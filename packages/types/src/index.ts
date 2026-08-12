@@ -258,6 +258,27 @@ export interface PostDetail {
   updatedAt: string;
 }
 
+export interface CalendarPostItem {
+  id: string;
+  title: string;
+  universalCaption: string;
+  status: PostStatus;
+  scheduledAt: string;
+  publishedAt?: string | null;
+  platformTypes: PlatformType[];
+  versionCount: number;
+}
+
+export interface ScheduleConflict {
+  postId: string;
+  conflictingPostId: string;
+  socialAccountId: string;
+  platformType: PlatformType;
+  scheduledAt: string;
+  conflictingScheduledAt: string;
+  diffMinutes: number;
+}
+
 export interface PlatformValidationError {
   platformType: PlatformType;
   field: string;

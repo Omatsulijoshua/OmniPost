@@ -135,6 +135,10 @@ export const updatePostSchema = z.object({
   overrides: z.array(postVersionOverrideSchema).optional(),
 });
 
+export const reschedulePostSchema = z.object({
+  scheduledAt: z.string().datetime('Invalid schedule ISO date string'),
+});
+
 export const createTranscodingJobSchema = z.object({
   mediaAssetId: z.string().uuid('Invalid media asset ID'),
   presets: z.array(
@@ -262,6 +266,7 @@ export type OAuthCallbackInput = z.infer<typeof oauthCallbackSchema>;
 export type PostVersionOverrideInput = z.infer<typeof postVersionOverrideSchema>;
 export type CreatePostInput = z.infer<typeof createPostSchema>;
 export type UpdatePostInput = z.infer<typeof updatePostSchema>;
+export type ReschedulePostInput = z.infer<typeof reschedulePostSchema>;
 export type CreateTranscodingJobInput = z.infer<typeof createTranscodingJobSchema>;
 export type AdaptCaptionInput = z.infer<typeof adaptCaptionSchema>;
 export type GenerateHashtagsInput = z.infer<typeof generateHashtagsSchema>;

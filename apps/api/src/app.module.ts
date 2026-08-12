@@ -8,6 +8,7 @@ import { SocialAccountModule } from './social-account/social-account.module';
 import { PostModule } from './post/post.module';
 import { AIModule } from './ai/ai.module';
 import { TranscodingModule } from './transcoding/transcoding.module';
+import { SchedulerModule } from './scheduler/scheduler.module';
 import { HealthController } from './health/health.controller';
 
 @Module({
@@ -21,6 +22,7 @@ import { HealthController } from './health/health.controller';
     PostModule,
     AIModule,
     TranscodingModule,
+    SchedulerModule,
   ],
   controllers: [HealthController],
   providers: [],
