@@ -297,6 +297,38 @@ export interface PublishingLogItem {
   executedAt: string;
 }
 
+export interface AnalyticsOverview {
+  totalViews: number;
+  totalLikes: number;
+  totalComments: number;
+  totalShares: number;
+  totalClicks: number;
+  totalReach: number;
+  averageEngagementRate: number;
+  publishedPostsCount: number;
+}
+
+export interface PlatformMetricsBreakdown {
+  platformType: PlatformType;
+  views: number;
+  likes: number;
+  comments: number;
+  shares: number;
+  clicks: number;
+  engagementRate: number;
+}
+
+export interface TopPostMetric {
+  id: string;
+  title: string;
+  universalCaption: string;
+  platformTypes: PlatformType[];
+  views: number;
+  likes: number;
+  engagementRate: number;
+  publishedAt: string;
+}
+
 export interface PlatformValidationError {
   platformType: PlatformType;
   field: string;

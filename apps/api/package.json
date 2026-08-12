@@ -18,6 +18,7 @@
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.4.7",
     "@omnipost/ai-core": "workspace:*",
+    "@omnipost/analytics-core": "workspace:*",
     "@omnipost/media-core": "workspace:*",
     "@omnipost/platform-core": "workspace:*",
     "@omnipost/publishing-core": "workspace:*",

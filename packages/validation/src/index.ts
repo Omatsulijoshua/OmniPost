@@ -255,6 +255,11 @@ export const retryPublishingSchema = z.object({
   postVersionId: z.string().uuid('Invalid post version ID'),
 });
 
+export const analyticsQuerySchema = z.object({
+  timeframe: z.enum(['7d', '30d', '90d', 'all']).optional(),
+  platformType: z.string().optional(),
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type RefreshTokenInput = z.infer<typeof refreshTokenSchema>;
@@ -283,3 +288,4 @@ export type RepurposeContentInput = z.infer<typeof repurposeContentSchema>;
 export type GenerateImagePromptInput = z.infer<typeof generateImagePromptSchema>;
 export type TestPublishingConnectionInput = z.infer<typeof testPublishingConnectionSchema>;
 export type RetryPublishingInput = z.infer<typeof retryPublishingSchema>;
+export type AnalyticsQueryInput = z.infer<typeof analyticsQuerySchema>;

@@ -10,6 +10,7 @@ import { AIModule } from './ai/ai.module';
 import { TranscodingModule } from './transcoding/transcoding.module';
 import { SchedulerModule } from './scheduler/scheduler.module';
 import { PublishingModule } from './publishing/publishing.module';
+import { AnalyticsModule } from './analytics/analytics.module';
 import { HealthController } from './health/health.controller';
 
 @Module({
@@ -25,6 +26,7 @@ import { HealthController } from './health/health.controller';
     TranscodingModule,
     SchedulerModule,
     PublishingModule,
+    AnalyticsModule,
   ],
   controllers: [HealthController],
   providers: [],
