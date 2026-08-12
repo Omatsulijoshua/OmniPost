@@ -22,6 +22,7 @@ import { AdminPlatformsModule } from './admin/platforms/admin-platforms.module';
 import { AdminSocialAccountsModule } from './admin/social-accounts/admin-social-accounts.module';
 import { AdminPublishingModule } from './admin/publishing/admin-publishing.module';
 import { AdminMediaModule } from './admin/media/admin-media.module';
+import { AdminAiModule } from './admin/ai/admin-ai.module';
 import { HealthController } from './health/health.controller';
 
 @Module({
@@ -49,6 +50,7 @@ import { HealthController } from './health/health.controller';
     AdminSocialAccountsModule,
     AdminPublishingModule,
     AdminMediaModule,
+    AdminAiModule,
   ],
   controllers: [HealthController],
   providers: [],
