@@ -87,6 +87,40 @@ export interface AuthResponse {
   defaultWorkspace: WorkspaceSummary;
 }
 
+export interface DashboardStats {
+  totalPosts: number;
+  scheduledPosts: number;
+  publishedPosts: number;
+  failedPosts: number;
+  draftPosts: number;
+  totalViews: number;
+  totalEngagement: number;
+  totalFollowers: number;
+}
+
+export interface RecentActivityItem {
+  id: string;
+  title: string;
+  universalCaption: string;
+  status: PostStatus;
+  scheduledAt?: string | null;
+  publishedAt?: string | null;
+  createdAt: string;
+  platformTypes: PlatformType[];
+}
+
+export interface ConnectedPlatformStatus {
+  id: string;
+  platformType: PlatformType;
+  platformName: string;
+  accountName: string;
+  profileUrl?: string | null;
+  avatarUrl?: string | null;
+  isConnected: boolean;
+  isMock: boolean;
+  capabilities: PlatformCapabilities;
+}
+
 export interface ApiResponse<T = any> {
   success: boolean;
   data?: T;
