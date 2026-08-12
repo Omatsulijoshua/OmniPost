@@ -48,7 +48,9 @@ export interface UserSummary {
   id: string;
   email: string;
   name: string;
-  avatarUrl?: string;
+  avatarUrl?: string | null;
+  emailVerified: boolean;
+  twoFactorEnabled: boolean;
 }
 
 export interface WorkspaceSummary {
@@ -56,6 +58,33 @@ export interface WorkspaceSummary {
   name: string;
   slug: string;
   role: RoleName;
+  createdAt: string;
+}
+
+export interface WorkspaceMemberDetail {
+  id: string;
+  workspaceId: string;
+  userId: string;
+  role: RoleName;
+  user: {
+    id: string;
+    email: string;
+    name: string;
+    avatarUrl?: string | null;
+  };
+  createdAt: string;
+}
+
+export interface TokenPair {
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: number;
+}
+
+export interface AuthResponse {
+  user: UserSummary;
+  tokens: TokenPair;
+  defaultWorkspace: WorkspaceSummary;
 }
 
 export interface ApiResponse<T = any> {
