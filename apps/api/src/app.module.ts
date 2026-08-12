@@ -29,6 +29,7 @@ import { AdminModerationModule } from './admin/moderation/admin-moderation.modul
 import { AdminAuditLogsModule } from './admin/audit-logs/admin-audit-logs.module';
 import { AdminSystemModule } from './admin/system/admin-system.module';
 import { AdminSettingsModule } from './admin/settings/admin-settings.module';
+import { AdminSecurityModule } from './admin/security/admin-security.module';
 import { HealthController } from './health/health.controller';
 
 @Module({
@@ -63,6 +64,7 @@ import { HealthController } from './health/health.controller';
     AdminAuditLogsModule,
     AdminSystemModule,
     AdminSettingsModule,
+    AdminSecurityModule,
   ],
   controllers: [HealthController],
   providers: [],
