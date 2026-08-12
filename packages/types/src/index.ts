@@ -187,6 +187,44 @@ export interface MediaFilterQuery {
   limit?: number;
 }
 
+export interface PostVersionDetail {
+  id: string;
+  postId: string;
+  socialAccountId: string;
+  platformType: PlatformType;
+  caption: string;
+  title?: string | null;
+  description?: string | null;
+  status: PostStatus;
+  externalPostId?: string | null;
+  externalPostUrl?: string | null;
+  hashtags: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PostDetail {
+  id: string;
+  workspaceId: string;
+  authorId: string;
+  authorName: string;
+  folderId?: string | null;
+  title?: string | null;
+  universalCaption: string;
+  status: PostStatus;
+  scheduledAt?: string | null;
+  publishedAt?: string | null;
+  versions: PostVersionDetail[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PlatformValidationError {
+  platformType: PlatformType;
+  field: string;
+  message: string;
+}
+
 export interface ApiResponse<T = any> {
   success: boolean;
   data?: T;
