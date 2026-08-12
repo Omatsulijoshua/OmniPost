@@ -24,6 +24,7 @@ import { AdminPublishingModule } from './admin/publishing/admin-publishing.modul
 import { AdminMediaModule } from './admin/media/admin-media.module';
 import { AdminAiModule } from './admin/ai/admin-ai.module';
 import { AdminAnalyticsModule } from './admin/analytics/admin-analytics.module';
+import { AdminBillingModule } from './admin/billing/admin-billing.module';
 import { HealthController } from './health/health.controller';
 
 @Module({
@@ -53,6 +54,7 @@ import { HealthController } from './health/health.controller';
     AdminMediaModule,
     AdminAiModule,
     AdminAnalyticsModule,
+    AdminBillingModule,
   ],
   controllers: [HealthController],
   providers: [],
