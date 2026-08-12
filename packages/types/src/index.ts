@@ -355,6 +355,37 @@ export interface AuditLogItem {
   createdAt: string;
 }
 
+export interface BrandKitDetail {
+  id: string;
+  workspaceId: string;
+  name: string;
+  logoUrl?: string | null;
+  primaryColor?: string | null;
+  secondaryColor?: string | null;
+  fontFamily?: string | null;
+  watermarkUrl?: string | null;
+  defaultCta?: string | null;
+  defaultHashtags: string[];
+  voiceTone?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ContentTemplateDetail {
+  id: string;
+  workspaceId?: string | null;
+  name: string;
+  category: string;
+  templateData: {
+    title?: string;
+    caption: string;
+    recommendedPlatforms: PlatformType[];
+    suggestedTone?: ToneOption;
+  };
+  isGlobal: boolean;
+  createdAt: string;
+}
+
 export interface PlatformValidationError {
   platformType: PlatformType;
   field: string;

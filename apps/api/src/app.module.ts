@@ -12,6 +12,7 @@ import { SchedulerModule } from './scheduler/scheduler.module';
 import { PublishingModule } from './publishing/publishing.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { ApprovalModule } from './approval/approval.module';
+import { BrandModule } from './brand/brand.module';
 import { HealthController } from './health/health.controller';
 
 @Module({
@@ -29,6 +30,7 @@ import { HealthController } from './health/health.controller';
     PublishingModule,
     AnalyticsModule,
     ApprovalModule,
+    BrandModule,
   ],
   controllers: [HealthController],
   providers: [],

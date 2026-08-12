@@ -270,6 +270,26 @@ export const addCommentSchema = z.object({
   content: z.string().min(1, 'Comment content is required'),
 });
 
+export const updateBrandKitSchema = z.object({
+  name: z.string().optional(),
+  logoUrl: z.string().url().nullable().optional(),
+  primaryColor: z.string().optional(),
+  secondaryColor: z.string().optional(),
+  fontFamily: z.string().optional(),
+  watermarkUrl: z.string().url().nullable().optional(),
+  defaultCta: z.string().optional(),
+  defaultHashtags: z.array(z.string()).optional(),
+  voiceTone: z.string().optional(),
+});
+
+export const createContentTemplateSchema = z.object({
+  name: z.string().min(2, 'Template name is required'),
+  category: z.string().min(1, 'Category is required'),
+  caption: z.string().min(1, 'Caption template text is required'),
+  recommendedPlatforms: z.array(z.string()).min(1),
+  suggestedTone: z.string().optional(),
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type RefreshTokenInput = z.infer<typeof refreshTokenSchema>;
@@ -301,3 +321,5 @@ export type RetryPublishingInput = z.infer<typeof retryPublishingSchema>;
 export type AnalyticsQueryInput = z.infer<typeof analyticsQuerySchema>;
 export type ActionApprovalInput = z.infer<typeof actionApprovalSchema>;
 export type AddCommentInput = z.infer<typeof addCommentSchema>;
+export type UpdateBrandKitInput = z.infer<typeof updateBrandKitSchema>;
+export type CreateContentTemplateInput = z.infer<typeof createContentTemplateSchema>;
