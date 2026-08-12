@@ -121,6 +121,28 @@ export interface ConnectedPlatformStatus {
   capabilities: PlatformCapabilities;
 }
 
+export interface SocialAccountDetail {
+  id: string;
+  workspaceId: string;
+  platformType: PlatformType;
+  platformName: string;
+  accountName: string;
+  externalId: string;
+  profileUrl?: string | null;
+  avatarUrl?: string | null;
+  isMock: boolean;
+  capabilities: PlatformCapabilities;
+  hasValidCredentials: boolean;
+  expiresAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface OAuthUrlResponse {
+  authorizationUrl: string;
+  state: string;
+}
+
 export interface FolderSummary {
   id: string;
   workspaceId: string;

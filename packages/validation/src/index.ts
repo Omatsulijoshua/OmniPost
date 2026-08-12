@@ -66,6 +66,47 @@ export const bulkMoveMediaSchema = z.object({
   folderId: z.string().uuid().nullable(),
 });
 
+export const connectMockAccountSchema = z.object({
+  platformType: z.enum([
+    'INSTAGRAM',
+    'FACEBOOK',
+    'TIKTOK',
+    'YOUTUBE',
+    'X',
+    'LINKEDIN',
+    'THREADS',
+    'PINTEREST',
+    'TELEGRAM',
+    'DISCORD',
+    'SLACK',
+    'REDDIT',
+    'GOOGLE_BUSINESS',
+  ]),
+  accountName: z.string().min(1, 'Account name is required'),
+  profileUrl: z.string().url().optional(),
+  avatarUrl: z.string().url().optional(),
+});
+
+export const oauthCallbackSchema = z.object({
+  platformType: z.enum([
+    'INSTAGRAM',
+    'FACEBOOK',
+    'TIKTOK',
+    'YOUTUBE',
+    'X',
+    'LINKEDIN',
+    'THREADS',
+    'PINTEREST',
+    'TELEGRAM',
+    'DISCORD',
+    'SLACK',
+    'REDDIT',
+    'GOOGLE_BUSINESS',
+  ]),
+  code: z.string().min(1, 'OAuth code is required'),
+  state: z.string().optional(),
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type RefreshTokenInput = z.infer<typeof refreshTokenSchema>;
@@ -80,3 +121,5 @@ export type CreateFolderInput = z.infer<typeof createFolderSchema>;
 export type UpdateMediaAssetInput = z.infer<typeof updateMediaAssetSchema>;
 export type BulkDeleteMediaInput = z.infer<typeof bulkDeleteMediaSchema>;
 export type BulkMoveMediaInput = z.infer<typeof bulkMoveMediaSchema>;
+export type ConnectMockAccountInput = z.infer<typeof connectMockAccountSchema>;
+export type OAuthCallbackInput = z.infer<typeof oauthCallbackSchema>;
