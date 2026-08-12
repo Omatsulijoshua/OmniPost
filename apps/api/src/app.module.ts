@@ -19,6 +19,7 @@ import { AdminDashboardModule } from './admin/dashboard/admin-dashboard.module';
 import { AdminUsersModule } from './admin/users/admin-users.module';
 import { AdminWorkspacesModule } from './admin/workspaces/admin-workspaces.module';
 import { AdminPlatformsModule } from './admin/platforms/admin-platforms.module';
+import { AdminSocialAccountsModule } from './admin/social-accounts/admin-social-accounts.module';
 import { HealthController } from './health/health.controller';
 
 @Module({
@@ -43,6 +44,7 @@ import { HealthController } from './health/health.controller';
     AdminUsersModule,
     AdminWorkspacesModule,
     AdminPlatformsModule,
+    AdminSocialAccountsModule,
   ],
   controllers: [HealthController],
   providers: [],
