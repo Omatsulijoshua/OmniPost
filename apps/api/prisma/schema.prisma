@@ -1,0 +1,510 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum RoleName {
+  OWNER
+  ADMIN
+  EDITOR
+  PUBLISHER
+  ANALYST
+  VIEWER
+}
+
+enum PostStatus {
+  DRAFT
+  PROCESSING
+  READY
+  SCHEDULED
+  PUBLISHING
+  PUBLISHED
+  PARTIALLY_PUBLISHED
+  FAILED
+  CANCELLED
+}
+
+enum PlatformType {
+  INSTAGRAM
+  FACEBOOK
+  TIKTOK
+  YOUTUBE
+  X
+  LINKEDIN
+  THREADS
+  PINTEREST
+  TELEGRAM
+  DISCORD
+  SLACK
+  REDDIT
+  GOOGLE_BUSINESS
+}
+
+model User {
+  id                String            @id @default(uuid())
+  email             String            @unique
+  passwordHash      String?
+  name              String
+  avatarUrl         String?
+  emailVerified     Boolean           @default(false)
+  twoFactorEnabled  Boolean           @default(false)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  deletedAt         DateTime?
+
+  memberships       WorkspaceMember[]
+  createdPosts      Post[]
+  auditLogs         AuditLog[]
+  approvalActions   ApprovalAction[]
+  notifications     Notification[]
+
+  @@index([email])
+}
+
+model Workspace {
+  id                String            @id @default(uuid())
+  name              String
+  slug              String            @unique
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  deletedAt         DateTime?
+
+  members           WorkspaceMember[]
+  socialAccounts    SocialAccount[]
+  posts             Post[]
+  mediaAssets       MediaAsset[]
+  brandKits         BrandKit[]
+  templates         ContentTemplate[]
+  folders           Folder[]
+  clients           Client[]
+  subscriptions     Subscription[]
+  aiJobs            AIJob[]
+  auditLogs         AuditLog[]
+
+  @@index([slug])
+}
+
+model WorkspaceMember {
+  id          String    @id @default(uuid())
+  workspaceId String
+  userId      String
+  roleId      String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role        Role      @relation(fields: [roleId], references: [id])
+
+  @@unique([workspaceId, userId])
+  @@index([workspaceId, userId])
+}
+
+model Role {
+  id          String            @id @default(uuid())
+  name        RoleName          @unique
+  description String?
+
+  members     WorkspaceMember[]
+  permissions Permission[]
+}
+
+model Permission {
+  id          String   @id @default(uuid())
+  action      String
+  resource    String
+  roleId      String
+
+  role        Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, action, resource])
+}
+
+model Platform {
+  id             String          @id @default(uuid())
+  type           PlatformType    @unique
+  name           String
+  capabilities   Json
+  isActive       Boolean         @default(true)
+
+  socialAccounts SocialAccount[]
+}
+
+model SocialAccount {
+  id           String             @id @default(uuid())
+  workspaceId  String
+  platformId   String
+  accountName  String
+  externalId   String
+  profileUrl   String?
+  avatarUrl    String?
+  isMock       Boolean            @default(false)
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  workspace    Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  platform     Platform           @relation(fields: [platformId], references: [id])
+  credentials  PlatformCredential?
+  postVersions PostVersion[]
+
+  @@unique([workspaceId, platformId, externalId])
+  @@index([workspaceId])
+}
+
+model PlatformCredential {
+  id               String        @id @default(uuid())
+  socialAccountId  String        @unique
+  encryptedToken   String
+  encryptedSecret  String?
+  refreshToken     String?
+  expiresAt        DateTime?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  socialAccount    SocialAccount @relation(fields: [socialAccountId], references: [id], onDelete: Cascade)
+}
+
+model Post {
+  id               String            @id @default(uuid())
+  workspaceId      String
+  authorId         String
+  folderId         String?
+  title            String?
+  universalCaption String
+  status           PostStatus        @default(DRAFT)
+  scheduledAt      DateTime?
+  publishedAt      DateTime?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  deletedAt        DateTime?
+
+  workspace        Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  author           User              @relation(fields: [authorId], references: [id])
+  folder           Folder?           @relation(fields: [folderId], references: [id])
+  versions         PostVersion[]
+  schedules        Schedule[]
+  publishingJobs   PublishingJob[]
+  approvalRequests ApprovalRequest[]
+  captions         Caption[]
+
+  @@index([workspaceId, status])
+  @@index([scheduledAt])
+}
+
+model PostVersion {
+  id               String          @id @default(uuid())
+  postId           String
+  socialAccountId  String
+  platformType     PlatformType
+  caption          String
+  title            String?
+  description      String?
+  status           PostStatus      @default(DRAFT)
+  externalPostId   String?
+  externalPostUrl  String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  post             Post            @relation(fields: [postId], references: [id], onDelete: Cascade)
+  socialAccount    SocialAccount   @relation(fields: [socialAccountId], references: [id])
+  hashtags         Hashtag[]
+  publishingAttempts PublishingAttempt[]
+  analyticsSnapshots AnalyticsSnapshot[]
+
+  @@index([postId, platformType])
+}
+
+model MediaAsset {
+  id          String         @id @default(uuid())
+  workspaceId String
+  filename    String
+  mimeType    String
+  fileSize    Int
+  originalUrl String
+  duration    Float?
+  width       Int?
+  height      Int?
+  metadata    Json?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  workspace   Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  variants    MediaVariant[]
+
+  @@index([workspaceId])
+}
+
+model MediaVariant {
+  id              String     @id @default(uuid())
+  mediaAssetId    String
+  preset          String
+  url             String
+  width           Int
+  height          Int
+  aspectRatio     String
+  format          String
+  fileSize        Int
+  createdAt       DateTime   @default(now())
+
+  mediaAsset      MediaAsset @relation(fields: [mediaAssetId], references: [id], onDelete: Cascade)
+}
+
+model Caption {
+  id        String   @id @default(uuid())
+  postId    String
+  content   String
+  tone      String?
+  isAi      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+model Hashtag {
+  id            String       @id @default(uuid())
+  postVersionId String
+  tag           String
+
+  postVersion   PostVersion  @relation(fields: [postVersionId], references: [id], onDelete: Cascade)
+
+  @@index([tag])
+}
+
+model Schedule {
+  id          String   @id @default(uuid())
+  postId      String
+  scheduledAt DateTime
+  timezone    String   @default("UTC")
+  createdAt   DateTime @default(now())
+
+  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+model PublishingJob {
+  id         String   @id @default(uuid())
+  postId     String
+  queueJobId String?  @unique
+  status     String
+  runAt      DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  attempts   PublishingAttempt[]
+}
+
+model PublishingAttempt {
+  id              String          @id @default(uuid())
+  publishingJobId String
+  postVersionId   String
+  attemptNumber   Int
+  status          String
+  errorDetails    Json?
+  createdAt       DateTime        @default(now())
+
+  publishingJob   PublishingJob   @relation(fields: [publishingJobId], references: [id], onDelete: Cascade)
+  postVersion     PostVersion     @relation(fields: [postVersionId], references: [id])
+  errors          PublishingError[]
+}
+
+model PublishingError {
+  id                  String            @id @default(uuid())
+  publishingAttemptId String
+  code                String
+  message             String
+  retryable           Boolean           @default(false)
+  createdAt           DateTime          @default(now())
+
+  publishingAttempt   PublishingAttempt @relation(fields: [publishingAttemptId], references: [id], onDelete: Cascade)
+}
+
+model AnalyticsSnapshot {
+  id            String            @id @default(uuid())
+  postVersionId String
+  capturedAt    DateTime          @default(now())
+  metrics       AnalyticsMetric[]
+
+  postVersion   PostVersion       @relation(fields: [postVersionId], references: [id], onDelete: Cascade)
+}
+
+model AnalyticsMetric {
+  id                  String            @id @default(uuid())
+  analyticsSnapshotId String
+  name                String
+  value               Float
+  unit                String?
+
+  analyticsSnapshot   AnalyticsSnapshot @relation(fields: [analyticsSnapshotId], references: [id], onDelete: Cascade)
+}
+
+model BrandKit {
+  id             String    @id @default(uuid())
+  workspaceId    String
+  name           String
+  logoUrl        String?
+  primaryColor   String?
+  secondaryColor String?
+  fontFamily     String?
+  watermarkUrl   String?
+  defaultCta     String?
+  defaultHashtags String[]
+  voiceTone      String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model ContentTemplate {
+  id          String    @id @default(uuid())
+  workspaceId String?
+  name        String
+  category    String
+  templateData Json
+  isGlobal    Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model Folder {
+  id          String    @id @default(uuid())
+  workspaceId String
+  name        String
+  parentId    String?
+  createdAt   DateTime  @default(now())
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  parent      Folder?   @relation("FolderHierarchy", fields: [parentId], references: [id])
+  children    Folder[]  @relation("FolderHierarchy")
+  posts       Post[]
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  title     String
+  message   String
+  type      String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AIJob {
+  id          String    @id @default(uuid())
+  workspaceId String
+  type        String
+  status      String
+  input       Json
+  output      Json?
+  createdAt   DateTime  @default(now())
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  recommendations AIRecommendation[]
+}
+
+model AIRecommendation {
+  id          String   @id @default(uuid())
+  aiJobId     String
+  title       String
+  description String
+  score       Float?
+  createdAt   DateTime @default(now())
+
+  aiJob       AIJob    @relation(fields: [aiJobId], references: [id], onDelete: Cascade)
+}
+
+model ApprovalRequest {
+  id         String           @id @default(uuid())
+  postId     String
+  status     String
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  post       Post             @relation(fields: [postId], references: [id], onDelete: Cascade)
+  actions    ApprovalAction[]
+}
+
+model ApprovalAction {
+  id                String          @id @default(uuid())
+  approvalRequestId String
+  actorId           String
+  action            String
+  comment           String?
+  createdAt         DateTime        @default(now())
+
+  approvalRequest   ApprovalRequest @relation(fields: [approvalRequestId], references: [id], onDelete: Cascade)
+  actor             User            @relation(fields: [actorId], references: [id])
+}
+
+model Client {
+  id          String    @id @default(uuid())
+  workspaceId String
+  name        String
+  email       String?
+  createdAt   DateTime  @default(now())
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model Subscription {
+  id          String    @id @default(uuid())
+  workspaceId String
+  planId      String
+  status      String
+  currentPeriodEnd DateTime
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  plan        Plan      @relation(fields: [planId], references: [id])
+  invoices    Invoice[]
+}
+
+model Plan {
+  id            String         @id @default(uuid())
+  name          String
+  priceMonthly  Float
+  features      Json
+  subscriptions Subscription[]
+}
+
+model Invoice {
+  id             String       @id @default(uuid())
+  subscriptionId String
+  amount         Float
+  status         String
+  createdAt      DateTime     @default(now())
+
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id          String    @id @default(uuid())
+  workspaceId String?
+  userId      String?
+  action      String
+  entity      String
+  entityId    String?
+  metadata    Json?
+  createdAt   DateTime  @default(now())
+
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user        User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model WebhookEvent {
+  id         String   @id @default(uuid())
+  provider   String
+  eventType  String
+  payload    Json
+  processed  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}

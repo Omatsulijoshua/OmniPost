@@ -1,0 +1,20 @@
+{
+  "name": "omnipost-monorepo",
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
+    "db:generate": "pnpm --filter @omnipost/api db:generate",
+    "db:migrate": "pnpm --filter @omnipost/api db:migrate"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "turbo": "^2.10.9",
+    "typescript": "^5.6.3"
+  },
+  "packageManager": "pnpm@11.18.0"
+}
