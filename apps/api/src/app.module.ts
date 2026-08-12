@@ -9,6 +9,7 @@ import { PostModule } from './post/post.module';
 import { AIModule } from './ai/ai.module';
 import { TranscodingModule } from './transcoding/transcoding.module';
 import { SchedulerModule } from './scheduler/scheduler.module';
+import { PublishingModule } from './publishing/publishing.module';
 import { HealthController } from './health/health.controller';
 
 @Module({
@@ -23,6 +24,7 @@ import { HealthController } from './health/health.controller';
     AIModule,
     TranscodingModule,
     SchedulerModule,
+    PublishingModule,
   ],
   controllers: [HealthController],
   providers: [],

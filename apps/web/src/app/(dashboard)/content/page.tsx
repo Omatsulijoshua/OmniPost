@@ -46,6 +46,18 @@ export default function ContentPage() {
     }
   };
 
+  const handleRetryVersion = async (versionId: string) => {
+    try {
+      await apiFetch('/publishing/retry', {
+        method: 'POST',
+        body: JSON.stringify({ postVersionId: versionId }),
+      });
+      loadPosts();
+    } catch (err: any) {
+      alert(err.message || 'Failed to retry publishing');
+    }
+  };
+
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this post?')) return;
     try {
@@ -77,7 +89,7 @@ export default function ContentPage() {
         <div>
           <h1 className="text-3xl font-black text-slate-100 tracking-tight">Content Library</h1>
           <p className="mt-1 text-sm text-slate-400">
-            View, filter, schedule, and publish posts across social channels.
+            View, filter, schedule, publish, and retry post versions across platforms.
           </p>
         </div>
 
@@ -137,7 +149,7 @@ export default function ContentPage() {
                   {post.universalCaption}
                 </p>
 
-                <div className="flex items-center gap-3 text-[11px] text-slate-500 pt-1">
+                <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-500 pt-1">
                   <span>Author: {post.authorName}</span>
                   <span>• {post.versions.length} Target Channels</span>
                   <span>• Created {new Date(post.createdAt).toLocaleDateString()}</span>
@@ -146,6 +158,28 @@ export default function ContentPage() {
                       • Scheduled: {new Date(post.scheduledAt).toLocaleString()}
                     </span>
                   )}
+                </div>
+
+                {/* Per-platform Version Badges */}
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {post.versions.map((v) => (
+                    <div
+                      key={v.id}
+                      className="flex items-center gap-1.5 px-2.5 py-1 bg-slate-950 border border-slate-800 rounded-lg text-[10px]"
+                    >
+                      <span className="font-bold text-slate-300">{v.platformType}</span>
+                      {v.status === 'FAILED' ? (
+                        <button
+                          onClick={() => handleRetryVersion(v.id)}
+                          className="text-rose-400 font-bold hover:underline"
+                        >
+                          🔄 Retry
+                        </button>
+                      ) : (
+                        <span className="text-slate-500">{v.status}</span>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
 

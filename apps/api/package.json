@@ -20,6 +20,7 @@
     "@omnipost/ai-core": "workspace:*",
     "@omnipost/media-core": "workspace:*",
     "@omnipost/platform-core": "workspace:*",
+    "@omnipost/publishing-core": "workspace:*",
     "@omnipost/shared": "workspace:*",
     "@omnipost/types": "workspace:*",
     "@omnipost/validation": "workspace:*",

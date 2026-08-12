@@ -247,6 +247,14 @@ export const generateImagePromptSchema = z.object({
   style: z.string().optional(),
 });
 
+export const testPublishingConnectionSchema = z.object({
+  socialAccountId: z.string().uuid('Invalid social account ID'),
+});
+
+export const retryPublishingSchema = z.object({
+  postVersionId: z.string().uuid('Invalid post version ID'),
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type RefreshTokenInput = z.infer<typeof refreshTokenSchema>;
@@ -273,3 +281,5 @@ export type GenerateHashtagsInput = z.infer<typeof generateHashtagsSchema>;
 export type ScoreContentInput = z.infer<typeof scoreContentSchema>;
 export type RepurposeContentInput = z.infer<typeof repurposeContentSchema>;
 export type GenerateImagePromptInput = z.infer<typeof generateImagePromptSchema>;
+export type TestPublishingConnectionInput = z.infer<typeof testPublishingConnectionSchema>;
+export type RetryPublishingInput = z.infer<typeof retryPublishingSchema>;

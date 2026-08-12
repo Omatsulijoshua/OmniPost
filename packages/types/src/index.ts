@@ -279,6 +279,24 @@ export interface ScheduleConflict {
   diffMinutes: number;
 }
 
+export interface PublishingResult {
+  success: boolean;
+  externalPostId?: string;
+  externalPostUrl?: string;
+  errorMessage?: string;
+  retryCount: number;
+}
+
+export interface PublishingLogItem {
+  id: string;
+  postVersionId: string;
+  platformType: PlatformType;
+  status: PostStatus;
+  responsePayload?: any;
+  errorMessage?: string | null;
+  executedAt: string;
+}
+
 export interface PlatformValidationError {
   platformType: PlatformType;
   field: string;
