@@ -29,16 +29,13 @@ export const verifyEmailSchema = z.object({
 });
 
 export const updateProfileSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters').optional(),
-  avatarUrl: z.string().url('Invalid avatar URL').optional().nullable(),
+  name: z.string().min(2).optional(),
+  avatarUrl: z.string().url().nullable().optional(),
 });
 
 export const createWorkspaceSchema = z.object({
   name: z.string().min(2, 'Workspace name must be at least 2 characters'),
-  slug: z
-    .string()
-    .min(2)
-    .regex(/^[a-z0-9-]+$/, 'Slug can only contain lowercase letters, numbers, and hyphens'),
+  slug: z.string().min(2, 'Slug must be at least 2 characters'),
 });
 
 export const addWorkspaceMemberSchema = z.object({
@@ -47,15 +44,26 @@ export const addWorkspaceMemberSchema = z.object({
 });
 
 export const updateWorkspaceMemberRoleSchema = z.object({
-  role: z.enum(['OWNER', 'ADMIN', 'EDITOR', 'PUBLISHER', 'ANALYST', 'VIEWER']),
+  role: z.enum(['ADMIN', 'EDITOR', 'PUBLISHER', 'ANALYST', 'VIEWER']),
 });
 
-export const createPostSchema = z.object({
-  title: z.string().optional(),
-  universalCaption: z.string().min(1, 'Caption is required'),
-  mediaAssetIds: z.array(z.string().uuid()).optional().default([]),
-  targetPlatforms: z.array(z.string()).min(1, 'Select at least one platform'),
-  scheduledAt: z.string().datetime().optional(),
+export const createFolderSchema = z.object({
+  name: z.string().min(1, 'Folder name is required'),
+  parentId: z.string().uuid().nullable().optional(),
+});
+
+export const updateMediaAssetSchema = z.object({
+  filename: z.string().min(1).optional(),
+  folderId: z.string().uuid().nullable().optional(),
+});
+
+export const bulkDeleteMediaSchema = z.object({
+  assetIds: z.array(z.string().uuid()).min(1, 'At least one asset ID is required'),
+});
+
+export const bulkMoveMediaSchema = z.object({
+  assetIds: z.array(z.string().uuid()).min(1, 'At least one asset ID is required'),
+  folderId: z.string().uuid().nullable(),
 });
 
 export type RegisterInput = z.infer<typeof registerSchema>;
@@ -68,4 +76,7 @@ export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
 export type CreateWorkspaceInput = z.infer<typeof createWorkspaceSchema>;
 export type AddWorkspaceMemberInput = z.infer<typeof addWorkspaceMemberSchema>;
 export type UpdateWorkspaceMemberRoleInput = z.infer<typeof updateWorkspaceMemberRoleSchema>;
-export type CreatePostInput = z.infer<typeof createPostSchema>;
+export type CreateFolderInput = z.infer<typeof createFolderSchema>;
+export type UpdateMediaAssetInput = z.infer<typeof updateMediaAssetSchema>;
+export type BulkDeleteMediaInput = z.infer<typeof bulkDeleteMediaSchema>;
+export type BulkMoveMediaInput = z.infer<typeof bulkMoveMediaSchema>;

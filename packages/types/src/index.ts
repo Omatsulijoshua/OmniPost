@@ -121,15 +121,12 @@ export interface ConnectedPlatformStatus {
   capabilities: PlatformCapabilities;
 }
 
-export interface ApiResponse<T = any> {
-  success: boolean;
-  data?: T;
-  error?: {
-    code: string;
-    message: string;
-    details?: any;
-  };
-  timestamp: string;
+export interface FolderSummary {
+  id: string;
+  workspaceId: string;
+  name: string;
+  parentId?: string | null;
+  createdAt: string;
 }
 
 export interface MediaVariantSpec {
@@ -141,4 +138,40 @@ export interface MediaVariantSpec {
   aspectRatio: string;
   url: string;
   format: string;
+}
+
+export interface MediaAssetDetail {
+  id: string;
+  workspaceId: string;
+  filename: string;
+  mimeType: string;
+  fileSize: number;
+  originalUrl: string;
+  duration?: number | null;
+  width?: number | null;
+  height?: number | null;
+  metadata?: Record<string, any> | null;
+  variants?: MediaVariantSpec[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface MediaFilterQuery {
+  search?: string;
+  type?: 'all' | 'video' | 'image' | 'audio';
+  folderId?: string;
+  sort?: 'newest' | 'oldest' | 'name' | 'size';
+  page?: number;
+  limit?: number;
+}
+
+export interface ApiResponse<T = any> {
+  success: boolean;
+  data?: T;
+  error?: {
+    code: string;
+    message: string;
+    details?: any;
+  };
+  timestamp: string;
 }
