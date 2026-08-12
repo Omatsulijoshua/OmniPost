@@ -9,8 +9,8 @@ export class AdminPlatformsController {
   constructor(private readonly adminPlatformsService: AdminPlatformsService) {}
 
   @Get()
-  async listPlatforms(): Promise<ApiResponse> {
-    const data = await this.adminPlatformsService.listPlatforms();
+  async getPlatformsOverview(): Promise<ApiResponse> {
+    const data = await this.adminPlatformsService.getPlatformsOverview();
     return {
       success: true,
       data,
@@ -18,19 +18,9 @@ export class AdminPlatformsController {
     };
   }
 
-  @Get('matrix')
-  async getMatrix(): Promise<ApiResponse> {
-    const data = await this.adminPlatformsService.getCapabilityMatrix();
-    return {
-      success: true,
-      data,
-      timestamp: new Date().toISOString(),
-    };
-  }
-
-  @Get(':id')
-  async getPlatformDetail(@Param('id') id: string): Promise<ApiResponse> {
-    const data = await this.adminPlatformsService.getPlatformDetail(id);
+  @Post()
+  async registerCustomPlatform(@Body() body: any): Promise<ApiResponse> {
+    const data = await this.adminPlatformsService.registerCustomPlatform(body);
     return {
       success: true,
       data,
@@ -39,8 +29,21 @@ export class AdminPlatformsController {
   }
 
   @Post(':id/maintenance')
-  async toggleMaintenance(@Param('id') id: string, @Body('maintenance') maintenance: boolean): Promise<ApiResponse> {
-    const data = await this.adminPlatformsService.toggleMaintenance(id, maintenance);
+  async togglePlatformMaintenance(
+    @Param('id') id: string,
+    @Body('maintenance') maintenance: boolean,
+  ): Promise<ApiResponse> {
+    const data = await this.adminPlatformsService.togglePlatformMaintenance(id, maintenance);
+    return {
+      success: true,
+      data,
+      timestamp: new Date().toISOString(),
+    };
+  }
+
+  @Get('matrix')
+  async getCapabilityMatrix(): Promise<ApiResponse> {
+    const data = await this.adminPlatformsService.getCapabilityMatrix();
     return {
       success: true,
       data,

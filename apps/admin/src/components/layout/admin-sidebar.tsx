@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -19,6 +19,8 @@ import {
   Activity,
   Settings,
   ShieldCheck,
+  Menu,
+  X,
 } from 'lucide-react';
 
 interface NavSection {
@@ -59,7 +61,7 @@ const navSections: NavSection[] = [
   },
   {
     title: 'Business & Billing',
-    items: [{ label: 'Subscriptions', href: '/billing', icon: DollarSign }],
+    items: [{ label: 'Subscriptions', href: '/billing/subscriptions', icon: DollarSign }],
   },
   {
     title: 'Analytics',
@@ -68,32 +70,43 @@ const navSections: NavSection[] = [
   {
     title: 'Operations & Health',
     items: [
-      { label: 'Support Tickets', href: '/support', icon: LifeBuoy },
+      { label: 'Support Tickets', href: '/support/tickets', icon: LifeBuoy },
       { label: 'Audit Logs', href: '/audit-logs', icon: ShieldAlert },
-      { label: 'System Health', href: '/system-health', icon: Activity },
-      { label: 'Settings', href: '/settings', icon: Settings },
+      { label: 'System Health', href: '/system/health', icon: Activity },
+      { label: 'Settings', href: '/settings/flags', icon: Settings },
     ],
   },
 ];
 
 export function AdminSidebar() {
   const pathname = usePathname();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  return (
-    <aside className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col h-screen sticky top-0 overflow-y-auto">
+  const sidebarContent = (
+    <div className="flex flex-col h-full bg-slate-900 border-r border-slate-800">
       {/* Brand Header */}
-      <div className="p-5 border-b border-slate-800 flex items-center gap-3">
-        <div className="w-8 h-8 rounded-xl bg-indigo-600 font-black text-sm text-white flex items-center justify-center shadow-lg shadow-indigo-600/30">
-          OP
+      <div className="p-5 border-b border-slate-800 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-xl bg-indigo-600 font-black text-sm text-white flex items-center justify-center shadow-lg shadow-indigo-600/30">
+            OP
+          </div>
+          <div>
+            <h1 className="text-sm font-black text-slate-100 tracking-tight">OmniPost Admin</h1>
+            <span className="text-[10px] text-slate-400 font-mono">v2.5 Enterprise</span>
+          </div>
         </div>
-        <div>
-          <h1 className="text-sm font-black text-slate-100 tracking-tight">OmniPost Admin</h1>
-          <span className="text-[10px] text-slate-400 font-mono">v2.5 Enterprise</span>
-        </div>
+
+        {/* Close Button on Mobile */}
+        <button
+          onClick={() => setMobileOpen(false)}
+          className="md:hidden text-slate-400 hover:text-slate-100 p-1"
+        >
+          <X className="w-5 h-5" />
+        </button>
       </div>
 
       {/* Navigation Sections */}
-      <div className="p-4 space-y-6 flex-1">
+      <div className="p-4 space-y-6 flex-1 overflow-y-auto">
         {navSections.map((sec) => (
           <div key={sec.title} className="space-y-1">
             <div className="px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
@@ -106,6 +119,7 @@ export function AdminSidebar() {
                 <Link
                   key={item.href}
                   href={item.href}
+                  onClick={() => setMobileOpen(false)}
                   className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition ${
                     isActive
                       ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20'
@@ -120,6 +134,38 @@ export function AdminSidebar() {
           </div>
         ))}
       </div>
-    </aside>
+    </div>
+  );
+
+  return (
+    <>
+      {/* Mobile Menu Button Trigger */}
+      <div className="md:hidden fixed top-3 left-4 z-50">
+        <button
+          onClick={() => setMobileOpen(true)}
+          className="p-2 bg-slate-900 border border-slate-800 rounded-xl text-slate-100 shadow-xl"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+      </div>
+
+      {/* Desktop Sidebar (Permanent) */}
+      <aside className="hidden md:flex w-64 h-screen sticky top-0 flex-shrink-0">
+        {sidebarContent}
+      </aside>
+
+      {/* Mobile Slide-Over Drawer with Backdrop */}
+      {mobileOpen && (
+        <div className="md:hidden fixed inset-0 z-50 flex">
+          <div
+            className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm"
+            onClick={() => setMobileOpen(false)}
+          />
+          <div className="relative w-72 max-w-xs h-full z-10">
+            {sidebarContent}
+          </div>
+        </div>
+      )}
+    </>
   );
 }

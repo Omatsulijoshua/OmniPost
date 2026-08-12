@@ -1,229 +1,81 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-export interface AdminPlatformHealth {
+export interface AdminPlatformHealthItem {
   id: string;
   name: string;
-  status: 'OPERATIONAL' | 'DEGRADED' | 'MAINTENANCE' | 'OUTAGE';
-  apiStatus: 'OPERATIONAL' | 'DEGRADED' | 'OUTAGE';
-  oauthStatus: 'OPERATIONAL' | 'DEGRADED';
-  publishingStatus: 'ENABLED' | 'DISABLED';
-  analyticsStatus: 'OPERATIONAL' | 'DEGRADED';
-  callsToday: number;
-  rateLimitUsagePercent: number;
-  lastErrorMsg: string | null;
+  slug: string;
+  iconUrl?: string;
+  status: 'OPERATIONAL' | 'DEGRADED' | 'OUTAGE' | 'MAINTENANCE';
+  connectedAccountsCount: number;
+  apiSuccessRatePercent: number;
+  rateLimitUsedPercent: number;
+  isCustomPlatform?: boolean;
 }
 
-export interface PlatformCapability {
+export interface PlatformCapabilityMatrixItem {
   platform: string;
-  images: boolean;
-  video: boolean;
-  stories: boolean;
-  reels: boolean;
-  shorts: boolean;
-  scheduling: boolean;
+  singleImage: boolean;
+  multiImageCarousel: boolean;
+  shortVideoReels: boolean;
+  longVideo: boolean;
+  textPost: boolean;
+  storyPost: boolean;
   analytics: boolean;
-  comments: boolean;
-  deletion: boolean;
+  maxCaptionLength: number;
+  maxVideoMB: number;
 }
 
 @Injectable()
 export class AdminPlatformsService {
-  private platformsHealth: AdminPlatformHealth[] = [
-    {
-      id: 'instagram',
-      name: 'Instagram',
-      status: 'OPERATIONAL',
-      apiStatus: 'OPERATIONAL',
-      oauthStatus: 'OPERATIONAL',
-      publishingStatus: 'ENABLED',
-      analyticsStatus: 'OPERATIONAL',
-      callsToday: 420930,
-      rateLimitUsagePercent: 42,
-      lastErrorMsg: null,
-    },
-    {
-      id: 'tiktok',
-      name: 'TikTok',
-      status: 'OPERATIONAL',
-      apiStatus: 'OPERATIONAL',
-      oauthStatus: 'OPERATIONAL',
-      publishingStatus: 'ENABLED',
-      analyticsStatus: 'OPERATIONAL',
-      callsToday: 312040,
-      rateLimitUsagePercent: 55,
-      lastErrorMsg: null,
-    },
-    {
-      id: 'youtube',
-      name: 'YouTube',
-      status: 'OPERATIONAL',
-      apiStatus: 'OPERATIONAL',
-      oauthStatus: 'OPERATIONAL',
-      publishingStatus: 'ENABLED',
-      analyticsStatus: 'OPERATIONAL',
-      callsToday: 184000,
-      rateLimitUsagePercent: 28,
-      lastErrorMsg: null,
-    },
-    {
-      id: 'x',
-      name: 'X (Twitter)',
-      status: 'OPERATIONAL',
-      apiStatus: 'OPERATIONAL',
-      oauthStatus: 'OPERATIONAL',
-      publishingStatus: 'ENABLED',
-      analyticsStatus: 'OPERATIONAL',
-      callsToday: 241090,
-      rateLimitUsagePercent: 64,
-      lastErrorMsg: null,
-    },
-    {
-      id: 'linkedin',
-      name: 'LinkedIn',
-      status: 'OPERATIONAL',
-      apiStatus: 'OPERATIONAL',
-      oauthStatus: 'OPERATIONAL',
-      publishingStatus: 'ENABLED',
-      analyticsStatus: 'OPERATIONAL',
-      callsToday: 134293,
-      rateLimitUsagePercent: 31,
-      lastErrorMsg: null,
-    },
-    {
-      id: 'facebook',
-      name: 'Facebook Page',
-      status: 'OPERATIONAL',
-      apiStatus: 'OPERATIONAL',
-      oauthStatus: 'OPERATIONAL',
-      publishingStatus: 'ENABLED',
-      analyticsStatus: 'OPERATIONAL',
-      callsToday: 95400,
-      rateLimitUsagePercent: 22,
-      lastErrorMsg: null,
-    },
-    {
-      id: 'threads',
-      name: 'Threads',
-      status: 'OPERATIONAL',
-      apiStatus: 'OPERATIONAL',
-      oauthStatus: 'OPERATIONAL',
-      publishingStatus: 'ENABLED',
-      analyticsStatus: 'OPERATIONAL',
-      callsToday: 82000,
-      rateLimitUsagePercent: 19,
-      lastErrorMsg: null,
-    },
-    {
-      id: 'pinterest',
-      name: 'Pinterest',
-      status: 'OPERATIONAL',
-      apiStatus: 'OPERATIONAL',
-      oauthStatus: 'OPERATIONAL',
-      publishingStatus: 'ENABLED',
-      analyticsStatus: 'OPERATIONAL',
-      callsToday: 41000,
-      rateLimitUsagePercent: 14,
-      lastErrorMsg: null,
-    },
-    {
-      id: 'telegram',
-      name: 'Telegram',
-      status: 'OPERATIONAL',
-      apiStatus: 'OPERATIONAL',
-      oauthStatus: 'OPERATIONAL',
-      publishingStatus: 'ENABLED',
-      analyticsStatus: 'OPERATIONAL',
-      callsToday: 38000,
-      rateLimitUsagePercent: 12,
-      lastErrorMsg: null,
-    },
-    {
-      id: 'discord',
-      name: 'Discord',
-      status: 'OPERATIONAL',
-      apiStatus: 'OPERATIONAL',
-      oauthStatus: 'OPERATIONAL',
-      publishingStatus: 'ENABLED',
-      analyticsStatus: 'OPERATIONAL',
-      callsToday: 32000,
-      rateLimitUsagePercent: 10,
-      lastErrorMsg: null,
-    },
-    {
-      id: 'slack',
-      name: 'Slack',
-      status: 'OPERATIONAL',
-      apiStatus: 'OPERATIONAL',
-      oauthStatus: 'OPERATIONAL',
-      publishingStatus: 'ENABLED',
-      analyticsStatus: 'OPERATIONAL',
-      callsToday: 21000,
-      rateLimitUsagePercent: 8,
-      lastErrorMsg: null,
-    },
-    {
-      id: 'reddit',
-      name: 'Reddit',
-      status: 'OPERATIONAL',
-      apiStatus: 'OPERATIONAL',
-      oauthStatus: 'OPERATIONAL',
-      publishingStatus: 'ENABLED',
-      analyticsStatus: 'OPERATIONAL',
-      callsToday: 19000,
-      rateLimitUsagePercent: 15,
-      lastErrorMsg: null,
-    },
-    {
-      id: 'googlebusiness',
-      name: 'Google Business Profile',
-      status: 'OPERATIONAL',
-      apiStatus: 'OPERATIONAL',
-      oauthStatus: 'OPERATIONAL',
-      publishingStatus: 'ENABLED',
-      analyticsStatus: 'OPERATIONAL',
-      callsToday: 14000,
-      rateLimitUsagePercent: 11,
-      lastErrorMsg: null,
-    },
+  private platforms: AdminPlatformHealthItem[] = [
+    { id: 'plat-snapchat', name: 'Snapchat', slug: 'snapchat', status: 'OPERATIONAL', connectedAccountsCount: 940, apiSuccessRatePercent: 99.2, rateLimitUsedPercent: 18.4 },
+    { id: 'plat-instagram', name: 'Instagram', slug: 'instagram', status: 'OPERATIONAL', connectedAccountsCount: 1820, apiSuccessRatePercent: 99.4, rateLimitUsedPercent: 34.2 },
+    { id: 'plat-tiktok', name: 'TikTok', slug: 'tiktok', status: 'DEGRADED', connectedAccountsCount: 1240, apiSuccessRatePercent: 98.1, rateLimitUsedPercent: 78.6 },
+    { id: 'plat-youtube', name: 'YouTube', slug: 'youtube', status: 'OPERATIONAL', connectedAccountsCount: 890, apiSuccessRatePercent: 99.6, rateLimitUsedPercent: 22.1 },
+    { id: 'plat-twitter', name: 'X (Twitter)', slug: 'twitter', status: 'OPERATIONAL', connectedAccountsCount: 1450, apiSuccessRatePercent: 99.1, rateLimitUsedPercent: 41.0 },
+    { id: 'plat-linkedin', name: 'LinkedIn', slug: 'linkedin', status: 'OPERATIONAL', connectedAccountsCount: 980, apiSuccessRatePercent: 99.2, rateLimitUsedPercent: 19.5 },
   ];
 
-  async listPlatforms(): Promise<AdminPlatformHealth[]> {
-    return this.platformsHealth;
+  async getPlatformsOverview(): Promise<AdminPlatformHealthItem[]> {
+    return this.platforms;
   }
 
-  async getPlatformDetail(id: string): Promise<AdminPlatformHealth> {
-    const platform = this.platformsHealth.find((p) => p.id === id);
-    if (!platform) {
-      throw new NotFoundException(`Platform ${id} not found`);
-    }
-    return platform;
+  async registerCustomPlatform(data: {
+    name: string;
+    slug: string;
+    authEndpoint?: string;
+    tokenEndpoint?: string;
+    publishEndpoint?: string;
+    maxCaptionLength?: number;
+    maxVideoMB?: number;
+  }): Promise<AdminPlatformHealthItem> {
+    const id = `plat-custom-${Date.now()}`;
+    const newPlatform: AdminPlatformHealthItem = {
+      id,
+      name: data.name,
+      slug: data.slug.toLowerCase().replace(/\s+/g, '-'),
+      status: 'OPERATIONAL',
+      connectedAccountsCount: 0,
+      apiSuccessRatePercent: 100.0,
+      rateLimitUsedPercent: 0.0,
+      isCustomPlatform: true,
+    };
+    this.platforms.push(newPlatform);
+    return newPlatform;
   }
 
-  async toggleMaintenance(id: string, maintenance: boolean) {
-    const platform = this.platformsHealth.find((p) => p.id === id);
-    if (!platform) {
-      throw new NotFoundException(`Platform ${id} not found`);
-    }
-    platform.status = maintenance ? 'MAINTENANCE' : 'OPERATIONAL';
-    platform.publishingStatus = maintenance ? 'DISABLED' : 'ENABLED';
-    return platform;
+  async togglePlatformMaintenance(id: string, maintenance: boolean): Promise<AdminPlatformHealthItem> {
+    const p = this.platforms.find((item) => item.id === id);
+    if (!p) throw new NotFoundException(`Platform ${id} not found`);
+    p.status = maintenance ? 'MAINTENANCE' : 'OPERATIONAL';
+    return p;
   }
 
-  async getCapabilityMatrix(): Promise<PlatformCapability[]> {
+  async getCapabilityMatrix(): Promise<PlatformCapabilityMatrixItem[]> {
     return [
-      { platform: 'Instagram', images: true, video: true, stories: true, reels: true, shorts: false, scheduling: true, analytics: true, comments: true, deletion: true },
-      { platform: 'TikTok', images: false, video: true, stories: false, reels: false, shorts: false, scheduling: true, analytics: true, comments: true, deletion: true },
-      { platform: 'YouTube', images: false, video: true, stories: false, reels: false, shorts: true, scheduling: true, analytics: true, comments: true, deletion: true },
-      { platform: 'X (Twitter)', images: true, video: true, stories: false, reels: false, shorts: false, scheduling: true, analytics: true, comments: true, deletion: true },
-      { platform: 'LinkedIn', images: true, video: true, stories: false, reels: false, shorts: false, scheduling: true, analytics: true, comments: true, deletion: true },
-      { platform: 'Facebook Page', images: true, video: true, stories: true, reels: true, shorts: false, scheduling: true, analytics: true, comments: true, deletion: true },
-      { platform: 'Threads', images: true, video: true, stories: false, reels: false, shorts: false, scheduling: true, analytics: true, comments: true, deletion: true },
-      { platform: 'Pinterest', images: true, video: true, stories: false, reels: false, shorts: false, scheduling: true, analytics: true, comments: false, deletion: true },
-      { platform: 'Telegram', images: true, video: true, stories: false, reels: false, shorts: false, scheduling: true, analytics: true, comments: true, deletion: true },
-      { platform: 'Discord', images: true, video: true, stories: false, reels: false, shorts: false, scheduling: true, analytics: false, comments: true, deletion: true },
-      { platform: 'Slack', images: true, video: true, stories: false, reels: false, shorts: false, scheduling: true, analytics: false, comments: true, deletion: true },
-      { platform: 'Reddit', images: true, video: true, stories: false, reels: false, shorts: false, scheduling: true, analytics: true, comments: true, deletion: true },
-      { platform: 'Google Business Profile', images: true, video: false, stories: false, reels: false, shorts: false, scheduling: true, analytics: true, comments: true, deletion: true },
+      { platform: 'Snapchat', singleImage: true, multiImageCarousel: false, shortVideoReels: true, longVideo: false, textPost: false, storyPost: true, analytics: true, maxCaptionLength: 250, maxVideoMB: 100 },
+      { platform: 'Instagram', singleImage: true, multiImageCarousel: true, shortVideoReels: true, longVideo: false, textPost: false, storyPost: true, analytics: true, maxCaptionLength: 2200, maxVideoMB: 500 },
+      { platform: 'TikTok', singleImage: false, multiImageCarousel: true, shortVideoReels: true, longVideo: true, textPost: false, storyPost: false, analytics: true, maxCaptionLength: 4000, maxVideoMB: 1000 },
     ];
   }
 }

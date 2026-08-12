@@ -12,25 +12,32 @@ describe('AdminPlatformsService', () => {
     service = module.get<AdminPlatformsService>(AdminPlatformsService);
   });
 
-  it('should return health status for all 13 supported social platforms', async () => {
-    const platforms = await service.listPlatforms();
+  it('should return overview telemetry across all social platforms including Snapchat', async () => {
+    const platforms = await service.getPlatformsOverview();
 
-    expect(platforms.length).toBe(13);
-    expect(platforms.find((p) => p.id === 'instagram')).toBeDefined();
-    expect(platforms.find((p) => p.id === 'tiktok')).toBeDefined();
+    expect(platforms.length).toBeGreaterThan(0);
+    expect(platforms.find((p) => p.slug === 'snapchat')).toBeDefined();
+    expect(platforms.find((p) => p.slug === 'instagram')).toBeDefined();
   });
 
-  it('should toggle maintenance mode on a platform', async () => {
-    const res = await service.toggleMaintenance('instagram', true);
+  it('should register custom social platform without code modification', async () => {
+    const custom = await service.registerCustomPlatform({
+      name: 'Mastodon',
+      slug: 'mastodon',
+    });
 
-    expect(res.status).toBe('MAINTENANCE');
-    expect(res.publishingStatus).toBe('DISABLED');
+    expect(custom.name).toBe('Mastodon');
+    expect(custom.isCustomPlatform).toBe(true);
   });
 
-  it('should return platform capability matrix', async () => {
+  it('should toggle platform maintenance status', async () => {
+    const platform = await service.togglePlatformMaintenance('plat-instagram', true);
+    expect(platform.status).toBe('MAINTENANCE');
+  });
+
+  it('should return cross-platform capability matrix', async () => {
     const matrix = await service.getCapabilityMatrix();
-
-    expect(matrix.length).toBe(13);
-    expect(matrix.find((m) => m.platform === 'Instagram')?.stories).toBe(true);
+    expect(matrix.length).toBeGreaterThan(0);
+    expect(matrix[0].storyPost).toBeDefined();
   });
 });

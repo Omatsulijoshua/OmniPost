@@ -28,9 +28,23 @@ export class AdminAiController {
     };
   }
 
-  @Post('providers/:id')
-  async updateProvider(@Param('id') id: string, @Body() body: any): Promise<ApiResponse> {
-    const data = await this.adminAiService.updateProvider(id, body);
+  @Post('providers/:id/keys')
+  async updateProviderKeys(
+    @Param('id') id: string,
+    @Body('keys') keys: string,
+    @Body('strategy') strategy?: 'ROUND_ROBIN' | 'FAILOVER_ON_LIMIT',
+  ): Promise<ApiResponse> {
+    const data = await this.adminAiService.updateProviderKeys(id, keys || '', strategy);
+    return {
+      success: true,
+      data,
+      timestamp: new Date().toISOString(),
+    };
+  }
+
+  @Post('providers/:id/test-failover')
+  async testFailoverRotation(@Param('id') id: string): Promise<ApiResponse> {
+    const data = await this.adminAiService.testFailoverRotation(id);
     return {
       success: true,
       data,
