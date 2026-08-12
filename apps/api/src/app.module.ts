@@ -7,6 +7,7 @@ import { MediaModule } from './media/media.module';
 import { SocialAccountModule } from './social-account/social-account.module';
 import { PostModule } from './post/post.module';
 import { AIModule } from './ai/ai.module';
+import { TranscodingModule } from './transcoding/transcoding.module';
 import { HealthController } from './health/health.controller';
 
 @Module({
@@ -19,6 +20,7 @@ import { HealthController } from './health/health.controller';
     SocialAccountModule,
     PostModule,
     AIModule,
+    TranscodingModule,
   ],
   controllers: [HealthController],
   providers: [],

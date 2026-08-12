@@ -135,6 +135,22 @@ export const updatePostSchema = z.object({
   overrides: z.array(postVersionOverrideSchema).optional(),
 });
 
+export const createTranscodingJobSchema = z.object({
+  mediaAssetId: z.string().uuid('Invalid media asset ID'),
+  presets: z.array(
+    z.enum([
+      'VERTICAL_SHORT_VIDEO',
+      'LANDSCAPE_VIDEO',
+      'SQUARE_VIDEO',
+      'INSTAGRAM_REEL',
+      'TIKTOK_VIDEO',
+      'YOUTUBE_SHORT',
+      'SQUARE_IMAGE',
+      'STORY_IMAGE',
+    ]),
+  ).min(1, 'Select at least one transcoding preset'),
+});
+
 export const adaptCaptionSchema = z.object({
   caption: z.string().min(1, 'Caption is required'),
   platformType: z.enum([
@@ -246,6 +262,7 @@ export type OAuthCallbackInput = z.infer<typeof oauthCallbackSchema>;
 export type PostVersionOverrideInput = z.infer<typeof postVersionOverrideSchema>;
 export type CreatePostInput = z.infer<typeof createPostSchema>;
 export type UpdatePostInput = z.infer<typeof updatePostSchema>;
+export type CreateTranscodingJobInput = z.infer<typeof createTranscodingJobSchema>;
 export type AdaptCaptionInput = z.infer<typeof adaptCaptionSchema>;
 export type GenerateHashtagsInput = z.infer<typeof generateHashtagsSchema>;
 export type ScoreContentInput = z.infer<typeof scoreContentSchema>;

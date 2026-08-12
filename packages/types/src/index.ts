@@ -53,6 +53,16 @@ export type ToneOption =
   | 'Educational'
   | 'Humor';
 
+export type TranscodingPresetName =
+  | 'VERTICAL_SHORT_VIDEO'
+  | 'LANDSCAPE_VIDEO'
+  | 'SQUARE_VIDEO'
+  | 'INSTAGRAM_REEL'
+  | 'TIKTOK_VIDEO'
+  | 'YOUTUBE_SHORT'
+  | 'SQUARE_IMAGE'
+  | 'STORY_IMAGE';
+
 export interface UserSummary {
   id: string;
   email: string;
@@ -187,6 +197,26 @@ export interface MediaAssetDetail {
   updatedAt: string;
 }
 
+export interface TranscodingPresetSpec {
+  preset: TranscodingPresetName;
+  name: string;
+  width: number;
+  height: number;
+  aspectRatio: string;
+  mediaType: 'video' | 'image';
+}
+
+export interface TranscodingJobDetail {
+  id: string;
+  mediaAssetId: string;
+  presets: TranscodingPresetName[];
+  status: 'QUEUED' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
+  progress: number;
+  generatedVariants: MediaVariantSpec[];
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface MediaFilterQuery {
   search?: string;
   type?: 'all' | 'video' | 'image' | 'audio';
@@ -242,7 +272,7 @@ export interface AICaptionAdaptResult {
 }
 
 export interface ContentAuditResult {
-  score: number; // 0 - 100
+  score: number;
   rating: 'EXCELLENT' | 'GOOD' | 'NEEDS_IMPROVEMENT' | 'POOR';
   strengths: string[];
   improvements: string[];

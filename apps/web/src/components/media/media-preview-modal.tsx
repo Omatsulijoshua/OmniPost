@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { MediaAssetDetail } from '@omnipost/types';
+import { MediaAssetDetail, TranscodingPresetName } from '@omnipost/types';
+import { apiFetch } from '../../lib/api-client';
 
 interface MediaPreviewModalProps {
   asset: MediaAssetDetail | null;
@@ -9,6 +10,14 @@ interface MediaPreviewModalProps {
   onRename: (id: string, newName: string) => void;
   onDelete: (id: string) => void;
 }
+
+const availablePresets: { preset: TranscodingPresetName; label: string }[] = [
+  { preset: 'INSTAGRAM_REEL', label: 'Instagram Reel (9:16)' },
+  { preset: 'TIKTOK_VIDEO', label: 'TikTok Video (9:16)' },
+  { preset: 'YOUTUBE_SHORT', label: 'YouTube Short (9:16)' },
+  { preset: 'SQUARE_VIDEO', label: 'Square Video / Image (1:1)' },
+  { preset: 'LANDSCAPE_VIDEO', label: 'Landscape Video (16:9)' },
+];
 
 export function MediaPreviewModal({
   asset,
@@ -20,12 +29,42 @@ export function MediaPreviewModal({
 
   const [filename, setFilename] = useState(asset.filename);
   const [editing, setEditing] = useState(false);
+  const [selectedPresets, setSelectedPresets] = useState<TranscodingPresetName[]>(['INSTAGRAM_REEL']);
+  const [transcoding, setTranscoding] = useState(false);
+  const [transcodeSuccess, setTranscodeSuccess] = useState<string | null>(null);
 
   const handleRenameSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!filename) return;
     onRename(asset.id, filename);
     setEditing(false);
+  };
+
+  const togglePreset = (preset: TranscodingPresetName) => {
+    setSelectedPresets((prev) =>
+      prev.includes(preset) ? prev.filter((p) => p !== preset) : [...prev, preset],
+    );
+  };
+
+  const handleStartTranscoding = async () => {
+    if (selectedPresets.length === 0) return;
+    setTranscoding(true);
+    setTranscodeSuccess(null);
+
+    try {
+      await apiFetch('/transcoding/jobs', {
+        method: 'POST',
+        body: JSON.stringify({
+          mediaAssetId: asset.id,
+          presets: selectedPresets,
+        }),
+      });
+      setTranscodeSuccess(`Successfully generated ${selectedPresets.length} platform variants!`);
+    } catch (err: any) {
+      alert(err.message || 'Failed to transcode media asset');
+    } finally {
+      setTranscoding(false);
+    }
   };
 
   const formatSize = (bytes: number) => {
@@ -35,9 +74,9 @@ export function MediaPreviewModal({
 
   return (
     <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-3xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[85vh]">
+      <div className="w-full max-w-4xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[85vh]">
         {/* Media Preview Area */}
-        <div className="flex-1 bg-slate-950 p-6 flex items-center justify-center overflow-hidden">
+        <div className="flex-1 bg-slate-950 p-6 flex flex-col items-center justify-center overflow-hidden">
           {asset.mimeType.startsWith('image/') ? (
             <img
               src={asset.originalUrl}
@@ -49,10 +88,29 @@ export function MediaPreviewModal({
           ) : (
             <audio controls src={asset.originalUrl} className="w-full" />
           )}
+
+          {asset.variants && asset.variants.length > 0 && (
+            <div className="w-full mt-4 p-3 bg-slate-900 border border-slate-800 rounded-xl space-y-2">
+              <div className="text-[11px] font-bold text-indigo-400 uppercase">Generated Variants ({asset.variants.length})</div>
+              <div className="flex flex-wrap gap-2">
+                {asset.variants.map((v) => (
+                  <a
+                    key={v.id}
+                    href={v.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-2.5 py-1 text-[10px] font-bold text-slate-200 bg-slate-950 border border-slate-800 rounded-md hover:border-indigo-500"
+                  >
+                    {v.preset} ({v.aspectRatio})
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Metadata & Actions Sidebar */}
-        <div className="w-full md:w-80 p-6 border-l border-slate-800 space-y-6 overflow-y-auto">
+        {/* Sidebar Controls */}
+        <div className="w-full md:w-85 p-6 border-l border-slate-800 space-y-6 overflow-y-auto">
           <div className="flex justify-between items-start">
             <div className="space-y-1 flex-1 mr-2">
               {!editing ? (
@@ -99,37 +157,60 @@ export function MediaPreviewModal({
             </button>
           </div>
 
-          <div className="space-y-3 text-xs">
-            <div className="text-slate-400 font-semibold uppercase">File Information</div>
-            <div className="space-y-2 p-3 bg-slate-950 rounded-lg">
-              <div className="flex justify-between text-slate-300">
+          <div className="space-y-2 text-xs">
+            <div className="text-slate-400 font-semibold uppercase">Metadata</div>
+            <div className="space-y-1.5 p-3 bg-slate-950 rounded-lg text-slate-300">
+              <div className="flex justify-between">
                 <span className="text-slate-500">MIME Type:</span>
                 <span>{asset.mimeType}</span>
               </div>
-              <div className="flex justify-between text-slate-300">
+              <div className="flex justify-between">
                 <span className="text-slate-500">File Size:</span>
                 <span>{formatSize(asset.fileSize)}</span>
               </div>
               {asset.width && asset.height && (
-                <div className="flex justify-between text-slate-300">
+                <div className="flex justify-between">
                   <span className="text-slate-500">Resolution:</span>
                   <span>{asset.width} x {asset.height}</span>
                 </div>
               )}
-              {asset.duration && (
-                <div className="flex justify-between text-slate-300">
-                  <span className="text-slate-500">Duration:</span>
-                  <span>{asset.duration}s</span>
-                </div>
-              )}
-              <div className="flex justify-between text-slate-300">
-                <span className="text-slate-500">Uploaded:</span>
-                <span>{new Date(asset.createdAt).toLocaleDateString()}</span>
-              </div>
             </div>
           </div>
 
-          <div className="pt-4 border-t border-slate-800 space-y-2">
+          {/* Transcoding Section */}
+          <div className="space-y-3 pt-3 border-t border-slate-800">
+            <div className="text-xs font-bold text-slate-200 uppercase">Transcode & Adapt Asset</div>
+            
+            {transcodeSuccess && (
+              <div className="p-2 text-[11px] font-semibold text-emerald-400 bg-emerald-950/80 border border-emerald-800 rounded-lg">
+                {transcodeSuccess}
+              </div>
+            )}
+
+            <div className="space-y-1.5">
+              {availablePresets.map((p) => (
+                <label key={p.preset} className="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={selectedPresets.includes(p.preset)}
+                    onChange={() => togglePreset(p.preset)}
+                    className="rounded bg-slate-950 border-slate-800 text-indigo-600 focus:ring-0"
+                  />
+                  <span>{p.label}</span>
+                </label>
+              ))}
+            </div>
+
+            <button
+              onClick={handleStartTranscoding}
+              disabled={transcoding || selectedPresets.length === 0}
+              className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-md shadow-indigo-600/20"
+            >
+              {transcoding ? 'Transcoding...' : '⚡ Generate Platform Variants'}
+            </button>
+          </div>
+
+          <div className="pt-3 border-t border-slate-800">
             <button
               onClick={() => onDelete(asset.id)}
               className="w-full py-2 bg-rose-950/60 hover:bg-rose-900 border border-rose-800/60 text-rose-300 text-xs font-semibold rounded-lg"
