@@ -11,6 +11,7 @@ import { TranscodingModule } from './transcoding/transcoding.module';
 import { SchedulerModule } from './scheduler/scheduler.module';
 import { PublishingModule } from './publishing/publishing.module';
 import { AnalyticsModule } from './analytics/analytics.module';
+import { ApprovalModule } from './approval/approval.module';
 import { HealthController } from './health/health.controller';
 
 @Module({
@@ -27,6 +28,7 @@ import { HealthController } from './health/health.controller';
     SchedulerModule,
     PublishingModule,
     AnalyticsModule,
+    ApprovalModule,
   ],
   controllers: [HealthController],
   providers: [],

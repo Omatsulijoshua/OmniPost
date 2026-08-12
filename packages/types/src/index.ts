@@ -329,6 +329,32 @@ export interface TopPostMetric {
   publishedAt: string;
 }
 
+export interface ApprovalRequestDetail {
+  id: string;
+  postId: string;
+  postTitle: string;
+  universalCaption: string;
+  authorName: string;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  createdAt: string;
+}
+
+export interface ApprovalCommentDetail {
+  id: string;
+  postId: string;
+  authorName: string;
+  content: string;
+  createdAt: string;
+}
+
+export interface AuditLogItem {
+  id: string;
+  actorName: string;
+  action: string;
+  entity: string;
+  createdAt: string;
+}
+
 export interface PlatformValidationError {
   platformType: PlatformType;
   field: string;

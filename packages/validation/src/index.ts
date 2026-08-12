@@ -260,6 +260,16 @@ export const analyticsQuerySchema = z.object({
   platformType: z.string().optional(),
 });
 
+export const actionApprovalSchema = z.object({
+  action: z.enum(['APPROVE', 'REJECT']),
+  comment: z.string().optional(),
+});
+
+export const addCommentSchema = z.object({
+  postId: z.string().uuid('Invalid post ID'),
+  content: z.string().min(1, 'Comment content is required'),
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type RefreshTokenInput = z.infer<typeof refreshTokenSchema>;
@@ -289,3 +299,5 @@ export type GenerateImagePromptInput = z.infer<typeof generateImagePromptSchema>
 export type TestPublishingConnectionInput = z.infer<typeof testPublishingConnectionSchema>;
 export type RetryPublishingInput = z.infer<typeof retryPublishingSchema>;
 export type AnalyticsQueryInput = z.infer<typeof analyticsQuerySchema>;
+export type ActionApprovalInput = z.infer<typeof actionApprovalSchema>;
+export type AddCommentInput = z.infer<typeof addCommentSchema>;
