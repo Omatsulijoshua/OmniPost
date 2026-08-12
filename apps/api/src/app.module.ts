@@ -16,6 +16,7 @@ import { BrandModule } from './brand/brand.module';
 import { BillingModule } from './billing/billing.module';
 import { AdminAuthModule } from './admin/auth/admin-auth.module';
 import { AdminDashboardModule } from './admin/dashboard/admin-dashboard.module';
+import { AdminUsersModule } from './admin/users/admin-users.module';
 import { HealthController } from './health/health.controller';
 
 @Module({
@@ -37,6 +38,7 @@ import { HealthController } from './health/health.controller';
     BillingModule,
     AdminAuthModule,
     AdminDashboardModule,
+    AdminUsersModule,
   ],
   controllers: [HealthController],
   providers: [],
