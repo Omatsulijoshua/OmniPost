@@ -290,6 +290,11 @@ export const createContentTemplateSchema = z.object({
   suggestedTone: z.string().optional(),
 });
 
+export const checkoutSchema = z.object({
+  targetTier: z.enum(['FREE', 'CREATOR', 'PRO', 'AGENCY']),
+  billingInterval: z.enum(['MONTHLY', 'ANNUAL']),
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type RefreshTokenInput = z.infer<typeof refreshTokenSchema>;
@@ -323,3 +328,4 @@ export type ActionApprovalInput = z.infer<typeof actionApprovalSchema>;
 export type AddCommentInput = z.infer<typeof addCommentSchema>;
 export type UpdateBrandKitInput = z.infer<typeof updateBrandKitSchema>;
 export type CreateContentTemplateInput = z.infer<typeof createContentTemplateSchema>;
+export type CheckoutInput = z.infer<typeof checkoutSchema>;

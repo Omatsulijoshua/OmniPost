@@ -19,6 +19,7 @@
     "@nestjs/platform-express": "^10.4.7",
     "@omnipost/ai-core": "workspace:*",
     "@omnipost/analytics-core": "workspace:*",
+    "@omnipost/billing-core": "workspace:*",
     "@omnipost/brand-core": "workspace:*",
     "@omnipost/media-core": "workspace:*",
     "@omnipost/platform-core": "workspace:*",

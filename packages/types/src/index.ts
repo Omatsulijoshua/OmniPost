@@ -63,6 +63,8 @@ export type TranscodingPresetName =
   | 'SQUARE_IMAGE'
   | 'STORY_IMAGE';
 
+export type SubscriptionTier = 'FREE' | 'CREATOR' | 'PRO' | 'AGENCY';
+
 export interface UserSummary {
   id: string;
   email: string;
@@ -383,6 +385,37 @@ export interface ContentTemplateDetail {
     suggestedTone?: ToneOption;
   };
   isGlobal: boolean;
+  createdAt: string;
+}
+
+export interface UsageQuotaDetail {
+  postsThisMonth: number;
+  maxPostsPerMonth: number;
+  aiCreditsUsed: number;
+  maxAiCredits: number;
+  connectedAccounts: number;
+  maxConnectedAccounts: number;
+  teamSeats: number;
+  maxTeamSeats: number;
+  storageUsedMB: number;
+  maxStorageMB: number;
+}
+
+export interface SubscriptionPlanDetail {
+  id: string;
+  workspaceId: string;
+  tier: SubscriptionTier;
+  status: 'ACTIVE' | 'PAST_DUE' | 'CANCELLED';
+  monthlyPriceUSD: number;
+  quota: UsageQuotaDetail;
+  renewsAt: string;
+}
+
+export interface InvoiceItem {
+  id: string;
+  amountUSD: number;
+  status: 'PAID' | 'OPEN' | 'FAILED';
+  pdfUrl: string;
   createdAt: string;
 }
 

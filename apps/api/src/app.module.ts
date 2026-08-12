@@ -13,6 +13,7 @@ import { PublishingModule } from './publishing/publishing.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { ApprovalModule } from './approval/approval.module';
 import { BrandModule } from './brand/brand.module';
+import { BillingModule } from './billing/billing.module';
 import { HealthController } from './health/health.controller';
 
 @Module({
@@ -31,6 +32,7 @@ import { HealthController } from './health/health.controller';
     AnalyticsModule,
     ApprovalModule,
     BrandModule,
+    BillingModule,
   ],
   controllers: [HealthController],
   providers: [],
