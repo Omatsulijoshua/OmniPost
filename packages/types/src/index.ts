@@ -44,6 +44,15 @@ export type PostStatus =
   | 'FAILED'
   | 'CANCELLED';
 
+export type ToneOption =
+  | 'Professional'
+  | 'Viral'
+  | 'Casual'
+  | 'Sales'
+  | 'Storytelling'
+  | 'Educational'
+  | 'Humor';
+
 export interface UserSummary {
   id: string;
   email: string;
@@ -223,6 +232,36 @@ export interface PlatformValidationError {
   platformType: PlatformType;
   field: string;
   message: string;
+}
+
+export interface AICaptionAdaptResult {
+  platformType: PlatformType;
+  adaptedCaption: string;
+  tone: ToneOption;
+  hashtags: string[];
+}
+
+export interface ContentAuditResult {
+  score: number; // 0 - 100
+  rating: 'EXCELLENT' | 'GOOD' | 'NEEDS_IMPROVEMENT' | 'POOR';
+  strengths: string[];
+  improvements: string[];
+}
+
+export interface BestTimeRecommendation {
+  platformType: PlatformType;
+  bestDay: string;
+  bestHour: string;
+  timezone: string;
+  confidenceScore: number;
+}
+
+export interface AIJobSummary {
+  id: string;
+  workspaceId: string;
+  type: string;
+  status: string;
+  createdAt: string;
 }
 
 export interface ApiResponse<T = any> {

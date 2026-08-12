@@ -6,6 +6,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { MediaModule } from './media/media.module';
 import { SocialAccountModule } from './social-account/social-account.module';
 import { PostModule } from './post/post.module';
+import { AIModule } from './ai/ai.module';
 import { HealthController } from './health/health.controller';
 
 @Module({
@@ -17,6 +18,7 @@ import { HealthController } from './health/health.controller';
     MediaModule,
     SocialAccountModule,
     PostModule,
+    AIModule,
   ],
   controllers: [HealthController],
   providers: [],

@@ -135,6 +135,98 @@ export const updatePostSchema = z.object({
   overrides: z.array(postVersionOverrideSchema).optional(),
 });
 
+export const adaptCaptionSchema = z.object({
+  caption: z.string().min(1, 'Caption is required'),
+  platformType: z.enum([
+    'INSTAGRAM',
+    'FACEBOOK',
+    'TIKTOK',
+    'YOUTUBE',
+    'X',
+    'LINKEDIN',
+    'THREADS',
+    'PINTEREST',
+    'TELEGRAM',
+    'DISCORD',
+    'SLACK',
+    'REDDIT',
+    'GOOGLE_BUSINESS',
+  ]),
+  tone: z.enum([
+    'Professional',
+    'Viral',
+    'Casual',
+    'Sales',
+    'Storytelling',
+    'Educational',
+    'Humor',
+  ]),
+});
+
+export const generateHashtagsSchema = z.object({
+  topic: z.string().min(1, 'Topic is required'),
+  platformType: z.enum([
+    'INSTAGRAM',
+    'FACEBOOK',
+    'TIKTOK',
+    'YOUTUBE',
+    'X',
+    'LINKEDIN',
+    'THREADS',
+    'PINTEREST',
+    'TELEGRAM',
+    'DISCORD',
+    'SLACK',
+    'REDDIT',
+    'GOOGLE_BUSINESS',
+  ]),
+});
+
+export const scoreContentSchema = z.object({
+  caption: z.string().min(1, 'Caption is required'),
+  platformType: z.enum([
+    'INSTAGRAM',
+    'FACEBOOK',
+    'TIKTOK',
+    'YOUTUBE',
+    'X',
+    'LINKEDIN',
+    'THREADS',
+    'PINTEREST',
+    'TELEGRAM',
+    'DISCORD',
+    'SLACK',
+    'REDDIT',
+    'GOOGLE_BUSINESS',
+  ]),
+});
+
+export const repurposeContentSchema = z.object({
+  sourceText: z.string().min(10, 'Source text must be at least 10 characters'),
+  targetPlatforms: z.array(
+    z.enum([
+      'INSTAGRAM',
+      'FACEBOOK',
+      'TIKTOK',
+      'YOUTUBE',
+      'X',
+      'LINKEDIN',
+      'THREADS',
+      'PINTEREST',
+      'TELEGRAM',
+      'DISCORD',
+      'SLACK',
+      'REDDIT',
+      'GOOGLE_BUSINESS',
+    ]),
+  ).min(1, 'Select at least one target platform'),
+});
+
+export const generateImagePromptSchema = z.object({
+  concept: z.string().min(1, 'Concept description is required'),
+  style: z.string().optional(),
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type RefreshTokenInput = z.infer<typeof refreshTokenSchema>;
@@ -154,3 +246,8 @@ export type OAuthCallbackInput = z.infer<typeof oauthCallbackSchema>;
 export type PostVersionOverrideInput = z.infer<typeof postVersionOverrideSchema>;
 export type CreatePostInput = z.infer<typeof createPostSchema>;
 export type UpdatePostInput = z.infer<typeof updatePostSchema>;
+export type AdaptCaptionInput = z.infer<typeof adaptCaptionSchema>;
+export type GenerateHashtagsInput = z.infer<typeof generateHashtagsSchema>;
+export type ScoreContentInput = z.infer<typeof scoreContentSchema>;
+export type RepurposeContentInput = z.infer<typeof repurposeContentSchema>;
+export type GenerateImagePromptInput = z.infer<typeof generateImagePromptSchema>;
