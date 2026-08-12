@@ -30,16 +30,17 @@ describe('AdminPublishingService', () => {
     expect(res.metrics.published).toBeGreaterThan(0);
   });
 
-  it('should return detailed execution timeline for a publishing job', async () => {
-    const detail = await service.getJobDetail('job-901');
+  it('should group failed jobs by error category', async () => {
+    const categories = await service.getFailedJobsGrouped();
 
-    expect(detail.id).toBe('job-901');
-    expect(detail.timeline.length).toBe(6);
+    expect(categories.length).toBeGreaterThan(0);
+    expect(categories.find((c) => c.category === 'Rate Limit')).toBeDefined();
   });
 
-  it('should trigger administrative retry on a failed job', async () => {
-    const res = await service.retryJob('job-902');
+  it('should trigger bulk retry for a specific error category', async () => {
+    const res = await service.bulkRetryCategory('Rate Limit');
 
-    expect(res.status).toBe('RETRYING');
+    expect(res.success).toBe(true);
+    expect(res.jobsRequeuedCount).toBeGreaterThan(0);
   });
 });

@@ -20,6 +20,16 @@ export interface AdminPublishingJobDetail extends AdminPublishingJobItem {
   errorDetails?: { code: string; message: string; platformResponse: string; lastAttemptAt: string };
 }
 
+export interface FailedJobCategorySummary {
+  category: 'Authentication' | 'Rate Limit' | 'Invalid Media' | 'Permission' | 'Platform API' | 'Network' | 'Internal';
+  failureCount: number;
+  affectedUsersCount: number;
+  affectedPlatforms: string[];
+  firstOccurrenceAt: string;
+  lastOccurrenceAt: string;
+  sampleErrorMessage: string;
+}
+
 @Injectable()
 export class AdminPublishingService {
   constructor(private readonly prisma: PrismaService) {}
@@ -126,6 +136,56 @@ export class AdminPublishingService {
             platformResponse: '{"error": {"code": 40001, "message": "Rate limit exceeded"}}',
             lastAttemptAt: new Date(Date.now() - 1800000).toISOString(),
           },
+    };
+  }
+
+  async getFailedJobsGrouped(): Promise<FailedJobCategorySummary[]> {
+    return [
+      {
+        category: 'Rate Limit',
+        failureCount: 18,
+        affectedUsersCount: 12,
+        affectedPlatforms: ['TikTok', 'X (Twitter)'],
+        firstOccurrenceAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+        lastOccurrenceAt: new Date(Date.now() - 1800000).toISOString(),
+        sampleErrorMessage: 'TikTok Open API publishing quota limit reached for current 1-hour window.',
+      },
+      {
+        category: 'Authentication',
+        failureCount: 9,
+        affectedUsersCount: 7,
+        affectedPlatforms: ['Instagram', 'LinkedIn'],
+        firstOccurrenceAt: new Date(Date.now() - 86400000 * 5).toISOString(),
+        lastOccurrenceAt: new Date(Date.now() - 3600000 * 4).toISOString(),
+        sampleErrorMessage: 'OAuth access token expired or user revoked permissions.',
+      },
+      {
+        category: 'Invalid Media',
+        failureCount: 4,
+        affectedUsersCount: 3,
+        affectedPlatforms: ['YouTube', 'TikTok'],
+        firstOccurrenceAt: new Date(Date.now() - 86400000 * 3).toISOString(),
+        lastOccurrenceAt: new Date(Date.now() - 3600000 * 12).toISOString(),
+        sampleErrorMessage: 'Video duration exceeds maximum allowed length of 60s for Shorts format.',
+      },
+      {
+        category: 'Permission',
+        failureCount: 3,
+        affectedUsersCount: 2,
+        affectedPlatforms: ['Facebook Page'],
+        firstOccurrenceAt: new Date(Date.now() - 86400000 * 4).toISOString(),
+        lastOccurrenceAt: new Date(Date.now() - 86400000).toISOString(),
+        sampleErrorMessage: 'Insufficient page administrative privileges for direct publishing.',
+      },
+    ];
+  }
+
+  async bulkRetryCategory(category: string) {
+    return {
+      success: true,
+      category,
+      jobsRequeuedCount: 18,
+      executedAt: new Date().toISOString(),
     };
   }
 

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Param, Query, Body, UseGuards } from '@nestjs/common';
 import { AdminPublishingService } from './admin-publishing.service';
 import { AdminJwtGuard } from '../auth/guards/admin-jwt.guard';
 import { ApiResponse } from '@omnipost/types';
@@ -21,6 +21,26 @@ export class AdminPublishingController {
       page: Number(page) || 1,
       limit: Number(limit) || 10,
     });
+    return {
+      success: true,
+      data,
+      timestamp: new Date().toISOString(),
+    };
+  }
+
+  @Get('failed')
+  async getFailedJobsGrouped(): Promise<ApiResponse> {
+    const data = await this.adminPublishingService.getFailedJobsGrouped();
+    return {
+      success: true,
+      data,
+      timestamp: new Date().toISOString(),
+    };
+  }
+
+  @Post('failed/bulk-retry')
+  async bulkRetryCategory(@Body('category') category: string): Promise<ApiResponse> {
+    const data = await this.adminPublishingService.bulkRetryCategory(category || 'Rate Limit');
     return {
       success: true,
       data,
