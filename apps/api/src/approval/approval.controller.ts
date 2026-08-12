@@ -6,6 +6,7 @@ import {
   Param,
   Headers,
   UseGuards,
+  Res,
 } from '@nestjs/common';
 import { ApprovalService } from './approval.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -14,6 +15,7 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { ApiResponse } from '@omnipost/types';
 import { actionApprovalSchema, addCommentSchema } from '@omnipost/validation';
+import { Response } from 'express';
 
 @Controller('approvals')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -108,5 +110,19 @@ export class ApprovalController {
       data,
       timestamp: new Date().toISOString(),
     };
+  }
+
+  @Get('audit-logs/export')
+  async exportAuditLogs(
+    @Headers('x-workspace-id') workspaceId: string,
+    @Res() res: Response,
+  ) {
+    const csv = await this.approvalService.exportAuditLogsCsv(workspaceId);
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename=omnipost_audit_logs_${Date.now()}.csv`,
+    );
+    return res.send(csv);
   }
 }

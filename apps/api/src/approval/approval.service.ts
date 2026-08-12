@@ -194,4 +194,18 @@ export class ApprovalService {
       createdAt: l.createdAt.toISOString(),
     }));
   }
+
+  async exportAuditLogsCsv(workspaceId: string): Promise<string> {
+    const logs = await this.getAuditLogs(workspaceId);
+    const lines = ['OmniPost Security Audit Trail Log'];
+    lines.push(`Generated,${new Date().toISOString()}`);
+    lines.push('');
+    lines.push('Timestamp,Actor,Action,Entity,Log ID');
+
+    for (const l of logs) {
+      lines.push(`${l.createdAt},${l.actorName},${l.action},${l.entity},${l.id}`);
+    }
+
+    return lines.join('\n');
+  }
 }
