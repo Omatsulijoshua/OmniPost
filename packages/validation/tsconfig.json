@@ -5,8 +5,8 @@
     "rootDir": "./src",
     "baseUrl": "./",
     "paths": {
-      "@omnipost/types": ["../types/dist"],
-      "@omnipost/types/*": ["../types/dist/*"]
+      "@omnipost/types": ["../types/dist/index", "../types/dist/index.d.ts", "../types/src/index"],
+      "@omnipost/types/*": ["../types/dist/*", "../types/src/*"]
     }
   },
   "include": ["src/**/*"]

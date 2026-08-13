@@ -5,10 +5,10 @@
     "rootDir": "./src",
     "baseUrl": "./",
     "paths": {
-      "@omnipost/types": ["../types/dist"],
-      "@omnipost/types/*": ["../types/dist/*"],
-      "@omnipost/validation": ["../validation/dist"],
-      "@omnipost/validation/*": ["../validation/dist/*"]
+      "@omnipost/types": ["../types/dist/index", "../types/dist/index.d.ts", "../types/src/index"],
+      "@omnipost/types/*": ["../types/dist/*", "../types/src/*"],
+      "@omnipost/validation": ["../validation/dist/index", "../validation/dist/index.d.ts", "../validation/src/index"],
+      "@omnipost/validation/*": ["../validation/dist/*", "../validation/src/*"]
     }
   },
   "include": ["src/**/*"]
