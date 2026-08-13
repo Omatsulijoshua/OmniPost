@@ -2,7 +2,30 @@
   "extends": "@omnipost/config/tsconfig/nestjs.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "baseUrl": "./",
+    "paths": {
+      "@omnipost/types": ["../../packages/types/dist"],
+      "@omnipost/types/*": ["../../packages/types/dist/*"],
+      "@omnipost/validation": ["../../packages/validation/dist"],
+      "@omnipost/validation/*": ["../../packages/validation/dist/*"],
+      "@omnipost/ai-core": ["../../packages/ai-core/dist"],
+      "@omnipost/ai-core/*": ["../../packages/ai-core/dist/*"],
+      "@omnipost/analytics-core": ["../../packages/analytics-core/dist"],
+      "@omnipost/analytics-core/*": ["../../packages/analytics-core/dist/*"],
+      "@omnipost/billing-core": ["../../packages/billing-core/dist"],
+      "@omnipost/billing-core/*": ["../../packages/billing-core/dist/*"],
+      "@omnipost/brand-core": ["../../packages/brand-core/dist"],
+      "@omnipost/brand-core/*": ["../../packages/brand-core/dist/*"],
+      "@omnipost/media-core": ["../../packages/media-core/dist"],
+      "@omnipost/media-core/*": ["../../packages/media-core/dist/*"],
+      "@omnipost/platform-core": ["../../packages/platform-core/dist"],
+      "@omnipost/platform-core/*": ["../../packages/platform-core/dist/*"],
+      "@omnipost/publishing-core": ["../../packages/publishing-core/dist"],
+      "@omnipost/publishing-core/*": ["../../packages/publishing-core/dist/*"],
+      "@omnipost/shared": ["../../packages/shared/dist"],
+      "@omnipost/shared/*": ["../../packages/shared/dist/*"]
+    }
   },
   "include": ["src/**/*"]
 }

@@ -2,9 +2,7 @@
   "extends": "@omnipost/config/tsconfig/base.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src",
-    "lib": ["ES2022", "DOM"],
-    "types": ["node", "jest"]
+    "rootDir": "./src"
   },
   "include": ["src/**/*"]
 }
