@@ -40,7 +40,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3001
 
-# Copy built workspace packages, root node_modules, and apps/api node_modules
+# Copy built workspace packages, node_modules, and apps/api
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/packages ./packages
 COPY --from=builder /app/apps/api/node_modules ./apps/api/node_modules
@@ -48,11 +48,9 @@ COPY --from=builder /app/apps/api/dist ./apps/api/dist
 COPY --from=builder /app/apps/api/package.json ./apps/api/package.json
 COPY --from=builder /app/apps/api/prisma ./apps/api/prisma
 
-WORKDIR /app/apps/api
-
-# Ensure Prisma Client is generated in runner environment
-RUN npx prisma generate --schema=./prisma/schema.prisma
+# Generate Prisma Client at root node_modules so @prisma/client finds .prisma/client
+RUN npx prisma generate --schema=./apps/api/prisma/schema.prisma
 
 EXPOSE 3001
 
-CMD ["node", "dist/main.js"]
+CMD ["node", "apps/api/dist/main.js"]
