@@ -86,7 +86,7 @@ export class AnalyticsService {
       'FACEBOOK',
     ];
 
-    return platforms.map((p) => {
+    return platforms.map((p: any) => {
       const views = Math.floor(Math.random() * 50000) + 10000;
       const likes = Math.floor(views * 0.08);
       const comments = Math.floor(views * 0.015);
@@ -120,11 +120,11 @@ export class AnalyticsService {
       include: { versions: { select: { platformType: true } } },
     });
 
-    return posts.map((p, idx) => ({
+    return posts.map((p: any, idx: number) => ({
       id: p.id,
       title: p.title || `Viral Post #${idx + 1}`,
       universalCaption: p.universalCaption,
-      platformTypes: p.versions.map((v) => v.platformType as PlatformType),
+      platformTypes: p.versions.map((v: any) => v.platformType as PlatformType),
       views: 45000 - idx * 7000,
       likes: 3800 - idx * 600,
       engagementRate: 11.4 - idx * 1.2,

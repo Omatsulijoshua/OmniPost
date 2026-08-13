@@ -43,7 +43,7 @@ export class SocialAccountService {
       },
     });
 
-    return accounts.map((acc) => this.mapAccountDetail(acc));
+    return accounts.map((acc: any) => this.mapAccountDetail(acc));
   }
 
   async getOAuthUrl(platformType: PlatformType): Promise<OAuthUrlResponse> {

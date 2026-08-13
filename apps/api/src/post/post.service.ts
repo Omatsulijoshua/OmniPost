@@ -65,9 +65,9 @@ export class PostService {
         scheduledAt: input.scheduledAt ? new Date(input.scheduledAt) : null,
         publishedAt: input.publishNow ? new Date() : null,
         versions: {
-          create: socialAccounts.map((acc) => {
+          create: socialAccounts.map((acc: any) => {
             const pType = acc.platform.type as PlatformType;
-            const override = input.overrides?.find((o) => o.socialAccountId === acc.id);
+            const override = input.overrides?.find((o: any) => o.socialAccountId === acc.id);
             return {
               socialAccountId: acc.id,
               platformType: pType,
@@ -76,7 +76,7 @@ export class PostService {
               description: override?.description || null,
               status,
               hashtags: {
-                create: (override?.hashtags || []).map((h) => ({
+                create: (override?.hashtags || []).map((h: any) => ({
                   tag: h.startsWith('#') ? h : `#${h}`,
                 })),
               },
@@ -122,7 +122,7 @@ export class PostService {
       orderBy: { updatedAt: 'desc' },
     });
 
-    return posts.map((p) => this.mapPostDetail(p));
+    return posts.map((p: any) => this.mapPostDetail(p));
   }
 
   async getPostById(workspaceId: string, id: string): Promise<PostDetail> {

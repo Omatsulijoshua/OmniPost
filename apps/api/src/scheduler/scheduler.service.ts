@@ -39,10 +39,10 @@ export class SchedulerService {
       orderBy: { scheduledAt: 'asc' },
     });
 
-    return posts.map((post) => {
+    return posts.map((post: any) => {
       const platformTypes = Array.from(
-        new Set(post.versions.map((v) => v.platformType as PlatformType)),
-      );
+        new Set(post.versions.map((v: any) => v.platformType as PlatformType)),
+      ) as PlatformType[];
 
       return {
         id: post.id,
@@ -80,8 +80,8 @@ export class SchedulerService {
     });
 
     const platformTypes = Array.from(
-      new Set(updated.versions.map((v) => v.platformType as PlatformType)),
-    );
+      new Set(updated.versions.map((v: any) => v.platformType as PlatformType)),
+    ) as PlatformType[];
 
     return {
       id: updated.id,

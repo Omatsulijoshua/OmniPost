@@ -105,7 +105,7 @@ export class MediaService {
     ]);
 
     return {
-      assets: assets.map((a) => this.mapAssetToDetail(a)),
+      assets: assets.map((a: any) => this.mapAssetToDetail(a)),
       total,
     };
   }
@@ -179,7 +179,7 @@ export class MediaService {
     }
 
     await this.prisma.mediaAsset.deleteMany({
-      where: { id: { in: assets.map((a) => a.id) } },
+      where: { id: { in: assets.map((a: any) => a.id) } },
     });
   }
 
@@ -224,7 +224,7 @@ export class MediaService {
       orderBy: { name: 'asc' },
     });
 
-    return folders.map((f) => ({
+    return folders.map((f: any) => ({
       id: f.id,
       workspaceId: f.workspaceId,
       name: f.name,

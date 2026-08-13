@@ -46,7 +46,7 @@ export class AdminPublishingService {
     });
 
     const items: AdminPublishingJobItem[] = posts.length > 0
-      ? posts.map((p, index) => ({
+      ? posts.map((p: any, index: number) => ({
           id: `job-${p.id}`,
           postId: p.id,
           postCaption: ((p as any).content || 'Post content details').substring(0, 50) + '...',

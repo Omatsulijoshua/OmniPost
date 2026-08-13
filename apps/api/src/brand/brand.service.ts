@@ -92,7 +92,7 @@ export class BrandService {
       orderBy: { createdAt: 'desc' },
     });
 
-    const premade = BrandEngine.getPremadeTemplates().map((t, idx) => ({
+    const premade = BrandEngine.getPremadeTemplates().map((t: any, idx: number) => ({
       id: `premade-${idx}`,
       workspaceId: null,
       name: t.name,
@@ -102,7 +102,7 @@ export class BrandService {
       createdAt: new Date().toISOString(),
     }));
 
-    const custom = customTemplates.map((t) => ({
+    const custom = customTemplates.map((t: any) => ({
       id: t.id,
       workspaceId: t.workspaceId,
       name: t.name,

@@ -30,7 +30,7 @@ export class AdminSocialAccountsService {
     });
 
     const items: AdminSocialAccountItem[] = accounts.length > 0
-      ? accounts.map((sa) => ({
+      ? accounts.map((sa: any) => ({
           id: sa.id,
           platform: (sa as any).platform || sa.platformId,
           accountName: (sa as any).name || 'Social Channel',

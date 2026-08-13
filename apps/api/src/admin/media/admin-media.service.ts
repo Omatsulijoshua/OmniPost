@@ -56,7 +56,7 @@ export class AdminMediaService {
     });
 
     const items: AdminMediaAssetItem[] = assets.length > 0
-      ? assets.map((a) => ({
+      ? assets.map((a: any) => ({
           id: a.id,
           filename: a.filename,
           workspaceName: a.workspace?.name || 'Workspace',

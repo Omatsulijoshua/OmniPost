@@ -65,7 +65,7 @@ export class PublishingService {
       version.platformType as PlatformType,
     );
 
-    const hashtagStrings = version.hashtags.map((h) => h.tag);
+    const hashtagStrings = version.hashtags.map((h: any) => h.tag);
 
     const result = await PublishingRetryEngine.executeWithRetry(publisher, {
       caption: version.caption,
@@ -116,7 +116,7 @@ export class PublishingService {
       take: 30,
     });
 
-    return versions.map((v) => ({
+    return versions.map((v: any) => ({
       id: `log-${v.id}`,
       postVersionId: v.id,
       platformType: v.platformType as PlatformType,

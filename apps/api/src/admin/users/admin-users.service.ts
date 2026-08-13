@@ -51,7 +51,7 @@ export class AdminUsersService {
     ]);
 
     const items: AdminUserListItem[] = users.length > 0
-      ? users.map((u) => ({
+      ? users.map((u: any) => ({
           id: u.id,
           name: u.name,
           email: u.email,

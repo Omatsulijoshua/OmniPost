@@ -125,7 +125,7 @@ export class ApprovalService {
       orderBy: { createdAt: 'desc' },
     });
 
-    return requests.map((req) => ({
+    return requests.map((req: any) => ({
       id: req.id,
       postId: req.post.id,
       postTitle: req.post.title || 'Untitled Post',
@@ -169,7 +169,7 @@ export class ApprovalService {
       orderBy: { createdAt: 'asc' },
     });
 
-    return comments.map((c) => ({
+    return comments.map((c: any) => ({
       id: c.id,
       postId: c.postId,
       authorName: 'Workspace Member',
@@ -186,7 +186,7 @@ export class ApprovalService {
       take: 25,
     });
 
-    return logs.map((l) => ({
+    return logs.map((l: any) => ({
       id: l.id,
       actorName: l.user?.name || 'System Worker',
       action: l.action,

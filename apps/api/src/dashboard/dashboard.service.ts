@@ -93,10 +93,10 @@ export class DashboardService {
       take: limit,
     });
 
-    return posts.map((post) => {
+    return posts.map((post: any) => {
       const platformTypes = Array.from(
-        new Set(post.versions.map((v) => v.platformType as PlatformType)),
-      );
+        new Set(post.versions.map((v: any) => v.platformType as PlatformType)),
+      ) as PlatformType[];
 
       return {
         id: post.id,
@@ -360,7 +360,7 @@ export class DashboardService {
     ];
 
     return allPlatformTypes.map((type) => {
-      const match = connectedAccounts.find((acc) => acc.platform.type === type);
+      const match = connectedAccounts.find((acc: any) => acc.platform.type === type);
       if (match) {
         return {
           id: match.id,

@@ -43,7 +43,7 @@ export class AdminWorkspacesService {
     });
 
     const items: AdminWorkspaceListItem[] = workspaces.length > 0
-      ? workspaces.map((w) => ({
+      ? workspaces.map((w: any) => ({
           id: w.id,
           name: w.name,
           slug: w.slug,

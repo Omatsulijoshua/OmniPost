@@ -161,7 +161,7 @@ export class AIService {
       take: 20,
     });
 
-    return jobs.map((j) => ({
+    return jobs.map((j: any) => ({
       id: j.id,
       workspaceId: j.workspaceId,
       type: j.type,

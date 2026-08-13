@@ -62,7 +62,7 @@ export class WorkspaceService {
       orderBy: { createdAt: 'asc' },
     });
 
-    return members.map((m) => ({
+    return members.map((m: any) => ({
       id: m.workspace.id,
       name: m.workspace.name,
       slug: m.workspace.slug,
@@ -101,7 +101,7 @@ export class WorkspaceService {
       slug: workspace.slug,
       role: member.role.name as RoleName,
       createdAt: workspace.createdAt.toISOString(),
-      members: workspace.members.map((m) => ({
+      members: workspace.members.map((m: any) => ({
         id: m.id,
         workspaceId: m.workspaceId,
         userId: m.userId,
