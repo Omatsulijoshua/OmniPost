@@ -13,6 +13,29 @@
     "declarationMap": true,
     "sourceMap": true,
     "composite": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@omnipost/types": ["../../packages/types/src", "../packages/types/src", "./packages/types/src"],
+      "@omnipost/types/*": ["../../packages/types/src/*", "../packages/types/src/*", "./packages/types/src/*"],
+      "@omnipost/validation": ["../../packages/validation/src", "../packages/validation/src", "./packages/validation/src"],
+      "@omnipost/validation/*": ["../../packages/validation/src/*", "../packages/validation/src/*", "./packages/validation/src/*"],
+      "@omnipost/ai-core": ["../../packages/ai-core/src", "../packages/ai-core/src", "./packages/ai-core/src"],
+      "@omnipost/ai-core/*": ["../../packages/ai-core/src/*", "../packages/ai-core/src/*", "./packages/ai-core/src/*"],
+      "@omnipost/analytics-core": ["../../packages/analytics-core/src", "../packages/analytics-core/src", "./packages/analytics-core/src"],
+      "@omnipost/analytics-core/*": ["../../packages/analytics-core/src/*", "../packages/analytics-core/src/*", "./packages/analytics-core/src/*"],
+      "@omnipost/billing-core": ["../../packages/billing-core/src", "../packages/billing-core/src", "./packages/billing-core/src"],
+      "@omnipost/billing-core/*": ["../../packages/billing-core/src/*", "../packages/billing-core/src/*", "./packages/billing-core/src/*"],
+      "@omnipost/brand-core": ["../../packages/brand-core/src", "../packages/brand-core/src", "./packages/brand-core/src"],
+      "@omnipost/brand-core/*": ["../../packages/brand-core/src/*", "../packages/brand-core/src/*", "./packages/brand-core/src/*"],
+      "@omnipost/media-core": ["../../packages/media-core/src", "../packages/media-core/src", "./packages/media-core/src"],
+      "@omnipost/media-core/*": ["../../packages/media-core/src/*", "../packages/media-core/src/*", "./packages/media-core/src/*"],
+      "@omnipost/platform-core": ["../../packages/platform-core/src", "../packages/platform-core/src", "./packages/platform-core/src"],
+      "@omnipost/platform-core/*": ["../../packages/platform-core/src/*", "../packages/platform-core/src/*", "./packages/platform-core/src/*"],
+      "@omnipost/publishing-core": ["../../packages/publishing-core/src", "../packages/publishing-core/src", "./packages/publishing-core/src"],
+      "@omnipost/publishing-core/*": ["../../packages/publishing-core/src/*", "../packages/publishing-core/src/*", "./packages/publishing-core/src/*"],
+      "@omnipost/shared": ["../../packages/shared/src", "../packages/shared/src", "./packages/shared/src"],
+      "@omnipost/shared/*": ["../../packages/shared/src/*", "../packages/shared/src/*", "./packages/shared/src/*"]
+    }
   }
 }
