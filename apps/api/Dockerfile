@@ -11,8 +11,8 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY packages/ ./packages/
 COPY apps/api/ ./apps/api/
 
-# Install all dependencies
-RUN pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
+# Install dependencies (allowing required build scripts)
+RUN pnpm install --no-frozen-lockfile
 
 # Generate Prisma Client & Build NestJS API
 RUN pnpm --filter @omnipost/api db:generate
