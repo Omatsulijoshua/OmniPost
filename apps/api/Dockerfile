@@ -17,8 +17,8 @@ RUN pnpm install --no-frozen-lockfile --dangerously-allow-all-builds
 # Generate Prisma Client
 RUN pnpm --filter @omnipost/api db:generate
 
-# Build all workspace packages and NestJS API in order
-RUN pnpm --filter "@omnipost/api..." build
+# Build workspace packages topologically using Turbo
+RUN npx turbo run build --filter=@omnipost/api
 
 # Stage 2: Production Runner
 FROM node:22-alpine AS runner
