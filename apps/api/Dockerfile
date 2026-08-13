@@ -1,6 +1,9 @@
 # Stage 1: Build NestJS API
 FROM node:22-alpine AS builder
 
+# Install OpenSSL for Prisma engine compatibility on Alpine
+RUN apk add --no-cache openssl
+
 WORKDIR /app
 
 # Install pnpm globally
@@ -34,6 +37,9 @@ RUN pnpm --filter @omnipost/api build
 
 # Stage 2: Production Runner
 FROM node:22-alpine AS runner
+
+# Install OpenSSL in production runtime container
+RUN apk add --no-cache openssl
 
 WORKDIR /app
 
