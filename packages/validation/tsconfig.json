@@ -2,12 +2,7 @@
   "extends": "@omnipost/config/tsconfig/base.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src",
-    "baseUrl": "./",
-    "paths": {
-      "@omnipost/types": ["../types/dist/index", "../types/dist/index.d.ts", "../types/src/index"],
-      "@omnipost/types/*": ["../types/dist/*", "../types/src/*"]
-    }
+    "rootDir": "./src"
   },
   "include": ["src/**/*"]
 }
