@@ -17,7 +17,19 @@ RUN pnpm install --no-frozen-lockfile --dangerously-allow-all-builds
 # Generate Prisma Client
 RUN pnpm --filter @omnipost/api db:generate
 
-# Build NestJS API with path alias resolution
+# Build foundational workspace packages in exact dependency order
+RUN pnpm --filter @omnipost/types build
+RUN pnpm --filter @omnipost/validation build
+RUN pnpm --filter @omnipost/shared build
+RUN pnpm --filter @omnipost/platform-core build
+RUN pnpm --filter @omnipost/brand-core build
+RUN pnpm --filter @omnipost/media-core build
+RUN pnpm --filter @omnipost/ai-core build
+RUN pnpm --filter @omnipost/publishing-core build
+RUN pnpm --filter @omnipost/analytics-core build
+RUN pnpm --filter @omnipost/billing-core build
+
+# Build NestJS API
 RUN pnpm --filter @omnipost/api build
 
 # Stage 2: Production Runner
