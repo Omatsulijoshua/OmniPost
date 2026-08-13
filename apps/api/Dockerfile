@@ -11,8 +11,8 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY packages/ ./packages/
 COPY apps/api/ ./apps/api/
 
-# Install dependencies
-RUN pnpm install --no-frozen-lockfile
+# Install dependencies allowing build scripts in non-interactive Docker
+RUN pnpm install --no-frozen-lockfile --dangerously-allow-all-build-scripts
 
 # Generate Prisma Client & Build NestJS API
 RUN pnpm --filter @omnipost/api db:generate
