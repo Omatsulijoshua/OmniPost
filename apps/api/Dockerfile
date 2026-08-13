@@ -50,6 +50,9 @@ COPY --from=builder /app/apps/api/prisma ./apps/api/prisma
 
 WORKDIR /app/apps/api
 
+# Ensure Prisma Client is generated in runner environment
+RUN npx prisma generate --schema=./prisma/schema.prisma
+
 EXPOSE 3001
 
 CMD ["node", "dist/main.js"]
