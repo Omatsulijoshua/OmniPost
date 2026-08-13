@@ -1,5 +1,5 @@
 # Stage 1: Build NestJS API
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
@@ -11,7 +11,7 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY packages/ ./packages/
 COPY apps/api/ ./apps/api/
 
-# Install dependencies (allowing required build scripts)
+# Install dependencies
 RUN pnpm install --no-frozen-lockfile
 
 # Generate Prisma Client & Build NestJS API
@@ -19,7 +19,7 @@ RUN pnpm --filter @omnipost/api db:generate
 RUN pnpm --filter @omnipost/api build
 
 # Stage 2: Production Runner
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 
 WORKDIR /app
 
