@@ -4,6 +4,11 @@ import React from 'react';
 export const metadata = {
   title: 'OmniPost — Create once. Adapt everywhere. Publish everywhere.',
   description: 'Production-grade SaaS platform for content adaptation, scheduling, and publishing.',
+  icons: {
+    icon: '/logo.jpg',
+    shortcut: '/favicon.ico',
+    apple: '/logo.jpg',
+  },
 };
 
 export default function RootLayout({

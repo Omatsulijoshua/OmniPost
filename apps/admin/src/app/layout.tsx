@@ -4,6 +4,11 @@ import './globals.css';
 export const metadata = {
   title: 'OmniPost Admin Portal',
   description: 'Enterprise Operations & Administration Platform for OmniPost SaaS',
+  icons: {
+    icon: '/logo.jpg',
+    shortcut: '/favicon.ico',
+    apple: '/logo.jpg',
+  },
 };
 
 export default function RootLayout({
