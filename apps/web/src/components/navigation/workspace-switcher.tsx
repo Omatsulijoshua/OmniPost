@@ -34,18 +34,18 @@ export function WorkspaceSwitcher() {
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-sm font-medium text-slate-200 hover:bg-slate-850"
+        className="w-full flex items-center justify-between px-3.5 py-2.5 bg-slate-50 border border-slate-200 hover:border-blue-400 rounded-xl text-xs font-bold text-slate-800 transition-all shadow-xs"
       >
         <span className="truncate">{activeWorkspace?.name || 'Select Workspace'}</span>
-        <span className="text-xs text-indigo-400 font-bold ml-2 uppercase">
+        <span className="text-[10px] text-blue-600 font-extrabold bg-blue-100 px-2 py-0.5 rounded-full ml-2 uppercase">
           {activeWorkspace?.role || 'OWNER'}
         </span>
       </button>
 
       {open && (
-        <div className="absolute left-0 right-0 mt-2 bg-slate-900 border border-slate-800 rounded-lg shadow-2xl z-50 p-2 space-y-1">
-          <div className="text-xs font-semibold text-slate-400 px-2 py-1 uppercase">
-            Workspaces
+        <div className="absolute left-0 right-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-xl z-50 p-2 space-y-1">
+          <div className="text-[10px] font-bold text-slate-400 px-2 py-1 uppercase tracking-wider">
+            Active Workspaces
           </div>
           {workspaces.map((ws) => (
             <button
@@ -54,44 +54,44 @@ export function WorkspaceSwitcher() {
                 setActiveWorkspace(ws);
                 setOpen(false);
               }}
-              className={`w-full flex justify-between items-center px-2 py-1.5 rounded-md text-xs font-medium text-left ${
+              className={`w-full flex justify-between items-center px-2.5 py-2 rounded-lg text-xs font-semibold text-left transition-all ${
                 ws.id === activeWorkspace?.id
-                  ? 'bg-indigo-950 text-indigo-300 font-bold'
-                  : 'text-slate-300 hover:bg-slate-800'
+                  ? 'bg-blue-50 text-blue-700 font-bold border border-blue-200'
+                  : 'text-slate-700 hover:bg-slate-50'
               }`}
             >
               <span className="truncate">{ws.name}</span>
-              <span className="text-[10px] text-slate-500 uppercase">{ws.role}</span>
+              <span className="text-[10px] text-emerald-600 font-bold uppercase">{ws.role}</span>
             </button>
           ))}
 
           {!creating ? (
             <button
               onClick={() => setCreating(true)}
-              className="w-full mt-2 text-center px-2 py-1.5 bg-slate-800 hover:bg-slate-750 text-indigo-400 text-xs font-medium rounded-md"
+              className="w-full mt-2 text-center px-2 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold rounded-lg transition-all"
             >
               + Create Workspace
             </button>
           ) : (
-            <form onSubmit={handleCreate} className="mt-2 space-y-2 p-2 bg-slate-950 rounded-md">
+            <form onSubmit={handleCreate} className="mt-2 space-y-2 p-2 bg-slate-50 rounded-lg border border-slate-200">
               <input
                 type="text"
                 value={newWsName}
                 onChange={(e) => setNewWsName(e.target.value)}
                 placeholder="Workspace name"
-                className="w-full px-2 py-1 bg-slate-900 border border-slate-800 text-xs text-slate-100 rounded focus:outline-none"
+                className="w-full px-2.5 py-1.5 bg-white border border-slate-200 text-xs text-slate-900 rounded-lg focus:outline-none focus:border-blue-500"
               />
               <div className="flex gap-1">
                 <button
                   type="submit"
-                  className="flex-1 py-1 bg-indigo-600 text-white text-[11px] font-semibold rounded"
+                  className="flex-1 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold rounded-lg"
                 >
                   Create
                 </button>
                 <button
                   type="button"
                   onClick={() => setCreating(false)}
-                  className="px-2 py-1 bg-slate-800 text-slate-400 text-[11px] rounded"
+                  className="px-2 py-1.5 bg-slate-200 text-slate-700 text-[11px] rounded-lg font-semibold"
                 >
                   Cancel
                 </button>

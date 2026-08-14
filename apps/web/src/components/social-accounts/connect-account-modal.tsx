@@ -76,44 +76,44 @@ export function ConnectAccountModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-lg p-6 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl space-y-6">
+    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-lg p-6 bg-white border border-slate-200 rounded-2xl shadow-2xl space-y-6">
         <div className="flex justify-between items-center">
           <div>
-            <h3 className="text-lg font-bold text-slate-100">
+            <h3 className="text-lg font-extrabold text-slate-900">
               {isOther ? 'Connect Custom / Other Platform' : `Connect ${platformType}`}
             </h3>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-500">
               {isOther
                 ? 'Configure custom social network, blog, or Webhook API for AI posting'
                 : 'Add social channel to your active workspace'}
             </p>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-white font-bold">
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-700 font-bold">
             ✕
           </button>
         </div>
 
         {error && (
-          <div className="p-3 text-xs text-rose-400 bg-rose-950/60 border border-rose-800/60 rounded-lg">
+          <div className="p-3 text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 rounded-xl">
             {error}
           </div>
         )}
 
         {!isOther && (
-          <div className="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
+          <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200">
             <button
               onClick={() => setMode('mock')}
-              className={`flex-1 py-1.5 text-xs font-semibold rounded-lg ${
-                mode === 'mock' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'
+              className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                mode === 'mock' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Mock Connect (Dev / Preview)
             </button>
             <button
               onClick={() => setMode('oauth')}
-              className={`flex-1 py-1.5 text-xs font-semibold rounded-lg ${
-                mode === 'oauth' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'
+              className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                mode === 'oauth' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Real OAuth Flow
@@ -125,7 +125,7 @@ export function ConnectAccountModal({
           <form onSubmit={handleMockConnect} className="space-y-4">
             {isOther && (
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
                   Custom Platform Name
                 </label>
                 <input
@@ -133,14 +133,14 @@ export function ConnectAccountModal({
                   required
                   value={customPlatformName}
                   onChange={(e) => setCustomPlatformName(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-500 font-medium"
                   placeholder="e.g. Bluesky, Medium, Substack, Mastodon, Lemon8, Custom API"
                 />
               </div>
             )}
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
                 Account Handle / Profile Name
               </label>
               <input
@@ -148,7 +148,7 @@ export function ConnectAccountModal({
                 required
                 value={accountName}
                 onChange={(e) => setAccountName(e.target.value)}
-                className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-500 font-medium"
                 placeholder="e.g. @myhandle or My Channel"
               />
             </div>
@@ -156,27 +156,27 @@ export function ConnectAccountModal({
             {isOther && (
               <>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
                     AI Adaptation Instructions (How AI should write for this platform)
                   </label>
                   <textarea
                     rows={3}
                     value={aiInstructions}
                     onChange={(e) => setAiInstructions(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500 leading-relaxed"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-500 font-medium leading-relaxed"
                     placeholder="e.g. Keep under 300 chars, use markdown formatting, add top 3 tech hashtags, and end with a link."
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">
-                    Webhook / API Endpoint URL <span className="text-slate-500 font-normal">(Optional for automated posting)</span>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Webhook / API Endpoint URL <span className="text-slate-400 font-normal">(Optional for automated posting)</span>
                   </label>
                   <input
                     type="url"
                     value={webhookUrl}
                     onChange={(e) => setWebhookUrl(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-500 font-medium"
                     placeholder="https://api.yourplatform.com/v1/posts or https://hooks.zapier.com/hooks/..."
                   />
                 </div>
@@ -186,7 +186,7 @@ export function ConnectAccountModal({
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-xl shadow-lg shadow-indigo-600/20"
+              className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-emerald-600/20 active:scale-98 transition-all"
             >
               {loading
                 ? 'Connecting Channel...'
@@ -197,13 +197,13 @@ export function ConnectAccountModal({
           </form>
         ) : (
           <div className="space-y-4 text-center">
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-600">
               Click below to authenticate with {platformType} via OAuth 2.0.
             </p>
             <button
               onClick={handleOAuthConnect}
               disabled={loading}
-              className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-xl shadow-lg shadow-indigo-600/20"
+              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-blue-600/20 active:scale-98 transition-all"
             >
               {loading ? 'Opening Authorizer...' : `Authorize ${platformType} Account`}
             </button>

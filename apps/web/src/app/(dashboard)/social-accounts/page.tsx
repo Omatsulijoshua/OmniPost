@@ -75,19 +75,19 @@ export default function SocialAccountsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-7xl">
       <div>
-        <h1 className="text-3xl font-black text-slate-100 tracking-tight">
+        <h1 className="text-3xl font-black text-slate-900 tracking-tight">
           Social Accounts & Integrations
         </h1>
-        <p className="mt-1 text-sm text-slate-400">
-          Manage OAuth credentials and connected channels for active workspace:{' '}
-          <span className="font-semibold text-indigo-400">{activeWorkspace?.name}</span>
+        <p className="mt-1 text-xs sm:text-sm text-slate-500 font-medium">
+          Manage OAuth credentials, custom platforms, and connected channels for active workspace:{' '}
+          <span className="font-bold text-blue-600">{activeWorkspace?.name}</span>
         </p>
       </div>
 
       {error && (
-        <div className="p-4 bg-rose-950/60 border border-rose-800/60 rounded-xl text-xs text-rose-300">
+        <div className="p-4 bg-rose-50 border border-rose-200 rounded-2xl text-xs font-semibold text-rose-700">
           {error}
         </div>
       )}
@@ -95,7 +95,7 @@ export default function SocialAccountsPage() {
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="h-40 bg-slate-900 border border-slate-800 rounded-2xl animate-pulse" />
+            <div key={i} className="h-40 bg-white border border-slate-200 rounded-2xl animate-pulse shadow-sm" />
           ))}
         </div>
       ) : (

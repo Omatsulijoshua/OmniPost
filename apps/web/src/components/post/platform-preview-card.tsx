@@ -47,37 +47,37 @@ export function PlatformPreviewCard({
   const isOverLimit = currentLength > maxLimit;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-slate-900 border border-slate-800 rounded-2xl">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-white border border-slate-200/80 rounded-2xl shadow-sm">
       {/* Live Preview Render */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
             {account.platformName} Live Preview
           </span>
-          <span className="text-xs font-semibold text-indigo-400">{account.accountName}</span>
+          <span className="text-xs font-bold text-blue-600">{account.accountName}</span>
         </div>
 
-        <div className="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3 shadow-inner">
+        <div className="p-4 bg-slate-50/80 border border-slate-200/80 rounded-xl space-y-3 shadow-inner">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center font-black text-xs text-indigo-400">
-              {pType.slice(0, 2)}
+            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center font-black text-xs text-blue-600">
+              {pType === 'OTHER' ? '✨' : pType.slice(0, 2)}
             </div>
             <div>
-              <div className="text-xs font-bold text-slate-100">{account.accountName}</div>
+              <div className="text-xs font-bold text-slate-900">{account.accountName}</div>
               <div className="text-[10px] text-slate-500">{account.platformName}</div>
             </div>
           </div>
 
           {currentTitle && (
-            <div className="text-sm font-bold text-slate-100">{currentTitle}</div>
+            <div className="text-sm font-bold text-slate-900">{currentTitle}</div>
           )}
 
-          <div className="text-xs text-slate-300 whitespace-pre-wrap leading-relaxed">
-            {currentCaption || <span className="italic text-slate-600">No caption entered...</span>}
+          <div className="text-xs text-slate-700 whitespace-pre-wrap leading-relaxed">
+            {currentCaption || <span className="italic text-slate-400">No caption entered...</span>}
           </div>
 
           {overrideHashtags && (
-            <div className="text-xs text-indigo-400 font-semibold">{overrideHashtags}</div>
+            <div className="text-xs text-blue-600 font-semibold">{overrideHashtags}</div>
           )}
         </div>
       </div>
@@ -85,12 +85,12 @@ export function PlatformPreviewCard({
       {/* Per-Platform Override Controls */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
             Custom Platform Overrides
           </span>
           <span
             className={`text-xs font-bold ${
-              isOverLimit ? 'text-rose-400' : 'text-slate-400'
+              isOverLimit ? 'text-rose-600' : 'text-slate-500'
             }`}
           >
             {currentLength} / {maxLimit} chars
@@ -98,14 +98,14 @@ export function PlatformPreviewCard({
         </div>
 
         {isOverLimit && (
-          <div className="p-2.5 bg-rose-950/60 border border-rose-800/60 text-[11px] font-semibold text-rose-300 rounded-lg">
+          <div className="p-2.5 bg-rose-50 border border-rose-200 text-[11px] font-semibold text-rose-700 rounded-xl">
             ⚠️ Exceeds max limit of {maxLimit} characters for {account.platformName}!
           </div>
         )}
 
         {(pType === 'YOUTUBE' || pType === 'PINTEREST') && (
           <div>
-            <label className="block text-[11px] font-semibold text-slate-400 uppercase mb-1">
+            <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
               Custom Title ({pType})
             </label>
             <input
@@ -113,13 +113,13 @@ export function PlatformPreviewCard({
               value={overrideTitle}
               onChange={(e) => onOverrideChange('title', e.target.value)}
               placeholder={universalTitle || `Title for ${pType}...`}
-              className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-500 font-medium"
             />
           </div>
         )}
 
         <div>
-          <label className="block text-[11px] font-semibold text-slate-400 uppercase mb-1">
+          <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
             Custom Caption Override
           </label>
           <textarea
@@ -127,12 +127,12 @@ export function PlatformPreviewCard({
             value={overrideCaption}
             onChange={(e) => onOverrideChange('caption', e.target.value)}
             placeholder={universalCaption || 'Defaults to universal caption...'}
-            className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500"
+            className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 font-medium leading-relaxed"
           />
         </div>
 
         <div>
-          <label className="block text-[11px] font-semibold text-slate-400 uppercase mb-1">
+          <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
             Hashtags (space separated)
           </label>
           <input
@@ -140,7 +140,7 @@ export function PlatformPreviewCard({
             value={overrideHashtags}
             onChange={(e) => onOverrideChange('hashtags', e.target.value)}
             placeholder="#omnipost #marketing #growth"
-            className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500"
+            className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 font-medium"
           />
         </div>
       </div>
