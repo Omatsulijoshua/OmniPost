@@ -68,7 +68,7 @@ export default function CreatePostPage() {
     }));
   };
 
-  const handleSubmit = async (action: 'draft' | 'schedule' | 'publish') => {
+  const handleSubmit = async (action: 'draft' | 'schedule' | 'publish' | 'approval') => {
     if (!universalCaption) {
       setError('Universal caption is required');
       return;
@@ -93,18 +93,23 @@ export default function CreatePostPage() {
         title: title || undefined,
         universalCaption,
         socialAccountIds: selectedAccountIds,
-        isDraft: action === 'draft',
+        isDraft: action === 'draft' || action === 'approval',
         publishNow: action === 'publish',
         scheduledAt: action === 'schedule' && scheduledAt ? new Date(scheduledAt).toISOString() : undefined,
         overrides: formattedOverrides,
       };
 
-      await apiFetch('/posts', {
+      const post = await apiFetch('/posts', {
         method: 'POST',
         body: JSON.stringify(payload),
       });
 
-      router.push('/content');
+      if (action === 'approval') {
+        alert('Post submitted for team approval!');
+        router.push('/approvals');
+      } else {
+        router.push('/content');
+      }
     } catch (err: any) {
       setError(err.message || 'Failed to submit post');
     } finally {
@@ -277,6 +282,13 @@ export default function CreatePostPage() {
               Schedule Post
             </button>
           )}
+          <button
+            onClick={() => handleSubmit('approval')}
+            disabled={loading}
+            className="px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-xl shadow-lg shadow-amber-600/20"
+          >
+            🛡️ Submit for Approval
+          </button>
           <button
             onClick={() => handleSubmit('publish')}
             disabled={loading}
