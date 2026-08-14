@@ -31,7 +31,11 @@ export class AuthController {
   @Public()
   @Post('auth/register')
   async register(@Body() body: any): Promise<ApiResponse> {
-    const parsed = registerSchema.parse(body);
+    const payload = {
+      ...body,
+      name: body.name || body.fullName || body.name,
+    };
+    const parsed = registerSchema.parse(payload);
     const result = await this.authService.register(parsed);
     return {
       success: true,

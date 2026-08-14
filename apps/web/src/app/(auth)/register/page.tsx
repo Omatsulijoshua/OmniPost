@@ -25,7 +25,7 @@ export default function RegisterPage() {
     try {
       const data = await apiFetch('/auth/register', {
         method: 'POST',
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, fullName: name, email, password }),
       });
 
       setAuth(data.user, data.tokens, data.defaultWorkspace);
