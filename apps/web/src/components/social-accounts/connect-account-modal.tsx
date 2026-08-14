@@ -17,8 +17,17 @@ export function ConnectAccountModal({
 }: ConnectAccountModalProps) {
   if (!platformType) return null;
 
+  const isOther = platformType === 'OTHER';
+
   const [mode, setMode] = useState<'oauth' | 'mock'>('mock');
-  const [accountName, setAccountName] = useState(`@omnipost_${platformType.toLowerCase()}`);
+  const [customPlatformName, setCustomPlatformName] = useState('Bluesky');
+  const [accountName, setAccountName] = useState(
+    isOther ? '@creator' : `@omnipost_${platformType.toLowerCase()}`,
+  );
+  const [aiInstructions, setAiInstructions] = useState(
+    'Adapt post to match platform style: use concise paragraphs, relevant hashtags, and a clear call-to-action.',
+  );
+  const [webhookUrl, setWebhookUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -42,18 +51,25 @@ export function ConnectAccountModal({
     setLoading(true);
     setError(null);
 
+    const displayName = isOther
+      ? `${customPlatformName} (${accountName})`
+      : accountName;
+
     try {
       await apiFetch('/social-accounts/connect-mock', {
         method: 'POST',
         body: JSON.stringify({
           platformType,
-          accountName,
+          accountName: displayName,
+          customPlatformName: isOther ? customPlatformName : undefined,
+          webhookUrl: webhookUrl.trim() || undefined,
+          aiInstructions: isOther ? aiInstructions : undefined,
         }),
       });
       onSuccess();
       onClose();
     } catch (err: any) {
-      setError(err.message || 'Failed to connect mock account');
+      setError(err.message || 'Failed to connect account');
     } finally {
       setLoading(false);
     }
@@ -61,11 +77,17 @@ export function ConnectAccountModal({
 
   return (
     <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md p-6 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl space-y-6">
+      <div className="w-full max-w-lg p-6 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl space-y-6">
         <div className="flex justify-between items-center">
           <div>
-            <h3 className="text-lg font-bold text-slate-100">Connect {platformType}</h3>
-            <p className="text-xs text-slate-400">Add social channel to your active workspace</p>
+            <h3 className="text-lg font-bold text-slate-100">
+              {isOther ? 'Connect Custom / Other Platform' : `Connect ${platformType}`}
+            </h3>
+            <p className="text-xs text-slate-400">
+              {isOther
+                ? 'Configure custom social network, blog, or Webhook API for AI posting'
+                : 'Add social channel to your active workspace'}
+            </p>
           </div>
           <button onClick={onClose} className="text-slate-400 hover:text-white font-bold">
             ✕
@@ -78,30 +100,48 @@ export function ConnectAccountModal({
           </div>
         )}
 
-        <div className="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
-          <button
-            onClick={() => setMode('mock')}
-            className={`flex-1 py-1.5 text-xs font-semibold rounded-lg ${
-              mode === 'mock' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            Mock Connect (Dev / Preview)
-          </button>
-          <button
-            onClick={() => setMode('oauth')}
-            className={`flex-1 py-1.5 text-xs font-semibold rounded-lg ${
-              mode === 'oauth' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            Real OAuth Flow
-          </button>
-        </div>
+        {!isOther && (
+          <div className="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
+            <button
+              onClick={() => setMode('mock')}
+              className={`flex-1 py-1.5 text-xs font-semibold rounded-lg ${
+                mode === 'mock' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              Mock Connect (Dev / Preview)
+            </button>
+            <button
+              onClick={() => setMode('oauth')}
+              className={`flex-1 py-1.5 text-xs font-semibold rounded-lg ${
+                mode === 'oauth' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              Real OAuth Flow
+            </button>
+          </div>
+        )}
 
-        {mode === 'mock' ? (
+        {mode === 'mock' || isOther ? (
           <form onSubmit={handleMockConnect} className="space-y-4">
+            {isOther && (
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">
+                  Custom Platform Name
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={customPlatformName}
+                  onChange={(e) => setCustomPlatformName(e.target.value)}
+                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                  placeholder="e.g. Bluesky, Medium, Substack, Mastodon, Lemon8, Custom API"
+                />
+              </div>
+            )}
+
             <div>
               <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">
-                Mock Account Handle / Name
+                Account Handle / Profile Name
               </label>
               <input
                 type="text"
@@ -109,14 +149,50 @@ export function ConnectAccountModal({
                 value={accountName}
                 onChange={(e) => setAccountName(e.target.value)}
                 className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                placeholder="e.g. @myhandle or My Channel"
               />
             </div>
+
+            {isOther && (
+              <>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">
+                    AI Adaptation Instructions (How AI should write for this platform)
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={aiInstructions}
+                    onChange={(e) => setAiInstructions(e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500 leading-relaxed"
+                    placeholder="e.g. Keep under 300 chars, use markdown formatting, add top 3 tech hashtags, and end with a link."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">
+                    Webhook / API Endpoint URL <span className="text-slate-500 font-normal">(Optional for automated posting)</span>
+                  </label>
+                  <input
+                    type="url"
+                    value={webhookUrl}
+                    onChange={(e) => setWebhookUrl(e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                    placeholder="https://api.yourplatform.com/v1/posts or https://hooks.zapier.com/hooks/..."
+                  />
+                </div>
+              </>
+            )}
+
             <button
               type="submit"
               disabled={loading}
               className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-xl shadow-lg shadow-indigo-600/20"
             >
-              {loading ? 'Connecting...' : `Connect Mock ${platformType}`}
+              {loading
+                ? 'Connecting Channel...'
+                : isOther
+                ? `Add & Train AI for ${customPlatformName}`
+                : `Connect Mock ${platformType}`}
             </button>
           </form>
         ) : (

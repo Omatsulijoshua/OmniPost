@@ -81,10 +81,15 @@ export const connectMockAccountSchema = z.object({
     'SLACK',
     'REDDIT',
     'GOOGLE_BUSINESS',
+    'OTHER',
   ]),
   accountName: z.string().min(1, 'Account name is required'),
-  profileUrl: z.string().url().optional(),
-  avatarUrl: z.string().url().optional(),
+  customPlatformName: z.string().optional(),
+  webhookUrl: z.string().url().or(z.literal('')).optional(),
+  aiInstructions: z.string().optional(),
+  maxCharacters: z.number().optional(),
+  profileUrl: z.string().url().or(z.literal('')).optional(),
+  avatarUrl: z.string().url().or(z.literal('')).optional(),
 });
 
 export const oauthCallbackSchema = z.object({
@@ -102,6 +107,7 @@ export const oauthCallbackSchema = z.object({
     'SLACK',
     'REDDIT',
     'GOOGLE_BUSINESS',
+    'OTHER',
   ]),
   code: z.string().min(1, 'OAuth code is required'),
   state: z.string().optional(),
@@ -171,6 +177,7 @@ export const adaptCaptionSchema = z.object({
     'SLACK',
     'REDDIT',
     'GOOGLE_BUSINESS',
+    'OTHER',
   ]),
   tone: z.enum([
     'Professional',
@@ -199,6 +206,7 @@ export const generateHashtagsSchema = z.object({
     'SLACK',
     'REDDIT',
     'GOOGLE_BUSINESS',
+    'OTHER',
   ]),
 });
 
@@ -218,6 +226,7 @@ export const scoreContentSchema = z.object({
     'SLACK',
     'REDDIT',
     'GOOGLE_BUSINESS',
+    'OTHER',
   ]),
 });
 

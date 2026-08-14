@@ -17,6 +17,7 @@ export class PlatformValidatorService {
     SLACK: 40000,
     REDDIT: 40000,
     GOOGLE_BUSINESS: 1500,
+    OTHER: 5000,
   };
 
   validatePostVersion(

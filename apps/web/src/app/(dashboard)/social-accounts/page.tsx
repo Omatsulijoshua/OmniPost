@@ -21,6 +21,7 @@ const allPlatforms: PlatformType[] = [
   'SLACK',
   'REDDIT',
   'GOOGLE_BUSINESS',
+  'OTHER',
 ];
 
 export default function SocialAccountsPage() {

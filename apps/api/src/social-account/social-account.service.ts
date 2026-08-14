@@ -62,6 +62,7 @@ export class SocialAccountService {
       SLACK: `https://slack.com/oauth/v2/authorize?client_id=MOCK_CLIENT_ID&user_scope=chat:write&state=${state}`,
       REDDIT: `https://www.reddit.com/api/v1/authorize?client_id=MOCK_CLIENT_ID&response_type=code&state=${state}&redirect_uri=https://omnipost.io/oauth/callback&duration=permanent&scope=submit`,
       GOOGLE_BUSINESS: `https://accounts.google.com/o/oauth2/v2/auth?client_id=MOCK_CLIENT_ID&redirect_uri=https://omnipost.io/oauth/callback&response_type=code&scope=https://www.googleapis.com/auth/business.manage&state=${state}`,
+      OTHER: `https://omnipost.io/oauth/custom?state=${state}`,
     };
 
     return {

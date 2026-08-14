@@ -11,7 +11,8 @@ export type PlatformType =
   | 'DISCORD'
   | 'SLACK'
   | 'REDDIT'
-  | 'GOOGLE_BUSINESS';
+  | 'GOOGLE_BUSINESS'
+  | 'OTHER';
 
 export interface PlatformCapabilities {
   supportsImages: boolean;

@@ -26,11 +26,13 @@ export function AccountCard({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center font-black text-indigo-400 text-sm">
-              {platformType.slice(0, 2)}
+              {platformType === 'OTHER' ? '✨' : platformType.slice(0, 2)}
             </div>
             <div>
               <h3 className="text-sm font-bold text-slate-100">
-                {platformType.charAt(0) + platformType.slice(1).toLowerCase().replace('_', ' ')}
+                {platformType === 'OTHER'
+                  ? 'Other / Custom Platform'
+                  : platformType.charAt(0) + platformType.slice(1).toLowerCase().replace('_', ' ')}
               </h3>
               <p className="text-xs text-slate-400">
                 {account ? account.accountName : 'Not Connected'}

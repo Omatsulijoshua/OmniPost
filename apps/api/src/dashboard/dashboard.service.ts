@@ -334,6 +334,23 @@ export class DashboardService {
         requiresBusinessAccount: true,
         requiresAppReview: true,
       },
+      OTHER: {
+        supportsImages: true,
+        supportsVideos: true,
+        supportsStories: true,
+        supportsShorts: true,
+        supportsReels: true,
+        supportsScheduling: true,
+        supportsDirectPublishing: true,
+        supportsAnalytics: true,
+        supportsComments: true,
+        supportsDeletion: true,
+        maxVideoSizeMB: 500,
+        maxVideoDurationSeconds: 600,
+        supportedAspectRatios: ['16:9', '9:16', '1:1'],
+        requiresBusinessAccount: false,
+        requiresAppReview: false,
+      },
     };
 
     const connectedAccounts = await this.prisma.socialAccount.findMany({

@@ -29,6 +29,7 @@ const platforms: PlatformType[] = [
   'LINKEDIN',
   'FACEBOOK',
   'THREADS',
+  'OTHER',
 ];
 
 export default function AIStudioPage() {

@@ -43,6 +43,7 @@ enum PlatformType {
   SLACK
   REDDIT
   GOOGLE_BUSINESS
+  OTHER
 }
 
 model User {
