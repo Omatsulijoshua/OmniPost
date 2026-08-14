@@ -15,7 +15,7 @@ COPY packages/ ./packages/
 COPY apps/api/ ./apps/api/
 
 # Install dependencies allowing build scripts in non-interactive Docker
-RUN pnpm install --no-frozen-lockfile --dangerously-allow-all-builds
+RUN pnpm install --no-frozen-lockfile
 
 # Generate Prisma Client
 RUN pnpm --filter @omnipost/api db:generate
