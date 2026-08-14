@@ -16,5 +16,16 @@
     "turbo": "^2.10.9",
     "typescript": "^5.6.3"
   },
-  "packageManager": "pnpm@10.2.0"
+  "packageManager": "pnpm@10.2.0",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@nestjs/core",
+      "@prisma/client",
+      "@prisma/engines",
+      "msgpackr-extract",
+      "prisma",
+      "sharp",
+      "unrs-resolver"
+    ]
+  }
 }
