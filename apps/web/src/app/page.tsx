@@ -1,7 +1,14 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 
 export default function HomePage() {
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.hostname.includes('omnipost-admin.vercel.app')) {
+      window.location.href = '/admin';
+    }
+  }, []);
   const tiers = [
     {
       name: 'Free Starter',
