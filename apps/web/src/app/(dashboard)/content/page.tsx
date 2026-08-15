@@ -74,20 +74,28 @@ export default function ContentPage() {
         ],
       };
 
-      const finalPosts = postsData && postsData.length > 0 ? postsData : [videoPost];
+      const localPostsStr = localStorage.getItem(`omnipost_posts_${activeWorkspace.id}`);
+      let localPosts: PostDetail[] = [];
+      if (localPostsStr) {
+        try {
+          localPosts = JSON.parse(localPostsStr);
+        } catch {
+          localPosts = [];
+        }
+      }
+
+      const combinedPosts = [...localPosts, ...(postsData || [])];
+      const finalPosts = combinedPosts.length > 0 ? combinedPosts : [videoPost];
       const finalAccounts = accountsData && accountsData.length > 0 ? accountsData : [
         {
           id: 'acc_tiktok_joshua',
           workspaceId: activeWorkspace.id,
-          platformId: 'plat_tiktok',
           platformType: 'TIKTOK' as const,
           platformName: 'TikTok',
           accountName: '@joshuaomatsuli',
           externalId: 'ext_tiktok_joshua',
           profileUrl: 'https://www.tiktok.com/@joshuaomatsuli',
           isMock: false,
-          isConnected: true,
-          hasValidCredentials: true,
           capabilities: {
             supportsImages: true,
             supportsVideos: true,
@@ -105,22 +113,20 @@ export default function ContentPage() {
             requiresBusinessAccount: false,
             requiresAppReview: false,
           },
-          tokenExpiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          hasValidCredentials: true,
+          expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         },
         {
           id: 'acc_tiktok_ubgbe',
           workspaceId: activeWorkspace.id,
-          platformId: 'plat_tiktok',
           platformType: 'TIKTOK' as const,
           platformName: 'TikTok',
           accountName: '@ubgbe',
           externalId: 'ext_tiktok_ubgbe',
           profileUrl: 'https://www.tiktok.com/@ubgbe',
           isMock: false,
-          isConnected: true,
-          hasValidCredentials: true,
           capabilities: {
             supportsImages: true,
             supportsVideos: true,
@@ -138,7 +144,8 @@ export default function ContentPage() {
             requiresBusinessAccount: false,
             requiresAppReview: false,
           },
-          tokenExpiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          hasValidCredentials: true,
+          expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         },
