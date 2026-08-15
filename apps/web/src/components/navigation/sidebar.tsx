@@ -8,6 +8,7 @@ import { useAuthStore } from '../../lib/auth-store';
 
 const navItems = [
   { label: 'Dashboard', href: '/dashboard', icon: '📊' },
+  { label: 'Admin Portal', href: '/admin', icon: '👑' },
   { label: 'Create Post', href: '/create', icon: '✍️' },
   { label: 'Content Queue', href: '/content', icon: '📁' },
   { label: 'Calendar', href: '/calendar', icon: '📅' },
