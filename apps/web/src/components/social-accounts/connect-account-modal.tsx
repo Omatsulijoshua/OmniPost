@@ -31,6 +31,14 @@ export function ConnectAccountModal({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const formatErrorMessage = (err: any) => {
+    const msg = err.message || String(err);
+    if (msg.includes('Failed to fetch') || msg.includes('fetch')) {
+      return '⚡ Backend API server is waking up on Render (cold start delay). Please wait 10 seconds and click again!';
+    }
+    return msg || 'Failed to connect account';
+  };
+
   const handleOAuthConnect = async () => {
     setLoading(true);
     setError(null);
@@ -40,7 +48,7 @@ export function ConnectAccountModal({
       );
       window.open(data.authorizationUrl, '_blank', 'width=600,height=700');
     } catch (err: any) {
-      setError(err.message || 'Failed to initialize OAuth URL');
+      setError(formatErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -69,7 +77,7 @@ export function ConnectAccountModal({
       onSuccess();
       onClose();
     } catch (err: any) {
-      setError(err.message || 'Failed to connect account');
+      setError(formatErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -95,8 +103,17 @@ export function ConnectAccountModal({
         </div>
 
         {error && (
-          <div className="p-3 text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 rounded-xl">
-            {error}
+          <div className="p-3 text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 rounded-xl space-y-2">
+            <div>{error}</div>
+            {error.includes('Render') && (
+              <button
+                type="button"
+                onClick={() => setError(null)}
+                className="px-3 py-1 bg-rose-600 text-white font-bold rounded-lg hover:bg-rose-700 text-[11px]"
+              >
+                🔄 Retry Connection Now
+              </button>
+            )}
           </div>
         )}
 
