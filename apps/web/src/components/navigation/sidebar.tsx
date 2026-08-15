@@ -26,6 +26,13 @@ export function Sidebar() {
   const pathname = usePathname();
   const { user, logout } = useAuthStore();
 
+  const handleLogout = () => {
+    logout();
+    if (typeof window !== 'undefined') {
+      window.location.href = '/login';
+    }
+  };
+
   return (
     <aside className="w-64 min-h-screen bg-white border-r border-slate-200 flex flex-col p-4 shadow-sm">
       {/* Brand Header */}
@@ -79,8 +86,8 @@ export function Sidebar() {
           </div>
         </div>
         <button
-          onClick={logout}
-          className="text-xs font-semibold text-slate-500 hover:text-rose-600 transition-colors ml-2"
+          onClick={handleLogout}
+          className="text-xs font-bold text-slate-500 hover:text-rose-600 transition-colors ml-2 px-2 py-1 hover:bg-rose-50 rounded-lg"
         >
           Sign Out
         </button>
