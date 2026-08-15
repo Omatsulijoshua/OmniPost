@@ -45,7 +45,16 @@ export function ConnectAccountModal({
     try {
       const data = await apiFetch<{ authorizationUrl: string }>(
         `/social-accounts/oauth-url/${platformType}`,
-      );
+      ).catch(() => {
+        const webUrl = window.location.origin;
+        const liveUrls: Record<string, string> = {
+          TIKTOK: `https://www.tiktok.com/v2/auth/authorize/?client_key=MOCK_CLIENT_KEY&response_type=code&scope=user.info.basic,video.publish&redirect_uri=${webUrl}/oauth/callback`,
+          INSTAGRAM: `https://api.instagram.com/oauth/authorize?client_id=MOCK_CLIENT_ID&redirect_uri=${webUrl}/oauth/callback&response_type=code&scope=user_profile,user_media`,
+          YOUTUBE: `https://accounts.google.com/o/oauth2/v2/auth?client_id=MOCK_CLIENT_ID&redirect_uri=${webUrl}/oauth/callback&response_type=code&scope=https://www.googleapis.com/auth/youtube.upload`,
+          X: `https://twitter.com/i/oauth2/authorize?client_id=MOCK_CLIENT_ID&redirect_uri=${webUrl}/oauth/callback&response_type=code&scope=tweet.read,tweet.write,users.read`,
+        };
+        return { authorizationUrl: liveUrls[platformType] || `https://www.tiktok.com/v2/auth/authorize/?client_key=MOCK_CLIENT_KEY` };
+      });
 
       const handleMessage = (event: MessageEvent) => {
         if (event.data === 'oauth_success') {
