@@ -9,6 +9,22 @@ const nextConfig = {
     '@omnipost/media-core',
     '@omnipost/shared',
   ],
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: '/',
+          has: [
+            {
+              type: 'host',
+              value: 'omnipost-admin.vercel.app',
+            },
+          ],
+          destination: '/admin',
+        },
+      ],
+    };
+  },
 };
 
 module.exports = nextConfig;

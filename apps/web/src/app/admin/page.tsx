@@ -7,26 +7,26 @@ import { DeveloperKeysModal } from '../../components/settings/developer-keys-mod
 
 export default function AdminPage() {
   const activeWorkspace = useAuthStore((state) => state.activeWorkspace);
-  const user = useAuthStore((state) => state.user);
-
   const [showDeveloperKeysModal, setShowDeveloperKeysModal] = useState(false);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans">
-      {/* Admin Top Header */}
-      <header className="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-40">
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
+      {/* Admin Top Header matching main web theme */}
+      <header className="border-b border-slate-200 bg-white/90 backdrop-blur-md sticky top-0 z-40 shadow-xs">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-2xl">👑</span>
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-emerald-500 flex items-center justify-center text-white font-black text-sm shadow-md shadow-blue-500/20">
+              OP
+            </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-lg font-black tracking-tight text-white">OmniPost Admin Portal</h1>
-                <span className="px-2 py-0.5 text-[10px] font-extrabold bg-blue-600 text-white rounded-full uppercase">
-                  System Admin
+                <h1 className="text-lg font-black tracking-tight text-slate-900">OmniPost Admin Portal</h1>
+                <span className="px-2.5 py-0.5 text-[10px] font-extrabold bg-blue-50 border border-blue-200 text-blue-700 rounded-full uppercase">
+                  👑 System Admin
                 </span>
               </div>
-              <p className="text-xs text-slate-400">
-                Workspace: <span className="text-blue-400 font-bold">{activeWorkspace?.name || 'Primary Workspace'}</span>
+              <p className="text-xs text-slate-500 font-medium">
+                Active Workspace: <span className="text-blue-600 font-bold">{activeWorkspace?.name || 'Primary Workspace'}</span>
               </p>
             </div>
           </div>
@@ -34,128 +34,136 @@ export default function AdminPage() {
           <div className="flex items-center gap-3">
             <Link
               href="/dashboard"
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl border border-slate-700 transition-all flex items-center gap-1.5"
+              className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl border border-slate-200 transition-all flex items-center gap-1.5"
             >
-              <span>👤</span> Switch to User Portal
+              <span>👤</span> User Publishing Workspace
             </Link>
           </div>
         </div>
       </header>
 
-      {/* Admin Body Content */}
+      {/* Admin Main Body */}
       <main className="max-w-7xl mx-auto px-6 py-8 space-y-8">
         <div>
-          <h2 className="text-2xl font-black tracking-tight text-white">Admin Command Center</h2>
-          <p className="text-xs text-slate-400 mt-1">
-            Manage global developer API credentials, user access roles, workspace security, and platform billing.
+          <h2 className="text-3xl font-black tracking-tight text-slate-900">Admin Command Center</h2>
+          <p className="text-xs sm:text-sm text-slate-500 font-medium mt-1">
+            Centralized administration hub for production OAuth developer API keys, team role access, workspace security, and billing.
           </p>
         </div>
 
-        {/* Quick Admin Actions Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="p-6 bg-slate-900 border border-slate-800 rounded-2xl space-y-4 hover:border-slate-700 transition-all">
-            <div className="w-12 h-12 rounded-xl bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-2xl">
-              🔑
-            </div>
-            <div>
-              <h3 className="text-base font-extrabold text-white">Developer API Keys</h3>
-              <p className="text-xs text-slate-400 mt-1">
-                Configure production OAuth Client Keys & Secrets for TikTok, Meta, YouTube, X, and LinkedIn.
-              </p>
+        {/* Feature Cards Grid matching Main Frontend UI */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="p-6 bg-white border border-slate-200/80 rounded-2xl space-y-4 hover:border-blue-300 shadow-sm transition-all flex flex-col justify-between">
+            <div className="space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-2xl">
+                🔑
+              </div>
+              <div>
+                <h3 className="text-base font-extrabold text-slate-900">Developer API Keys</h3>
+                <p className="text-xs text-slate-500 font-medium mt-1 leading-relaxed">
+                  Configure production OAuth App Keys & Client Secrets for TikTok, Meta, YouTube, X, and LinkedIn.
+                </p>
+              </div>
             </div>
             <button
               onClick={() => setShowDeveloperKeysModal(true)}
-              className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-blue-600/20 transition-all"
+              className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-xl shadow-md shadow-blue-600/20 active:scale-98 transition-all"
             >
               Configure API Keys
             </button>
           </div>
 
-          <div className="p-6 bg-slate-900 border border-slate-800 rounded-2xl space-y-4 hover:border-slate-700 transition-all">
-            <div className="w-12 h-12 rounded-xl bg-emerald-600/10 border border-emerald-500/20 flex items-center justify-center text-2xl">
-              👥
-            </div>
-            <div>
-              <h3 className="text-base font-extrabold text-white">Team & Roles</h3>
-              <p className="text-xs text-slate-400 mt-1">
-                Manage team member access roles (Owner, Admin, Editor, Publisher, Analyst).
-              </p>
+          <div className="p-6 bg-white border border-slate-200/80 rounded-2xl space-y-4 hover:border-blue-300 shadow-sm transition-all flex flex-col justify-between">
+            <div className="space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-2xl">
+                👥
+              </div>
+              <div>
+                <h3 className="text-base font-extrabold text-slate-900">Team & Role Admin</h3>
+                <p className="text-xs text-slate-500 font-medium mt-1 leading-relaxed">
+                  Manage team member invitations and access roles (Owner, Admin, Editor, Publisher, Analyst).
+                </p>
+              </div>
             </div>
             <Link
               href="/settings/team"
-              className="block w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-center text-slate-200 font-extrabold text-xs rounded-xl border border-slate-700 transition-all"
+              className="block w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-center text-slate-800 font-extrabold text-xs rounded-xl border border-slate-200 transition-all"
             >
-              Manage Team Members
+              Manage Team Roles
             </Link>
           </div>
 
-          <div className="p-6 bg-slate-900 border border-slate-800 rounded-2xl space-y-4 hover:border-slate-700 transition-all">
-            <div className="w-12 h-12 rounded-xl bg-purple-600/10 border border-purple-500/20 flex items-center justify-center text-2xl">
-              🛡️
-            </div>
-            <div>
-              <h3 className="text-base font-extrabold text-white">Security & Audit</h3>
-              <p className="text-xs text-slate-400 mt-1">
-                Enforce 2FA, session timeout controls, and view platform security audit logs.
-              </p>
+          <div className="p-6 bg-white border border-slate-200/80 rounded-2xl space-y-4 hover:border-blue-300 shadow-sm transition-all flex flex-col justify-between">
+            <div className="space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-purple-50 border border-purple-100 flex items-center justify-center text-2xl">
+                🛡️
+              </div>
+              <div>
+                <h3 className="text-base font-extrabold text-slate-900">Security & 2FA Controls</h3>
+                <p className="text-xs text-slate-500 font-medium mt-1 leading-relaxed">
+                  Enforce mandatory 2FA, session timeout rules, and view platform security audit logs.
+                </p>
+              </div>
             </div>
             <Link
               href="/settings/security"
-              className="block w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-center text-slate-200 font-extrabold text-xs rounded-xl border border-slate-700 transition-all"
+              className="block w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-center text-slate-800 font-extrabold text-xs rounded-xl border border-slate-200 transition-all"
             >
               Security Settings
             </Link>
           </div>
 
-          <div className="p-6 bg-slate-900 border border-slate-800 rounded-2xl space-y-4 hover:border-slate-700 transition-all">
-            <div className="w-12 h-12 rounded-xl bg-amber-600/10 border border-amber-500/20 flex items-center justify-center text-2xl">
-              💳
-            </div>
-            <div>
-              <h3 className="text-base font-extrabold text-white">Billing & Plans</h3>
-              <p className="text-xs text-slate-400 mt-1">
-                View workspace plan tier, monthly posting quotas, and active payment subscriptions.
-              </p>
+          <div className="p-6 bg-white border border-slate-200/80 rounded-2xl space-y-4 hover:border-blue-300 shadow-sm transition-all flex flex-col justify-between">
+            <div className="space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-2xl">
+                💳
+              </div>
+              <div>
+                <h3 className="text-base font-extrabold text-slate-900">Billing & Quota Admin</h3>
+                <p className="text-xs text-slate-500 font-medium mt-1 leading-relaxed">
+                  Manage subscription tier (Starter Free 1 post/mo, Pro, Business, Enterprise) and post quotas.
+                </p>
+              </div>
             </div>
             <Link
               href="/billing"
-              className="block w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-center text-slate-200 font-extrabold text-xs rounded-xl border border-slate-700 transition-all"
+              className="block w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-center text-slate-800 font-extrabold text-xs rounded-xl border border-slate-200 transition-all"
             >
               Billing Admin
             </Link>
           </div>
         </div>
 
-        {/* System Diagnostics Card */}
-        <div className="p-6 bg-slate-900 border border-slate-800 rounded-2xl space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+        {/* System Diagnostics & Operational Status Card */}
+        <div className="p-6 bg-white border border-slate-200/80 rounded-2xl space-y-4 shadow-sm">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-4">
             <div className="flex items-center gap-3">
               <span className="text-xl">⚙️</span>
               <div>
-                <h3 className="text-sm font-extrabold text-white">Production System Environment</h3>
-                <p className="text-xs text-slate-400">Current active endpoints and cloud infrastructure</p>
+                <h3 className="text-sm font-extrabold text-slate-900">Production Infrastructure & Endpoints</h3>
+                <p className="text-xs text-slate-500">Live operational status across frontend and API services</p>
               </div>
             </div>
-            <span className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold rounded-full flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span className="px-3 py-1 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold rounded-full flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
               All Systems Operational
             </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-xs font-mono">
-            <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
-              <div className="text-slate-400 font-sans text-[11px] mb-1">Frontend Web Domain</div>
-              <div className="text-blue-400 font-bold truncate">https://omnipost-web-ivory.vercel.app</div>
+            <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+              <div className="text-slate-500 font-sans text-[11px] font-semibold mb-1">User Web Platform</div>
+              <div className="text-blue-700 font-bold truncate">https://omnipost-web-ivory.vercel.app</div>
             </div>
 
-            <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
-              <div className="text-slate-400 font-sans text-[11px] mb-1">Backend API Domain</div>
-              <div className="text-emerald-400 font-bold truncate">https://omnipost-api.onrender.com</div>
+            <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+              <div className="text-slate-500 font-sans text-[11px] font-semibold mb-1">Admin Dashboard URL</div>
+              <div className="text-purple-700 font-bold truncate">https://omnipost-admin.vercel.app</div>
             </div>
 
-            <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
-              <div className="text-slate-400 font-sans text-[11px] mb-1">OAuth Redirect URI</div>
-              <div className="text-amber-400 font-bold truncate">.../oauth/callback</div>
+            <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+              <div className="text-slate-500 font-sans text-[11px] font-semibold mb-1">Backend API Endpoint</div>
+              <div className="text-emerald-700 font-bold truncate">https://omnipost-api.onrender.com</div>
             </div>
           </div>
         </div>
