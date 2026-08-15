@@ -11,7 +11,7 @@ export interface TierLimitsSpec {
 
 export const TIER_LIMITS: Record<SubscriptionTier, TierLimitsSpec> = {
   FREE: {
-    maxPostsPerMonth: 10,
+    maxPostsPerMonth: 1,
     maxAiCredits: 100,
     maxConnectedAccounts: 3,
     maxTeamSeats: 1,

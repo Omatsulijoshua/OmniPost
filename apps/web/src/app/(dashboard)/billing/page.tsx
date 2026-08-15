@@ -75,9 +75,9 @@ export default function BillingPage() {
       name: 'Free Starter',
       price: 0,
       channelsLimit: '3 Social Channels',
-      postsLimit: '10 Posts / mo',
+      postsLimit: '1 Post / mo',
       desc: 'For individuals exploring social channel management',
-      features: ['3 Connected Social Channels', '10 Posts per month', '30-Day Media Retention', 'Basic Analytics'],
+      features: ['3 Connected Social Channels', '1 Post per month', '30-Day Media Retention', 'Basic Analytics'],
     },
     {
       tier: 'CREATOR',
