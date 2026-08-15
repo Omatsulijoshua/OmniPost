@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { SocialAccountDetail, PlatformType } from '@omnipost/types';
+import { PlatformLogo } from '../common/platform-logo';
 
 interface AccountCardProps {
   platformType: PlatformType;
@@ -29,9 +30,7 @@ export function AccountCard({
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center font-black text-blue-600 text-sm">
-              {platformType === 'OTHER' ? '✨' : platformType.slice(0, 2)}
-            </div>
+            <PlatformLogo platformType={platformType} size={40} />
             <div>
               <h3 className="text-sm font-extrabold text-slate-900">{platformTitle}</h3>
               <p className="text-xs text-slate-500 font-medium">
