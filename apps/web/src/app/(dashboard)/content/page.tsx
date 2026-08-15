@@ -4,37 +4,44 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useAuthStore } from '../../../lib/auth-store';
 import { apiFetch } from '../../../lib/api-client';
-import { PostDetail, PostStatus } from '@omnipost/types';
+import { PostDetail, PostStatus, SocialAccountDetail } from '@omnipost/types';
 import { PostHistoryModal } from '../../../components/post/post-history-modal';
 
 export default function ContentPage() {
   const activeWorkspace = useAuthStore((state) => state.activeWorkspace);
 
   const [posts, setPosts] = useState<PostDetail[]>([]);
+  const [connectedAccounts, setConnectedAccounts] = useState<SocialAccountDetail[]>([]);
   const [filterStatus, setFilterStatus] = useState<string>('ALL');
+  const [selectedAccountFilter, setSelectedAccountFilter] = useState<string>('ALL');
   const [inspectingPost, setInspectingPost] = useState<PostDetail | null>(null);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const loadPosts = async () => {
+  const loadData = async () => {
     if (!activeWorkspace?.id) return;
     setLoading(true);
     setError(null);
 
     try {
       const statusParam = filterStatus !== 'ALL' ? `?status=${filterStatus}` : '';
-      const data = await apiFetch<PostDetail[]>(`/posts${statusParam}`);
-      setPosts(data || []);
+      const [postsData, accountsData] = await Promise.all([
+        apiFetch<PostDetail[]>(`/posts${statusParam}`),
+        apiFetch<SocialAccountDetail[]>('/social-accounts').catch(() => []),
+      ]);
+
+      setPosts(postsData || []);
+      setConnectedAccounts(accountsData || []);
     } catch (err: any) {
-      setError(err.message || 'Failed to load posts');
+      setError(err.message || 'Failed to load content history');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    loadPosts();
+    loadData();
   }, [activeWorkspace?.id, filterStatus]);
 
   const handlePublishNow = async (id: string) => {
@@ -54,7 +61,7 @@ export default function ContentPage() {
         method: 'POST',
         body: JSON.stringify({ postVersionId: versionId }),
       });
-      loadPosts();
+      loadData();
     } catch (err: any) {
       alert(err.message || 'Failed to retry publishing');
     }
@@ -85,6 +92,15 @@ export default function ContentPage() {
     }
   };
 
+  // Filter posts by selected social account handle
+  const filteredPosts = posts.filter((post) => {
+    if (selectedAccountFilter === 'ALL') return true;
+    return post.versions.some(
+      (v) => (v.accountName || '').toLowerCase() === selectedAccountFilter.toLowerCase() ||
+        v.socialAccountId === selectedAccountFilter,
+    );
+  });
+
   return (
     <div className="space-y-6 max-w-6xl">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -109,21 +125,43 @@ export default function ContentPage() {
         </div>
       )}
 
-      {/* Filter Tabs */}
-      <div className="flex bg-white p-1 rounded-xl border border-slate-200/80 w-max gap-1 shadow-xs">
-        {['ALL', 'DRAFT', 'SCHEDULED', 'PUBLISHED', 'FAILED'].map((st) => (
-          <button
-            key={st}
-            onClick={() => setFilterStatus(st)}
-            className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all ${
-              filterStatus === st
-                ? 'bg-blue-600 text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-            }`}
+      {/* Filter Toolbar: Status Tabs + Social Accounts Dropdown */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-3 border border-slate-200/80 rounded-2xl shadow-xs">
+        {/* Status Filter Tabs */}
+        <div className="flex bg-slate-100 p-1 rounded-xl gap-1">
+          {['ALL', 'DRAFT', 'SCHEDULED', 'PUBLISHED', 'FAILED'].map((st) => (
+            <button
+              key={st}
+              onClick={() => setFilterStatus(st)}
+              className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                filterStatus === st
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+              }`}
+            >
+              {st}
+            </button>
+          ))}
+        </div>
+
+        {/* Separate Social Media Account Dropdown Filter */}
+        <div className="flex items-center gap-2">
+          <label className="text-xs font-bold text-slate-700 whitespace-nowrap">
+            Social Account:
+          </label>
+          <select
+            value={selectedAccountFilter}
+            onChange={(e) => setSelectedAccountFilter(e.target.value)}
+            className="px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:border-blue-500 shadow-xs min-w-[200px]"
           >
-            {st}
-          </button>
-        ))}
+            <option value="ALL">All Social Accounts</option>
+            {connectedAccounts.map((acc) => (
+              <option key={acc.id} value={acc.accountName}>
+                {acc.platformName}: {acc.accountName}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Post Table */}
@@ -133,13 +171,13 @@ export default function ContentPage() {
             <div key={i} className="h-24 bg-white border border-slate-200 rounded-2xl animate-pulse shadow-sm" />
           ))}
         </div>
-      ) : posts.length === 0 ? (
+      ) : filteredPosts.length === 0 ? (
         <div className="p-12 bg-white border border-dashed border-slate-200 rounded-2xl text-center text-slate-500 text-xs font-medium">
-          No posts found. Click "+ Create New Post" to write your first content post.
+          No posts found for current status/account filter. Click "+ Create New Post" to write your first content post.
         </div>
       ) : (
         <div className="bg-white border border-slate-200/80 rounded-2xl overflow-hidden divide-y divide-slate-100 shadow-sm">
-          {posts.map((post) => (
+          {filteredPosts.map((post) => (
             <div key={post.id} className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="space-y-2 max-w-2xl">
                 <div className="flex items-center gap-3">
@@ -162,14 +200,17 @@ export default function ContentPage() {
                   )}
                 </div>
 
-                {/* Per-platform Version Badges */}
+                {/* Per-platform Version Badges with Explicit Account Handle */}
                 <div className="flex flex-wrap gap-2 pt-1">
                   {post.versions.map((v) => (
                     <div
                       key={v.id}
                       className="flex items-center gap-1.5 px-2.5 py-1 bg-slate-50 border border-slate-200 rounded-lg text-[10px]"
                     >
-                      <span className="font-bold text-slate-800">{v.platformType}</span>
+                      <span className="font-bold text-slate-900">{v.platformType}</span>
+                      <span className="text-blue-700 font-bold">
+                        ({v.accountName || 'Connected Account'})
+                      </span>
                       {v.status === 'FAILED' ? (
                         <button
                           onClick={() => handleRetryVersion(v.id)}
@@ -188,7 +229,7 @@ export default function ContentPage() {
               <div className="flex flex-wrap items-center gap-2">
                 <button
                   onClick={() => setInspectingPost(post)}
-                  className="px-3.5 py-2 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 text-xs font-bold rounded-xl transition-all"
+                  className="px-3.5 py-2 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 text-xs font-bold rounded-xl transition-all shadow-xs"
                 >
                   📜 Inspect History
                 </button>
