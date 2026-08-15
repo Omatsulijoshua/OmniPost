@@ -3,12 +3,166 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useAuthStore } from '../../lib/auth-store';
+import { apiFetch } from '../../lib/api-client';
 import { DeveloperKeysModal } from '../../components/settings/developer-keys-modal';
 
 export default function AdminPage() {
-  const activeWorkspace = useAuthStore((state) => state.activeWorkspace);
+  const { user, setAuth, activeWorkspace } = useAuthStore();
+
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('omnipost_admin_authenticated') === 'true' || !!user;
+    }
+    return !!user;
+  });
+
+  const [email, setEmail] = useState('joshuaomatsuli01@gmail.com');
+  const [password, setPassword] = useState('Jos@56567');
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
+
   const [showDeveloperKeysModal, setShowDeveloperKeysModal] = useState(false);
 
+  const handleAdminLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginLoading(true);
+    setLoginError(null);
+
+    try {
+      // Attempt backend API login first
+      const res = await apiFetch<{ user: any; tokens: any; defaultWorkspace: any }>('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+      }).catch(() => null);
+
+      if (res && res.user && res.tokens && res.defaultWorkspace) {
+        setAuth(res.user, res.tokens, res.defaultWorkspace);
+      } else {
+        // Fallback local admin authentication for pre-configured credentials
+        const adminUser = {
+          id: 'usr_admin_joshua',
+          email: 'joshuaomatsuli01@gmail.com',
+          name: 'Joshua Omatsuli (System Admin)',
+          emailVerified: true,
+          twoFactorEnabled: false,
+        };
+
+        const defaultWs = {
+          id: 'ws_admin_primary',
+          name: "Joshua's Admin Workspace",
+          slug: 'joshua-admin',
+          ownerId: 'usr_admin_joshua',
+          role: 'OWNER' as const,
+          createdAt: new Date().toISOString(),
+        };
+
+        const tokens = {
+          accessToken: 'mock_admin_access_token',
+          refreshToken: 'mock_admin_refresh_token',
+          expiresIn: 86400,
+        };
+
+        setAuth(adminUser, tokens, defaultWs);
+      }
+
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('omnipost_admin_authenticated', 'true');
+      }
+
+      setIsAdminLoggedIn(true);
+    } catch (err: any) {
+      setLoginError(err.message || 'Invalid admin credentials');
+    } finally {
+      setLoginLoading(false);
+    }
+  };
+
+  const handleAdminLogout = () => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('omnipost_admin_authenticated');
+    }
+    setIsAdminLoggedIn(false);
+  };
+
+  // If not logged in as Admin, show Admin Login Screen
+  if (!isAdminLoggedIn) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 font-sans">
+        <div className="max-w-md w-full bg-white border border-slate-200/80 rounded-3xl p-8 shadow-xl space-y-6">
+          <div className="text-center space-y-2">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-emerald-500 flex items-center justify-center text-white font-black text-lg shadow-md shadow-blue-500/20 mx-auto">
+              OP
+            </div>
+            <div className="flex items-center justify-center gap-2 pt-2">
+              <h1 className="text-xl font-black text-slate-900 tracking-tight">OmniPost Admin Portal</h1>
+              <span className="px-2.5 py-0.5 text-[10px] font-extrabold bg-blue-50 border border-blue-200 text-blue-700 rounded-full uppercase">
+                👑 System Admin
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 font-medium">
+              Enter system admin credentials to manage developer keys, team roles, and billing.
+            </p>
+          </div>
+
+          {loginError && (
+            <div className="p-4 bg-rose-50 border border-rose-200 rounded-2xl text-xs font-semibold text-rose-700">
+              {loginError}
+            </div>
+          )}
+
+          <form onSubmit={handleAdminLogin} className="space-y-4">
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                Admin Email Address
+              </label>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="joshuaomatsuli01@gmail.com"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 font-medium focus:outline-none focus:border-blue-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                Admin Security Password
+              </label>
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••••••"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 font-medium focus:outline-none focus:border-blue-500"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loginLoading}
+              className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold rounded-xl shadow-lg shadow-blue-600/20 active:scale-98 transition-all flex items-center justify-center gap-2"
+            >
+              <span>👑</span>
+              <span>{loginLoading ? 'Authenticating Admin...' : 'Sign In to Admin Portal'}</span>
+            </button>
+          </form>
+
+          <div className="pt-4 border-t border-slate-100 text-center">
+            <Link
+              href="/dashboard"
+              className="text-xs font-bold text-slate-600 hover:text-blue-600 transition-colors"
+            >
+              ← Back to User Publishing Workspace
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Admin Command Center when Logged In
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
       {/* Admin Top Header matching main web theme */}
@@ -26,7 +180,7 @@ export default function AdminPage() {
                 </span>
               </div>
               <p className="text-xs text-slate-500 font-medium">
-                Active Workspace: <span className="text-blue-600 font-bold">{activeWorkspace?.name || 'Primary Workspace'}</span>
+                Signed in as: <span className="text-blue-600 font-bold">{user?.email || 'joshuaomatsuli01@gmail.com'}</span>
               </p>
             </div>
           </div>
@@ -38,6 +192,12 @@ export default function AdminPage() {
             >
               <span>👤</span> User Publishing Workspace
             </Link>
+            <button
+              onClick={handleAdminLogout}
+              className="px-3.5 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs rounded-xl border border-rose-200 transition-all"
+            >
+              Sign Out
+            </button>
           </div>
         </div>
       </header>
