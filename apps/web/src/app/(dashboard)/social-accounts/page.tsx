@@ -76,14 +76,16 @@ export default function SocialAccountsPage() {
 
   return (
     <div className="space-y-6 max-w-7xl">
-      <div>
-        <h1 className="text-3xl font-black text-slate-900 tracking-tight">
-          Social Accounts & Integrations
-        </h1>
-        <p className="mt-1 text-xs sm:text-sm text-slate-500 font-medium">
-          Manage OAuth credentials, custom platforms, and connected channels for active workspace:{' '}
-          <span className="font-bold text-blue-600">{activeWorkspace?.name}</span>
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">
+            Social Accounts & Integrations
+          </h1>
+          <p className="mt-1 text-xs sm:text-sm text-slate-500 font-medium">
+            Link single or multiple accounts per platform (e.g. 3 YouTube channels, 2 TikTok accounts) for active workspace:{' '}
+            <span className="font-bold text-blue-600">{activeWorkspace?.name}</span>
+          </p>
+        </div>
       </div>
 
       {error && (
@@ -95,18 +97,18 @@ export default function SocialAccountsPage() {
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="h-40 bg-white border border-slate-200 rounded-2xl animate-pulse shadow-sm" />
+            <div key={i} className="h-44 bg-white border border-slate-200 rounded-2xl animate-pulse shadow-sm" />
           ))}
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {allPlatforms.map((platformType) => {
-            const account = accounts.find((a) => a.platformType === platformType);
+            const platformAccounts = accounts.filter((a) => a.platformType === platformType);
             return (
               <AccountCard
                 key={platformType}
                 platformType={platformType}
-                account={account}
+                accounts={platformAccounts}
                 onConnect={setConnectingPlatform}
                 onRefresh={handleRefresh}
                 onDisconnect={handleDisconnect}

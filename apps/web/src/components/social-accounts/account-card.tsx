@@ -5,7 +5,7 @@ import { SocialAccountDetail, PlatformType } from '@omnipost/types';
 
 interface AccountCardProps {
   platformType: PlatformType;
-  account?: SocialAccountDetail;
+  accounts: SocialAccountDetail[];
   onConnect: (platformType: PlatformType) => void;
   onRefresh: (id: string) => void;
   onDisconnect: (id: string) => void;
@@ -13,12 +13,16 @@ interface AccountCardProps {
 
 export function AccountCard({
   platformType,
-  account,
+  accounts,
   onConnect,
   onRefresh,
   onDisconnect,
 }: AccountCardProps) {
-  const isConnected = !!account;
+  const isConnected = accounts.length > 0;
+  const platformTitle =
+    platformType === 'OTHER'
+      ? 'Custom Platform'
+      : platformType.charAt(0) + platformType.slice(1).toLowerCase().replace('_', ' ');
 
   return (
     <div className="p-5 bg-white border border-slate-200/80 hover:border-blue-300 rounded-2xl flex flex-col justify-between space-y-4 shadow-sm transition-all">
@@ -29,21 +33,19 @@ export function AccountCard({
               {platformType === 'OTHER' ? '✨' : platformType.slice(0, 2)}
             </div>
             <div>
-              <h3 className="text-sm font-bold text-slate-900">
-                {platformType === 'OTHER'
-                  ? 'Other / Custom Platform'
-                  : platformType.charAt(0) + platformType.slice(1).toLowerCase().replace('_', ' ')}
-              </h3>
-              <p className="text-xs text-slate-500">
-                {account ? account.accountName : 'Not Connected'}
+              <h3 className="text-sm font-extrabold text-slate-900">{platformTitle}</h3>
+              <p className="text-xs text-slate-500 font-medium">
+                {isConnected
+                  ? `${accounts.length} ${accounts.length === 1 ? 'Account' : 'Accounts'} Linked`
+                  : 'Not Connected'}
               </p>
             </div>
           </div>
 
           <div>
             {isConnected ? (
-              <span className="px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-full">
-                {account.isMock ? 'Mock Connected' : 'Live Connected'}
+              <span className="px-2.5 py-0.5 text-[10px] font-extrabold text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-full">
+                {accounts.length} Active
               </span>
             ) : (
               <span className="px-2.5 py-0.5 text-[10px] font-bold text-slate-500 bg-slate-100 border border-slate-200 rounded-full">
@@ -53,50 +55,52 @@ export function AccountCard({
           </div>
         </div>
 
-        {/* Capabilities Pills */}
-        <div className="flex flex-wrap gap-1">
-          {account?.capabilities.supportsImages && (
-            <span className="px-2 py-0.5 text-[9px] font-bold text-slate-600 bg-slate-100 rounded">Images</span>
-          )}
-          {account?.capabilities.supportsVideos && (
-            <span className="px-2 py-0.5 text-[9px] font-bold text-slate-600 bg-slate-100 rounded">Videos</span>
-          )}
-          {account?.capabilities.supportsReels && (
-            <span className="px-2 py-0.5 text-[9px] font-bold text-purple-700 bg-purple-50 rounded">Reels</span>
-          )}
-          {account?.capabilities.supportsShorts && (
-            <span className="px-2 py-0.5 text-[9px] font-bold text-rose-700 bg-rose-50 rounded">Shorts</span>
-          )}
-          {account?.capabilities.supportsStories && (
-            <span className="px-2 py-0.5 text-[9px] font-bold text-amber-700 bg-amber-50 rounded">Stories</span>
-          )}
-        </div>
+        {/* Connected Accounts Handles List */}
+        {isConnected && (
+          <div className="space-y-2 pt-1 border-t border-slate-100">
+            {accounts.map((acc) => (
+              <div
+                key={acc.id}
+                className="p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl flex items-center justify-between gap-2"
+              >
+                <div className="truncate">
+                  <div className="text-xs font-extrabold text-slate-900 truncate">
+                    {acc.accountName}
+                  </div>
+                  <div className="text-[10px] text-slate-500">
+                    {acc.isMock ? 'Mock Account' : 'Live OAuth Connected'}
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => onRefresh(acc.id)}
+                    className="text-[11px] text-blue-600 hover:underline font-bold"
+                    title="Refresh token"
+                  >
+                    Refresh
+                  </button>
+                  <button
+                    onClick={() => onDisconnect(acc.id)}
+                    className="text-[11px] text-rose-600 hover:underline font-bold"
+                    title="Disconnect account"
+                  >
+                    Disconnect
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-        {isConnected ? (
-          <div className="w-full flex items-center justify-between">
-            <button
-              onClick={() => onRefresh(account.id)}
-              className="text-xs text-blue-600 hover:underline font-bold"
-            >
-              Refresh Token
-            </button>
-            <button
-              onClick={() => onDisconnect(account.id)}
-              className="text-xs text-rose-600 hover:underline font-semibold"
-            >
-              Disconnect
-            </button>
-          </div>
-        ) : (
-          <button
-            onClick={() => onConnect(platformType)}
-            className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl transition-all shadow-md shadow-blue-600/20"
-          >
-            + Connect Channel
-          </button>
-        )}
+      <div className="pt-2 border-t border-slate-100">
+        <button
+          onClick={() => onConnect(platformType)}
+          className="w-full py-2 bg-blue-50 hover:bg-blue-600 text-blue-700 hover:text-white font-extrabold text-xs rounded-xl border border-blue-200 transition-all shadow-xs"
+        >
+          {isConnected ? `+ Add Another ${platformTitle} Account` : `+ Connect ${platformTitle}`}
+        </button>
       </div>
     </div>
   );
