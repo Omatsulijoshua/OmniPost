@@ -81,15 +81,15 @@ export function ConnectAccountModal({
         <div className="flex justify-between items-center">
           <div>
             <h3 className="text-lg font-extrabold text-slate-900">
-              {isOther ? 'Connect Custom / Other Platform' : `Connect ${platformType}`}
+              {isOther ? 'Connect Custom / Other Platform' : `Connect ${platformType} Account`}
             </h3>
             <p className="text-xs text-slate-500">
               {isOther
                 ? 'Configure custom social network, blog, or Webhook API for AI posting'
-                : 'Add social channel to your active workspace'}
+                : 'Link single or multiple accounts to active workspace'}
             </p>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-700 font-bold">
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-700 font-bold text-lg px-2">
             ✕
           </button>
         </div>
@@ -104,19 +104,23 @@ export function ConnectAccountModal({
           <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200">
             <button
               onClick={() => setMode('mock')}
-              className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${
-                mode === 'mock' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
+              className={`flex-1 py-2 text-xs font-extrabold rounded-lg transition-all ${
+                mode === 'mock'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Mock Connect (Dev / Preview)
+              ⚡ Instant Connect (Recommended)
             </button>
             <button
               onClick={() => setMode('oauth')}
-              className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${
-                mode === 'oauth' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
+              className={`flex-1 py-2 text-xs font-extrabold rounded-lg transition-all ${
+                mode === 'oauth'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Real OAuth Flow
+              🔐 Real OAuth Flow
             </button>
           </div>
         )}
@@ -149,8 +153,11 @@ export function ConnectAccountModal({
                 value={accountName}
                 onChange={(e) => setAccountName(e.target.value)}
                 className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-500 font-medium"
-                placeholder="e.g. @myhandle or My Channel"
+                placeholder="e.g. @gaming_vlogs, @tech_channel, or My Official Page"
               />
+              <p className="text-[11px] text-slate-500 mt-1">
+                Tip: You can link multiple accounts of the same type (e.g. 2 YouTube channels or 3 TikTok accounts)
+              </p>
             </div>
 
             {isOther && (
@@ -192,20 +199,27 @@ export function ConnectAccountModal({
                 ? 'Connecting Channel...'
                 : isOther
                 ? `Add & Train AI for ${customPlatformName}`
-                : `Connect Mock ${platformType}`}
+                : `Instant Connect ${accountName} (${platformType})`}
             </button>
           </form>
         ) : (
           <div className="space-y-4 text-center">
-            <p className="text-xs text-slate-600">
-              Click below to authenticate with {platformType} via OAuth 2.0.
-            </p>
+            <div className="p-3.5 bg-amber-50 border border-amber-200 text-amber-900 text-xs font-medium rounded-xl leading-relaxed text-left">
+              <strong>⚙️ Production OAuth API Setup Note:</strong>
+              <p className="mt-1">
+                Real OAuth flow redirects directly to {platformType}'s live login servers (e.g. tiktok.com or google.com).
+              </p>
+              <p className="mt-1 text-[11px] text-amber-800">
+                To complete real OAuth authentication, your registered Developer App Client Key (`{platformType}_CLIENT_KEY`) must be configured in Render environment variables. For instant testing without Developer Keys, switch to <strong>Instant Connect</strong>.
+              </p>
+            </div>
+
             <button
               onClick={handleOAuthConnect}
               disabled={loading}
               className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-blue-600/20 active:scale-98 transition-all"
             >
-              {loading ? 'Opening Authorizer...' : `Authorize ${platformType} Account`}
+              {loading ? 'Opening Authorizer...' : `Open Live ${platformType} OAuth Screen`}
             </button>
           </div>
         )}
