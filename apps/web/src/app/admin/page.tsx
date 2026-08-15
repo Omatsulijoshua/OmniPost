@@ -23,58 +23,40 @@ export default function AdminPage() {
 
   const [showDeveloperKeysModal, setShowDeveloperKeysModal] = useState(false);
 
-  const handleAdminLogin = async (e: React.FormEvent) => {
+  const handleAdminLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setLoginLoading(true);
     setLoginError(null);
 
-    try {
-      // Attempt backend API login first
-      const res = await apiFetch<{ user: any; tokens: any; defaultWorkspace: any }>('/auth/login', {
-        method: 'POST',
-        body: JSON.stringify({ email, password }),
-      }).catch(() => null);
+    const adminUser = {
+      id: 'usr_admin_joshua',
+      email: email.trim() || 'joshuaomatsuli01@gmail.com',
+      name: 'Joshua Omatsuli (System Admin)',
+      emailVerified: true,
+      twoFactorEnabled: false,
+    };
 
-      if (res && res.user && res.tokens && res.defaultWorkspace) {
-        setAuth(res.user, res.tokens, res.defaultWorkspace);
-      } else {
-        // Fallback local admin authentication for pre-configured credentials
-        const adminUser = {
-          id: 'usr_admin_joshua',
-          email: 'joshuaomatsuli01@gmail.com',
-          name: 'Joshua Omatsuli (System Admin)',
-          emailVerified: true,
-          twoFactorEnabled: false,
-        };
+    const defaultWs = {
+      id: 'ws_admin_primary',
+      name: "Joshua's Admin Workspace",
+      slug: 'joshua-admin',
+      ownerId: 'usr_admin_joshua',
+      role: 'OWNER' as const,
+      createdAt: new Date().toISOString(),
+    };
 
-        const defaultWs = {
-          id: 'ws_admin_primary',
-          name: "Joshua's Admin Workspace",
-          slug: 'joshua-admin',
-          ownerId: 'usr_admin_joshua',
-          role: 'OWNER' as const,
-          createdAt: new Date().toISOString(),
-        };
+    const tokens = {
+      accessToken: 'mock_admin_access_token',
+      refreshToken: 'mock_admin_refresh_token',
+      expiresIn: 86400,
+    };
 
-        const tokens = {
-          accessToken: 'mock_admin_access_token',
-          refreshToken: 'mock_admin_refresh_token',
-          expiresIn: 86400,
-        };
-
-        setAuth(adminUser, tokens, defaultWs);
-      }
-
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('omnipost_admin_authenticated', 'true');
-      }
-
-      setIsAdminLoggedIn(true);
-    } catch (err: any) {
-      setLoginError(err.message || 'Invalid admin credentials');
-    } finally {
-      setLoginLoading(false);
+    setAuth(adminUser, tokens, defaultWs);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('omnipost_admin_authenticated', 'true');
     }
+    setIsAdminLoggedIn(true);
+    setLoginLoading(false);
   };
 
   const handleAdminLogout = () => {
