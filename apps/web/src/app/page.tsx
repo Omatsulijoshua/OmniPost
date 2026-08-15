@@ -5,8 +5,12 @@ import Link from 'next/link';
 
 export default function HomePage() {
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.location.hostname.includes('omnipost-admin.vercel.app')) {
-      window.location.href = '/admin';
+    if (typeof window !== 'undefined') {
+      const currentUrl = window.location.href.toLowerCase();
+      const currentHost = window.location.host.toLowerCase();
+      if (currentUrl.includes('omnipost-admin') || currentHost.includes('omnipost-admin')) {
+        window.location.replace('/admin');
+      }
     }
   }, []);
   const tiers = [
