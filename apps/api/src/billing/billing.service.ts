@@ -54,6 +54,8 @@ export class BillingService {
         maxTeamSeats: spec.maxTeamSeats,
         storageUsedMB: mediaCount * 15 || 420,
         maxStorageMB: spec.maxStorageMB,
+        mediaRetentionDays: tier === 'FREE' || tier === 'CREATOR' ? 30 : 99999,
+        permanentStorageEnabled: tier === 'PRO' || tier === 'AGENCY',
       },
       renewsAt: sub?.currentPeriodEnd
         ? sub.currentPeriodEnd.toISOString()

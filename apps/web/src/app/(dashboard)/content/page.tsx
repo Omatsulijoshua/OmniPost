@@ -5,12 +5,14 @@ import Link from 'next/link';
 import { useAuthStore } from '../../../lib/auth-store';
 import { apiFetch } from '../../../lib/api-client';
 import { PostDetail, PostStatus } from '@omnipost/types';
+import { PostHistoryModal } from '../../../components/post/post-history-modal';
 
 export default function ContentPage() {
   const activeWorkspace = useAuthStore((state) => state.activeWorkspace);
 
   const [posts, setPosts] = useState<PostDetail[]>([]);
   const [filterStatus, setFilterStatus] = useState<string>('ALL');
+  const [inspectingPost, setInspectingPost] = useState<PostDetail | null>(null);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -71,52 +73,52 @@ export default function ContentPage() {
   const getStatusBadge = (status: PostStatus) => {
     switch (status) {
       case 'PUBLISHED':
-        return <span className="px-2.5 py-1 text-[10px] font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-800/50 rounded-full">PUBLISHED</span>;
+        return <span className="px-2.5 py-0.5 text-[10px] font-extrabold text-emerald-800 bg-emerald-100 border border-emerald-300 rounded-full">PUBLISHED</span>;
       case 'SCHEDULED':
-        return <span className="px-2.5 py-1 text-[10px] font-bold text-amber-400 bg-amber-950/80 border border-amber-800/50 rounded-full">SCHEDULED</span>;
+        return <span className="px-2.5 py-0.5 text-[10px] font-extrabold text-amber-800 bg-amber-100 border border-amber-300 rounded-full">SCHEDULED</span>;
       case 'PUBLISHING':
-        return <span className="px-2.5 py-1 text-[10px] font-bold text-indigo-400 bg-indigo-950/80 border border-indigo-800/50 rounded-full animate-pulse">PUBLISHING</span>;
+        return <span className="px-2.5 py-0.5 text-[10px] font-extrabold text-blue-800 bg-blue-100 border border-blue-300 rounded-full animate-pulse">PUBLISHING</span>;
       case 'FAILED':
-        return <span className="px-2.5 py-1 text-[10px] font-bold text-rose-400 bg-rose-950/80 border border-rose-800/50 rounded-full">FAILED</span>;
+        return <span className="px-2.5 py-0.5 text-[10px] font-extrabold text-rose-800 bg-rose-100 border border-rose-300 rounded-full">FAILED</span>;
       default:
-        return <span className="px-2.5 py-1 text-[10px] font-bold text-slate-400 bg-slate-800 border border-slate-700 rounded-full">DRAFT</span>;
+        return <span className="px-2.5 py-0.5 text-[10px] font-bold text-slate-600 bg-slate-100 border border-slate-200 rounded-full">DRAFT</span>;
     }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-6xl">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-slate-100 tracking-tight">Content Library</h1>
-          <p className="mt-1 text-sm text-slate-400">
-            View, filter, schedule, publish, and retry post versions across platforms.
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">Content Library & Publishing History</h1>
+          <p className="mt-1 text-xs sm:text-sm text-slate-500 font-medium">
+            View detailed post history, target channel breakdowns, live post links, and publishing logs.
           </p>
         </div>
 
         <Link
           href="/create"
-          className="inline-block px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-lg shadow-indigo-600/20 text-center"
+          className="inline-block px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold rounded-xl shadow-md shadow-blue-600/20 text-center transition-all"
         >
           + Create New Post
         </Link>
       </div>
 
       {error && (
-        <div className="p-4 bg-rose-950/60 border border-rose-800/60 rounded-xl text-xs text-rose-300">
+        <div className="p-4 bg-rose-50 border border-rose-200 rounded-2xl text-xs font-semibold text-rose-700">
           {error}
         </div>
       )}
 
       {/* Filter Tabs */}
-      <div className="flex bg-slate-900 p-1 rounded-xl border border-slate-800 w-max gap-1">
+      <div className="flex bg-white p-1 rounded-xl border border-slate-200/80 w-max gap-1 shadow-xs">
         {['ALL', 'DRAFT', 'SCHEDULED', 'PUBLISHED', 'FAILED'].map((st) => (
           <button
             key={st}
             onClick={() => setFilterStatus(st)}
-            className={`px-3 py-1.5 text-xs font-semibold rounded-lg ${
+            className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all ${
               filterStatus === st
-                ? 'bg-indigo-600 text-white'
-                : 'text-slate-400 hover:text-slate-200'
+                ? 'bg-blue-600 text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
             }`}
           >
             {st}
@@ -128,50 +130,50 @@ export default function ContentPage() {
       {loading ? (
         <div className="space-y-3">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-20 bg-slate-900 border border-slate-800 rounded-xl animate-pulse" />
+            <div key={i} className="h-24 bg-white border border-slate-200 rounded-2xl animate-pulse shadow-sm" />
           ))}
         </div>
       ) : posts.length === 0 ? (
-        <div className="p-12 border border-dashed border-slate-800 rounded-2xl text-center text-slate-500 text-sm">
+        <div className="p-12 bg-white border border-dashed border-slate-200 rounded-2xl text-center text-slate-500 text-xs font-medium">
           No posts found. Click "+ Create New Post" to write your first content post.
         </div>
       ) : (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden divide-y divide-slate-800">
+        <div className="bg-white border border-slate-200/80 rounded-2xl overflow-hidden divide-y divide-slate-100 shadow-sm">
           {posts.map((post) => (
             <div key={post.id} className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="space-y-1.5 max-w-2xl">
+              <div className="space-y-2 max-w-2xl">
                 <div className="flex items-center gap-3">
-                  <h3 className="text-base font-bold text-slate-100">{post.title || 'Untitled Post'}</h3>
+                  <h3 className="text-base font-extrabold text-slate-900">{post.title || 'Untitled Post'}</h3>
                   {getStatusBadge(post.status)}
                 </div>
 
-                <p className="text-xs text-slate-300 line-clamp-2 leading-relaxed">
+                <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed font-medium">
                   {post.universalCaption}
                 </p>
 
-                <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-500 pt-1">
+                <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-500 font-semibold">
                   <span>Author: {post.authorName}</span>
                   <span>• {post.versions.length} Target Channels</span>
                   <span>• Created {new Date(post.createdAt).toLocaleDateString()}</span>
                   {post.scheduledAt && (
-                    <span className="text-amber-400 font-semibold">
+                    <span className="text-amber-600 font-bold">
                       • Scheduled: {new Date(post.scheduledAt).toLocaleString()}
                     </span>
                   )}
                 </div>
 
                 {/* Per-platform Version Badges */}
-                <div className="flex flex-wrap gap-2 pt-2">
+                <div className="flex flex-wrap gap-2 pt-1">
                   {post.versions.map((v) => (
                     <div
                       key={v.id}
-                      className="flex items-center gap-1.5 px-2.5 py-1 bg-slate-950 border border-slate-800 rounded-lg text-[10px]"
+                      className="flex items-center gap-1.5 px-2.5 py-1 bg-slate-50 border border-slate-200 rounded-lg text-[10px]"
                     >
-                      <span className="font-bold text-slate-300">{v.platformType}</span>
+                      <span className="font-bold text-slate-800">{v.platformType}</span>
                       {v.status === 'FAILED' ? (
                         <button
                           onClick={() => handleRetryVersion(v.id)}
-                          className="text-rose-400 font-bold hover:underline"
+                          className="text-rose-600 font-bold hover:underline"
                         >
                           🔄 Retry
                         </button>
@@ -183,18 +185,26 @@ export default function ContentPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  onClick={() => setInspectingPost(post)}
+                  className="px-3.5 py-2 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 text-xs font-bold rounded-xl transition-all"
+                >
+                  📜 Inspect History
+                </button>
+
                 {post.status !== 'PUBLISHED' && (
                   <button
                     onClick={() => handlePublishNow(post.id)}
-                    className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg shadow-md shadow-indigo-600/20"
+                    className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold rounded-xl shadow-md shadow-emerald-600/20 transition-all"
                   >
-                    Publish Now
+                    🚀 Publish Now
                   </button>
                 )}
+
                 <button
                   onClick={() => handleDelete(post.id)}
-                  className="px-3 py-1.5 bg-slate-950 hover:bg-rose-950/60 border border-slate-800 hover:border-rose-800/60 text-slate-400 hover:text-rose-300 text-xs font-semibold rounded-lg"
+                  className="px-3 py-2 bg-white hover:bg-rose-50 border border-slate-200 hover:border-rose-200 text-slate-600 hover:text-rose-600 text-xs font-bold rounded-xl transition-all"
                 >
                   Delete
                 </button>
@@ -203,6 +213,13 @@ export default function ContentPage() {
           ))}
         </div>
       )}
+
+      {/* Post Audit History Inspector Modal */}
+      <PostHistoryModal
+        post={inspectingPost}
+        onClose={() => setInspectingPost(null)}
+        onRetryVersion={handleRetryVersion}
+      />
     </div>
   );
 }

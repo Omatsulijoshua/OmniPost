@@ -233,8 +233,10 @@ export interface PostVersionDetail {
   id: string;
   postId: string;
   socialAccountId: string;
+  accountName?: string;
   platformType: PlatformType;
   caption: string;
+  overrideCaption?: string | null;
   title?: string | null;
   description?: string | null;
   status: PostStatus;
@@ -256,6 +258,8 @@ export interface PostDetail {
   status: PostStatus;
   scheduledAt?: string | null;
   publishedAt?: string | null;
+  mediaUrls?: string[];
+  contentType?: 'text' | 'image' | 'video';
   versions: PostVersionDetail[];
   createdAt: string;
   updatedAt: string;
@@ -400,6 +404,8 @@ export interface UsageQuotaDetail {
   maxTeamSeats: number;
   storageUsedMB: number;
   maxStorageMB: number;
+  mediaRetentionDays: number;
+  permanentStorageEnabled: boolean;
 }
 
 export interface SubscriptionPlanDetail {
