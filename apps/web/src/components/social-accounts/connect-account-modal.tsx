@@ -46,6 +46,16 @@ export function ConnectAccountModal({
       const data = await apiFetch<{ authorizationUrl: string }>(
         `/social-accounts/oauth-url/${platformType}`,
       );
+
+      const handleMessage = (event: MessageEvent) => {
+        if (event.data === 'oauth_success') {
+          window.removeEventListener('message', handleMessage);
+          onSuccess();
+          onClose();
+        }
+      };
+      window.addEventListener('message', handleMessage);
+
       window.open(data.authorizationUrl, '_blank', 'width=600,height=700');
     } catch (err: any) {
       setError(formatErrorMessage(err));

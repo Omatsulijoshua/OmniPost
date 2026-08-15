@@ -48,26 +48,44 @@ export class SocialAccountService {
 
   async getOAuthUrl(platformType: PlatformType): Promise<OAuthUrlResponse> {
     const state = Math.random().toString(36).substring(2, 15);
-    const tiktokKey = process.env.TIKTOK_CLIENT_KEY || 'MOCK_CLIENT_KEY';
-    const instagramKey = process.env.INSTAGRAM_CLIENT_ID || 'MOCK_CLIENT_ID';
-    const googleKey = process.env.GOOGLE_CLIENT_ID || 'MOCK_CLIENT_ID';
-    const twitterKey = process.env.X_CLIENT_ID || 'MOCK_CLIENT_ID';
+    const webUrl = process.env.FRONTEND_URL || 'https://omnipost-web-ivory.vercel.app';
+
+    const tiktokKey = process.env.TIKTOK_CLIENT_KEY;
+    const instagramKey = process.env.INSTAGRAM_CLIENT_ID;
+    const googleKey = process.env.GOOGLE_CLIENT_ID;
+    const twitterKey = process.env.X_CLIENT_ID;
+    const facebookKey = process.env.FACEBOOK_CLIENT_ID;
+    const linkedinKey = process.env.LINKEDIN_CLIENT_ID;
 
     const authUrls: Record<PlatformType, string> = {
-      INSTAGRAM: `https://api.instagram.com/oauth/authorize?client_id=${instagramKey}&redirect_uri=https://omnipost.io/oauth/callback&response_type=code&scope=user_profile,user_media&state=${state}`,
-      FACEBOOK: `https://www.facebook.com/v18.0/dialog/oauth?client_id=${process.env.FACEBOOK_CLIENT_ID || 'MOCK_CLIENT_ID'}&redirect_uri=https://omnipost.io/oauth/callback&state=${state}`,
-      TIKTOK: `https://www.tiktok.com/v2/auth/authorize/?client_key=${tiktokKey}&response_type=code&scope=user.info.basic,video.publish&redirect_uri=https://omnipost.io/oauth/callback&state=${state}`,
-      YOUTUBE: `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleKey}&redirect_uri=https://omnipost.io/oauth/callback&response_type=code&scope=https://www.googleapis.com/auth/youtube.upload&state=${state}`,
-      X: `https://twitter.com/i/oauth2/authorize?client_id=${twitterKey}&redirect_uri=https://omnipost.io/oauth/callback&response_type=code&scope=tweet.read,tweet.write,users.read&state=${state}`,
-      LINKEDIN: `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${process.env.LINKEDIN_CLIENT_ID || 'MOCK_CLIENT_ID'}&redirect_uri=https://omnipost.io/oauth/callback&state=${state}`,
-      THREADS: `https://threads.net/oauth/authorize?client_id=${process.env.THREADS_CLIENT_ID || 'MOCK_CLIENT_ID'}&redirect_uri=https://omnipost.io/oauth/callback&response_type=code&state=${state}`,
-      PINTEREST: `https://www.pinterest.com/oauth/?client_id=${process.env.PINTEREST_CLIENT_ID || 'MOCK_CLIENT_ID'}&redirect_uri=https://omnipost.io/oauth/callback&response_type=code&state=${state}`,
-      TELEGRAM: `https://telegram.org/auth?bot_id=${process.env.TELEGRAM_BOT_ID || 'MOCK_BOT_ID'}&origin=https://omnipost.io&return_to=https://omnipost.io/oauth/callback`,
-      DISCORD: `https://discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT_ID || 'MOCK_CLIENT_ID'}&redirect_uri=https://omnipost.io/oauth/callback&response_type=code&scope=bot&state=${state}`,
-      SLACK: `https://slack.com/oauth/v2/authorize?client_id=${process.env.SLACK_CLIENT_ID || 'MOCK_CLIENT_ID'}&user_scope=chat:write&state=${state}`,
-      REDDIT: `https://www.reddit.com/api/v1/authorize?client_id=${process.env.REDDIT_CLIENT_ID || 'MOCK_CLIENT_ID'}&response_type=code&state=${state}&redirect_uri=https://omnipost.io/oauth/callback&duration=permanent&scope=submit`,
-      GOOGLE_BUSINESS: `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleKey}&redirect_uri=https://omnipost.io/oauth/callback&response_type=code&scope=https://www.googleapis.com/auth/business.manage&state=${state}`,
-      OTHER: `https://omnipost.io/oauth/custom?state=${state}`,
+      INSTAGRAM: instagramKey
+        ? `https://api.instagram.com/oauth/authorize?client_id=${instagramKey}&redirect_uri=${webUrl}/oauth/callback&response_type=code&scope=user_profile,user_media&state=${state}`
+        : `${webUrl}/oauth/sandbox?platform=INSTAGRAM&state=${state}`,
+      FACEBOOK: facebookKey
+        ? `https://www.facebook.com/v18.0/dialog/oauth?client_id=${facebookKey}&redirect_uri=${webUrl}/oauth/callback&state=${state}`
+        : `${webUrl}/oauth/sandbox?platform=FACEBOOK&state=${state}`,
+      TIKTOK: tiktokKey
+        ? `https://www.tiktok.com/v2/auth/authorize/?client_key=${tiktokKey}&response_type=code&scope=user.info.basic,video.publish&redirect_uri=${webUrl}/oauth/callback&state=${state}`
+        : `${webUrl}/oauth/sandbox?platform=TIKTOK&state=${state}`,
+      YOUTUBE: googleKey
+        ? `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleKey}&redirect_uri=${webUrl}/oauth/callback&response_type=code&scope=https://www.googleapis.com/auth/youtube.upload&state=${state}`
+        : `${webUrl}/oauth/sandbox?platform=YOUTUBE&state=${state}`,
+      X: twitterKey
+        ? `https://twitter.com/i/oauth2/authorize?client_id=${twitterKey}&redirect_uri=${webUrl}/oauth/callback&response_type=code&scope=tweet.read,tweet.write,users.read&state=${state}`
+        : `${webUrl}/oauth/sandbox?platform=X&state=${state}`,
+      LINKEDIN: linkedinKey
+        ? `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${linkedinKey}&redirect_uri=${webUrl}/oauth/callback&state=${state}`
+        : `${webUrl}/oauth/sandbox?platform=LINKEDIN&state=${state}`,
+      THREADS: `${webUrl}/oauth/sandbox?platform=THREADS&state=${state}`,
+      PINTEREST: `${webUrl}/oauth/sandbox?platform=PINTEREST&state=${state}`,
+      TELEGRAM: `${webUrl}/oauth/sandbox?platform=TELEGRAM&state=${state}`,
+      DISCORD: `${webUrl}/oauth/sandbox?platform=DISCORD&state=${state}`,
+      SLACK: `${webUrl}/oauth/sandbox?platform=SLACK&state=${state}`,
+      REDDIT: `${webUrl}/oauth/sandbox?platform=REDDIT&state=${state}`,
+      GOOGLE_BUSINESS: googleKey
+        ? `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleKey}&redirect_uri=${webUrl}/oauth/callback&response_type=code&scope=https://www.googleapis.com/auth/business.manage&state=${state}`
+        : `${webUrl}/oauth/sandbox?platform=GOOGLE_BUSINESS&state=${state}`,
+      OTHER: `${webUrl}/oauth/sandbox?platform=OTHER&state=${state}`,
     };
 
     return {
