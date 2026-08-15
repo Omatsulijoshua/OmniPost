@@ -4,9 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '../../../lib/auth-store';
 import { apiFetch } from '../../../lib/api-client';
-import { SocialAccountDetail } from '@omnipost/types';
+import { SocialAccountDetail, SocialGroupDetail } from '@omnipost/types';
 import { PlatformPreviewCard } from '../../../components/post/platform-preview-card';
-import { Button } from '@omnipost/ui';
 
 interface OverrideState {
   caption: string;
@@ -22,6 +21,7 @@ export default function CreatePostPage() {
 
   const [contentType, setContentType] = useState<PostContentType>('image');
   const [connectedAccounts, setConnectedAccounts] = useState<SocialAccountDetail[]>([]);
+  const [channelGroups, setChannelGroups] = useState<SocialGroupDetail[]>([]);
   const [selectedAccountIds, setSelectedAccountIds] = useState<string[]>([]);
   const [activeTabAccountId, setActiveTabAccountId] = useState<string | null>(null);
 
@@ -46,6 +46,16 @@ export default function CreatePostPage() {
         }
       })
       .catch(() => setConnectedAccounts([]));
+
+    // Load channel groups
+    const savedGroups = localStorage.getItem(`omnipost_groups_${activeWorkspace.id}`);
+    if (savedGroups) {
+      try {
+        setChannelGroups(JSON.parse(savedGroups));
+      } catch {
+        setChannelGroups([]);
+      }
+    }
   }, [activeWorkspace?.id]);
 
   const toggleAccountSelection = (id: string) => {
@@ -56,6 +66,13 @@ export default function CreatePostPage() {
       }
       return next;
     });
+  };
+
+  const handleSelectGroup = (group: SocialGroupDetail) => {
+    setSelectedAccountIds(group.socialAccountIds);
+    if (group.socialAccountIds.length > 0) {
+      setActiveTabAccountId(group.socialAccountIds[0]);
+    }
   };
 
   const handleSelectAll = () => {
@@ -158,7 +175,7 @@ export default function CreatePostPage() {
       <div>
         <h1 className="text-3xl font-black text-slate-900 tracking-tight">Create & Adapt Post</h1>
         <p className="mt-1 text-xs sm:text-sm text-slate-500 font-medium">
-          Create once. Select target social channels. Adapt format automatically everywhere.
+          Select a preset Channel Group or choose individual social accounts to publish across platforms.
         </p>
       </div>
 
@@ -307,14 +324,14 @@ export default function CreatePostPage() {
         )}
       </div>
 
-      {/* Step 3: Checkbox Social Channels Matrix */}
+      {/* Step 3: Checkbox Social Channels & Channel Group Selector */}
       <div className="p-6 bg-white border border-slate-200/80 rounded-2xl space-y-4 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <h2 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-              3. Check Channels to Publish To ({selectedAccountIds.length} Selected)
+              3. Target Channels ({selectedAccountIds.length} Selected)
             </h2>
-            <p className="text-[11px] text-slate-500">Tick the checkboxes for the target platforms where this post will go live</p>
+            <p className="text-[11px] text-slate-500">Pick a preset Group Bundle or select individual social accounts below</p>
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -322,7 +339,7 @@ export default function CreatePostPage() {
               onClick={handleSelectAll}
               className="px-3 py-1 bg-blue-50 text-blue-700 text-[11px] font-bold rounded-lg hover:bg-blue-100"
             >
-              ✓ Select All
+              ✓ Select All Accounts
             </button>
             <button
               type="button"
@@ -334,6 +351,38 @@ export default function CreatePostPage() {
           </div>
         </div>
 
+        {/* Preset Social Group Bundles Pills */}
+        {channelGroups.length > 0 && (
+          <div className="space-y-2 pt-1 border-t border-slate-100">
+            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+              📁 Quick Select Channel Groups / Bundles
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {channelGroups.map((group) => {
+                const isFullySelected = group.socialAccountIds.every((id) => selectedAccountIds.includes(id));
+                return (
+                  <button
+                    key={group.id}
+                    type="button"
+                    onClick={() => handleSelectGroup(group)}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-extrabold transition-all border flex items-center gap-2 ${
+                      isFullySelected
+                        ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
+                        : 'bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100'
+                    }`}
+                  >
+                    <span>📁 {group.name}</span>
+                    <span className="px-2 py-0.5 text-[9px] bg-white/20 rounded-full">
+                      {group.socialAccountIds.length} Channels
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Individual Checkbox Grid */}
         {connectedAccounts.length === 0 ? (
           <div className="text-xs text-amber-800 bg-amber-50 p-4 rounded-xl border border-amber-200 font-medium">
             No connected accounts found for this workspace. Go to{' '}
@@ -343,7 +392,7 @@ export default function CreatePostPage() {
             to connect channels first.
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 pt-2">
             {connectedAccounts.map((acc) => {
               const isChecked = selectedAccountIds.includes(acc.id);
               return (

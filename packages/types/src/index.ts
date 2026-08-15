@@ -220,13 +220,22 @@ export interface TranscodingJobDetail {
   updatedAt: string;
 }
 
-export interface MediaFilterQuery {
-  search?: string;
-  type?: 'all' | 'video' | 'image' | 'audio';
-  folderId?: string;
-  sort?: 'newest' | 'oldest' | 'name' | 'size';
-  page?: number;
-  limit?: number;
+export interface SocialGroupDetail {
+  id: string;
+  workspaceId: string;
+  name: string;
+  description?: string;
+  color?: string;
+  socialAccountIds: string[];
+  accounts?: SocialAccountDetail[];
+  createdAt: string;
+}
+
+export interface CreateSocialGroupInput {
+  name: string;
+  description?: string;
+  color?: string;
+  socialAccountIds: string[];
 }
 
 export interface PostVersionDetail {
