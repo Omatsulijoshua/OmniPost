@@ -1,12 +1,53 @@
-# OmniPost — Multi-Platform Social Media Automation & Enterprise Admin Portal
+# OmniPost — Multi-Platform Social Media Automation & Enterprise SaaS
 
-OmniPost is an all-in-one social media publishing, scheduling, AI content generation, and multi-channel analytics platform. It features a Next.js customer web portal, a NestJS REST API backend, and a standalone Next.js 15 Enterprise Admin Dashboard for platform operations, workspace governance, subscription management, and security telemetry.
+OmniPost is an all-in-one social media publishing, scheduling, AI content generation, and multi-channel analytics SaaS platform. It features a Next.js customer web portal, a NestJS REST API backend, and a Next.js 15 Enterprise Admin Dashboard.
+
+---
+
+## 🌟 Key Platform Features & Architecture Updates
+
+### 1. 🎨 Premium White, Royal Blue & Emerald Green UI Theme
+- **Crisp High-Contrast Design**: Clean white containers (`bg-white`), subtle dividers (`border-slate-200`), and soft slate backgrounds (`bg-slate-50`).
+- **Brand Accents**: Royal Blue primary buttons/active states (`bg-blue-600`) and Emerald Green success badges/conversion CTAs (`bg-emerald-600`).
+
+### 2. 🎥 Multi-Account YouTube Channels & TikTok Accounts
+- **Multiple Accounts Per Platform**: Link multiple channels under the same platform (e.g. 3 YouTube channels: `@gaming_vlogs`, `@tech_channel`, `@shorts_brand`; 2 TikTok accounts: `@business_tok`, `@personal_tok`).
+- **Account-Level Previews & Overrides**: Distinct preview tabs for each linked account allowing unique titles, captions, and hashtags.
+
+### 3. ✍️ Interactive Channel Checkboxes & Content Selector
+- **Content Format Selector**: 🖼️ **Photo/Image Post**, 🎥 **Video/Reel/Short Post**, or 📝 **Text-Only Post**.
+- **Target Channel Checkbox Matrix**: Tick individual connected accounts or use quick `✓ Select All` / `✕ Deselect All` actions.
+
+### 4. 🛡️ Team Collaboration & Restricted Approval Workflows
+- **Granular Workspace Roles**:
+  - **OWNER / ADMIN**: Full workspace control & instant publishing.
+  - **EDITOR / CREATOR**: Restricted to drafts — must click `Submit for Approval`.
+  - **PUBLISHER / SCHEDULER**: Manages queue calendar and schedules pre-approved posts.
+  - **ANALYST / VIEWER**: Read-only performance inspection.
+- **Team Governance Studio**: Review queue, internal discussion threads, and one-click approve/reject controls.
+
+### 5. 📦 30-Day Media Auto-Wipe vs Paid Permanent Storage
+- **Free/Standard Policy**: Heavy raw videos and photo assets auto-expire after 30 days to optimize cloud storage costs.
+- **Permanent Lifetime Storage Pass**: Paid add-on ($15/mo) or included with Pro/Agency tiers for lifetime asset retention.
+
+### 6. 📜 Multi-Channel Post History & Audit Inspector Modal
+- **Detailed History Inspection**: View complete target channel breakdowns, adapted captions, live post URLs (`🔗 View Live Post`), and individual platform status.
+- **Audit Timeline**: Step-by-step history tracking when a post was created, submitted for approval, approved, scheduled, and published.
+
+---
+
+### 💳 Tiered Pricing & Channel Capacity Matrix
+
+| Subscription Tier | Monthly Price | Connected Social Account Limit | Post Quota & Media Storage |
+|---|---|---|---|
+| **FREE STARTER** | **$0 / mo** | **3 Connected Social Channels** | **1 Post / mo (Free Trial)**, 30-Day Media Auto-Wipe |
+| **CREATOR TIER** | **$29 / mo** | **10 Connected Social Channels** | **100 Posts / mo**, 1,000 AI Credits, 3 Team Seats |
+| **PRO GROWTH** | **$79 / mo** | **25 Connected Social Channels** | **500 Posts / mo**, **Permanent Lifetime Storage**, 10 Team Seats |
+| **AGENCY UNLIMITED** | **$199 / mo** | **UNLIMITED Social Channels** | **UNLIMITED Posts / mo**, **Permanent Lifetime Storage**, 25k AI Credits |
 
 ---
 
 ## 🚀 Repository Structure
-
-This monorepo contains the following applications and packages:
 
 ```text
 OmniPost/
@@ -15,10 +56,10 @@ OmniPost/
 │   ├── api/                 # NestJS Core API Gateway & Admin Endpoints (Port 3001)
 │   └── web/                 # Customer Web Application (Port 3000)
 ├── packages/
+│   ├── billing-core/        # Billing Engine & Tier Specs
 │   ├── types/               # Shared TypeScript Interfaces & DTO Schemas
 │   ├── ui/                  # Shared UI Component Library & Design Tokens
 │   └── validation/          # Zod Validation Schemas
-├── docs/                    # Architecture Guidelines & Engineering Specs
 ├── README.md                # Main Project Documentation
 └── package.json             # Monorepo Workspace Configuration
 ```
@@ -29,114 +70,13 @@ OmniPost/
 
 | Application | Framework | Port | Command |
 |---|---|---|---|
-| **Customer App (`apps/web`)** | Next.js 14 / React 18 | `3000` | `npm run dev --workspace=apps/web` |
-| **REST API Backend (`apps/api`)** | NestJS / Prisma ORM | `3001` | `npm run dev --workspace=apps/api` |
-| **Admin Dashboard (`apps/admin`)** | Next.js 15 / Tailwind CSS | `3002` | `npm run dev --workspace=apps/admin` |
-
----
-
-## 🔐 Admin Authentication & Role-Based Access Control (RBAC)
-
-The Admin Dashboard enforces **Server-Side Guard Protection (`AdminJwtGuard`)** on all `/api/v1/admin/*` endpoints. It includes **6-digit TOTP MFA verification** and supports 7 distinct administrative roles:
-
-1. **`SUPER_ADMIN`**: Unrestricted platform access, billing, security, and role management (`*`).
-2. **`PLATFORM_ADMIN`**: Manage 13 social networks, publishing queues, and feature flags.
-3. **`OPERATIONS_ADMIN`**: Infrastructure health, BullMQ queue switches, FFmpeg transcoding, worker fleet.
-4. **`SUPPORT_ADMIN`**: Customer helpdesk tickets, workspace inspection, and official support replies.
-5. **`FINANCE_ADMIN`**: Plan tier quotas, customer subscriptions, payment transactions, and audited refunds.
-6. **`ANALYST`**: Executive DAU/WAU/MAU metrics, cohort retention, and platform performance graphs.
-7. **`MODERATOR`**: Flagged content review, automated keyword/spam filters, and post blocking.
-
----
-
-## 📊 Complete 20-Phase Admin Build Specification (Phases A–T)
-
-The Enterprise Admin Portal was developed across 20 structured engineering phases:
-
-- **Phase A — Admin Project Initialization**: Built standalone Next.js 15 app in `/apps/admin` (Port 3002), directory architecture, API client (`adminApiFetch`), and Zustand auth store.
-- **Phase B — Admin Authentication & RBAC**: Server-enforced `AdminAuthModule` in NestJS, MFA TOTP verification, and password reset flows.
-- **Phase C — Admin Layout & Design System**: Dark glassmorphic design system (`AdminSidebar`, `AdminHeader`, global search bar, incident alert pill).
-- **Phase D — Executive Dashboard**: Real-time KPI telemetry (Users, Active Workspaces, Published Posts, MRR, AI Tokens, Infrastructure Health Grid).
-- **Phase E — User Management**: User directory with status filtering (`ACTIVE`, `SUSPENDED`), profile inspection, force logout, and MFA reset controllers.
-- **Phase F — Workspace & Agency Management**: Workspace inspection detail views and Agency White-Label Portfolio Hub.
-- **Phase G — Social Platform Matrix**: Telemetry tracking across all 13 social networks (Instagram, TikTok, YouTube, X, LinkedIn, Facebook, Threads, Pinterest, Telegram, Discord, Slack, Reddit, Google Business Profile).
-- **Phase H — Social-Account Monitoring**: Token health telemetry (Connected, Token Expiring, Permission Revoked) with secret token masking (`••••••••`).
-- **Phase I — Global Publishing Management**: Global activity table and execution stage timeline inspector (Created → Queued → Processing → Uploading → Publishing → Published).
-- **Phase J — Failed-Job Center**: Root-cause error categorization (Authentication, Rate Limit, Invalid Media, Permission, Platform API, Network) and `⚡ Bulk Retry` controls.
-- **Phase K — Media Monitoring**: Storage usage overview (Video vs Image), top storage workspaces, and FFmpeg transcoding log inspector.
-- **Phase L — AI Management & Costs**: Multi-LLM usage tracking (OpenAI, Gemini, Anthropic), feature request distribution, and encrypted API key management (`••••••••8f2a`).
-- **Phase M — Executive Product Analytics**: DAU, WAU, MAU retention metrics (`7d`, `30d`, `90d`, `12m`), cohort analysis, and cross-platform comparative performance.
-- **Phase N — Billing & Subscriptions**: Subscription directory, Plan Entitlement Manager (Free, Creator, Pro, Agency), multi-gateway payment ledger (Stripe, Paystack, Flutterwave), and finance-audited refunds.
-- **Phase O — Support & Moderation**: Helpdesk support ticket center, threaded replies, and flagged content policy enforcement (Approve, Block, Warn, Suspend).
-- **Phase P — Security Audit Logs**: Immutable audit log ledger, JSON state diff inspector (Before vs After), and SHA-256 cryptographic non-repudiation verification.
-- **Phase Q — System Health & Queue Monitoring**: Infrastructure health checks, BullMQ queue pause/resume controls, and active worker process fleet CPU/RAM telemetry.
-- **Phase R — Feature Flags & Settings**: Targeted feature rollout engine (Rollout %, Plan tiers, Workspace whitelist), global maintenance mode switch, and 7-role RBAC matrix.
-- **Phase S — Security Hardening**: Admin CIDR IP whitelisting rules, session inactivity timeouts, active session inventory, and instant session revocation.
-- **Phase T — Testing & Production Release**: Full NestJS Jest test suite execution (33 passed test suites / 94 tests) and production Next.js 15 build (34 prerendered pages).
-
----
-
-## 🛠 Setup & Installation
-
-### Prerequisites
-- **Node.js**: `v20.x` or higher
-- **Package Manager**: `npm v10.x` or `pnpm`
-- **Database**: PostgreSQL database & Redis server instance
-
-### 1. Install Workspace Dependencies
-```bash
-npm install
-```
-
-### 2. Environment Variables Configuration
-Copy `.env.example` to `.env.local` in `apps/admin` and `apps/api`:
-
-```env
-# apps/admin/.env.local
-NEXT_PUBLIC_API_URL=http://localhost:3001/api/v1
-NEXT_PUBLIC_ADMIN_PORT=3002
-
-# apps/api/.env
-PORT=3001
-DATABASE_URL=postgresql://postgres:password@localhost:5432/omnipost
-REDIS_URL=redis://localhost:6379
-JWT_SECRET=super-secret-jwt-key
-JWT_ADMIN_SECRET=super-secret-admin-jwt-key
-```
-
-### 3. Run Applications Locally
-```bash
-# Start API backend (Port 3001)
-npm run dev --workspace=apps/api
-
-# Start Admin Dashboard (Port 3002)
-npm run dev --workspace=apps/admin
-
-# Start Customer Web Portal (Port 3000)
-npm run dev --workspace=apps/web
-```
-
----
-
-## 🧪 Testing & Production Build
-
-### Run Backend API Unit Tests (`apps/api`)
-```bash
-cd apps/api
-npm run test
-# Output: PASS 33/33 test suites (94 passed tests)
-```
-
-### Compile Production Admin Build (`apps/admin`)
-```bash
-cd apps/admin
-npm run build
-# Output: Compiled 34 static and dynamic prerendered routes cleanly
-```
+| **Customer App (`apps/web`)** | Next.js 15 / React 18 | `3000` | `pnpm --filter @omnipost/web dev` |
+| **REST API Backend (`apps/api`)** | NestJS / Prisma ORM | `3001` | `pnpm --filter @omnipost/api dev` |
+| **Admin Dashboard (`apps/admin`)** | Next.js 15 / Tailwind CSS | `3002` | `pnpm --filter @omnipost/admin dev` |
 
 ---
 
 ## 📄 License & GitHub Repository
 - **Repository**: [https://github.com/Omatsulijoshua/OmniPost](https://github.com/Omatsulijoshua/OmniPost)
-- **Main Branch**: `main`
-- **License**: Enterprise Proprietary License — All Rights Reserved.
+- **Main Web App**: [https://omnipost-web-ivory.vercel.app](https://omnipost-web-ivory.vercel.app)
+- **API Backend**: [https://omnipost-api.onrender.com](https://omnipost-api.onrender.com)
