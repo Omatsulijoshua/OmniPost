@@ -7,6 +7,7 @@ import { PlatformType, SocialAccountDetail, SocialGroupDetail } from '@omnipost/
 import { AccountCard } from '../../../components/social-accounts/account-card';
 import { ConnectAccountModal } from '../../../components/social-accounts/connect-account-modal';
 import { CreateGroupModal } from '../../../components/social-groups/create-group-modal';
+import { DeveloperKeysModal } from '../../../components/settings/developer-keys-modal';
 
 const allPlatforms: PlatformType[] = [
   'INSTAGRAM',
@@ -32,6 +33,7 @@ export default function SocialAccountsPage() {
   const [groups, setGroups] = useState<SocialGroupDetail[]>([]);
   const [connectingPlatform, setConnectingPlatform] = useState<PlatformType | null>(null);
   const [showGroupModal, setShowGroupModal] = useState(false);
+  const [showDeveloperKeysModal, setShowDeveloperKeysModal] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -192,12 +194,20 @@ export default function SocialAccountsPage() {
           </p>
         </div>
 
-        <button
-          onClick={() => setShowGroupModal(true)}
-          className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-xl shadow-md shadow-blue-600/20 whitespace-nowrap transition-all"
-        >
-          📁 + Create Channel Group
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setShowDeveloperKeysModal(true)}
+            className="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs rounded-xl shadow-md shadow-slate-900/20 whitespace-nowrap transition-all flex items-center gap-1.5"
+          >
+            <span>🔑</span> Developer API Keys
+          </button>
+          <button
+            onClick={() => setShowGroupModal(true)}
+            className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-xl shadow-md shadow-blue-600/20 whitespace-nowrap transition-all"
+          >
+            📁 + Create Channel Group
+          </button>
+        </div>
       </div>
 
       {error && (
@@ -295,6 +305,11 @@ export default function SocialAccountsPage() {
         platformType={connectingPlatform}
         onClose={() => setConnectingPlatform(null)}
         onSuccess={loadData}
+      />
+
+      <DeveloperKeysModal
+        isOpen={showDeveloperKeysModal}
+        onClose={() => setShowDeveloperKeysModal(false)}
       />
     </div>
   );

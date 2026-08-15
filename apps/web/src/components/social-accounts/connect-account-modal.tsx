@@ -47,13 +47,26 @@ export function ConnectAccountModal({
         `/social-accounts/oauth-url/${platformType}`,
       ).catch(() => {
         const webUrl = window.location.origin;
+        let storedKeys: any = {};
+        try {
+          const raw = localStorage.getItem('omnipost_developer_keys');
+          if (raw) storedKeys = JSON.parse(raw);
+        } catch {
+          storedKeys = {};
+        }
+
+        const tkKey = storedKeys.tiktokClientKey || 'MOCK_CLIENT_KEY';
+        const igKey = storedKeys.instagramClientId || 'MOCK_CLIENT_ID';
+        const ytKey = storedKeys.googleClientId || 'MOCK_CLIENT_ID';
+        const xKey = storedKeys.xClientId || 'MOCK_CLIENT_ID';
+
         const liveUrls: Record<string, string> = {
-          TIKTOK: `https://www.tiktok.com/v2/auth/authorize/?client_key=MOCK_CLIENT_KEY&response_type=code&scope=user.info.basic,video.publish&redirect_uri=${webUrl}/oauth/callback`,
-          INSTAGRAM: `https://api.instagram.com/oauth/authorize?client_id=MOCK_CLIENT_ID&redirect_uri=${webUrl}/oauth/callback&response_type=code&scope=user_profile,user_media`,
-          YOUTUBE: `https://accounts.google.com/o/oauth2/v2/auth?client_id=MOCK_CLIENT_ID&redirect_uri=${webUrl}/oauth/callback&response_type=code&scope=https://www.googleapis.com/auth/youtube.upload`,
-          X: `https://twitter.com/i/oauth2/authorize?client_id=MOCK_CLIENT_ID&redirect_uri=${webUrl}/oauth/callback&response_type=code&scope=tweet.read,tweet.write,users.read`,
+          TIKTOK: `https://www.tiktok.com/v2/auth/authorize/?client_key=${tkKey}&response_type=code&scope=user.info.basic,video.publish&redirect_uri=${webUrl}/oauth/callback`,
+          INSTAGRAM: `https://api.instagram.com/oauth/authorize?client_id=${igKey}&redirect_uri=${webUrl}/oauth/callback&response_type=code&scope=user_profile,user_media`,
+          YOUTUBE: `https://accounts.google.com/o/oauth2/v2/auth?client_id=${ytKey}&redirect_uri=${webUrl}/oauth/callback&response_type=code&scope=https://www.googleapis.com/auth/youtube.upload`,
+          X: `https://twitter.com/i/oauth2/authorize?client_id=${xKey}&redirect_uri=${webUrl}/oauth/callback&response_type=code&scope=tweet.read,tweet.write,users.read`,
         };
-        return { authorizationUrl: liveUrls[platformType] || `https://www.tiktok.com/v2/auth/authorize/?client_key=MOCK_CLIENT_KEY` };
+        return { authorizationUrl: liveUrls[platformType] || `https://www.tiktok.com/v2/auth/authorize/?client_key=${tkKey}` };
       });
 
       const handleMessage = (event: MessageEvent) => {
