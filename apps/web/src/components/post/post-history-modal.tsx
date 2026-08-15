@@ -110,10 +110,40 @@ export function PostHistoryModal({
               </div>
             ) : (
               filteredVersions.map((ver) => {
-                const liveUrl =
-                  ver.status === 'PUBLISHED'
-                    ? `https://${ver.platformType.toLowerCase()}.com/post/${ver.id.slice(0, 8)}`
-                    : null;
+                const cleanHandle = (ver.accountName || '').replace('@', '').trim();
+                let liveUrl: string | null = null;
+
+                if (ver.status === 'PUBLISHED') {
+                  if (ver.externalPostUrl && ver.externalPostUrl.startsWith('http')) {
+                    liveUrl = ver.externalPostUrl;
+                  } else {
+                    switch (ver.platformType) {
+                      case 'TIKTOK':
+                        liveUrl = cleanHandle ? `https://www.tiktok.com/@${cleanHandle}` : 'https://www.tiktok.com';
+                        break;
+                      case 'INSTAGRAM':
+                        liveUrl = cleanHandle ? `https://www.instagram.com/${cleanHandle}` : 'https://www.instagram.com';
+                        break;
+                      case 'YOUTUBE':
+                        liveUrl = cleanHandle ? `https://www.youtube.com/@${cleanHandle}` : 'https://www.youtube.com';
+                        break;
+                      case 'X':
+                        liveUrl = cleanHandle ? `https://x.com/${cleanHandle}` : 'https://x.com';
+                        break;
+                      case 'LINKEDIN':
+                        liveUrl = 'https://www.linkedin.com';
+                        break;
+                      case 'FACEBOOK':
+                        liveUrl = 'https://www.facebook.com';
+                        break;
+                      case 'PINTEREST':
+                        liveUrl = cleanHandle ? `https://www.pinterest.com/${cleanHandle}` : 'https://www.pinterest.com';
+                        break;
+                      default:
+                        liveUrl = `https://${ver.platformType.toLowerCase()}.com`;
+                    }
+                  }
+                }
 
                 const accNameDisplay = ver.accountName || `@${ver.platformType.toLowerCase()}_account`;
 
