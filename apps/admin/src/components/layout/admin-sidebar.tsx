@@ -7,18 +7,35 @@ import {
   LayoutDashboard,
   Users,
   Building2,
-  Share2,
+  UserCheck,
+  Briefcase,
   FileText,
+  Clock,
   AlertOctagon,
   Image,
+  Layers,
+  Share2,
+  ShieldCheck,
+  Activity,
+  AlertTriangle,
   Bot,
   DollarSign,
+  Cpu,
+  Server,
+  CreditCard,
+  Package,
+  Receipt,
+  TrendingUp,
   BarChart3,
+  PieChart,
+  LineChart,
   LifeBuoy,
+  Bell,
   ShieldAlert,
-  Activity,
-  Settings,
-  ShieldCheck,
+  Sliders,
+  Shield,
+  Flag,
+  Settings as SettingsIcon,
   Menu,
   X,
 } from 'lucide-react';
@@ -38,42 +55,72 @@ const navSections: NavSection[] = [
     items: [
       { label: 'Users', href: '/users', icon: Users },
       { label: 'Workspaces', href: '/workspaces', icon: Building2 },
+      { label: 'Teams', href: '/settings/roles', icon: UserCheck },
+      { label: 'Agencies', href: '/agencies', icon: Briefcase },
     ],
   },
   {
     title: 'Content & Publishing',
     items: [
-      { label: 'Publishing Queue', href: '/publishing', icon: FileText },
+      { label: 'Posts', href: '/publishing', icon: FileText },
+      { label: 'Publishing Queue', href: '/publishing', icon: Clock },
       { label: 'Failed Jobs', href: '/publishing/failed', icon: AlertOctagon },
       { label: 'Media Assets', href: '/media', icon: Image },
+      { label: 'Templates', href: '/media/jobs', icon: Layers },
     ],
   },
   {
-    title: 'Platforms & Accounts',
+    title: 'Platforms',
     items: [
       { label: 'Platforms Health', href: '/platforms', icon: Share2 },
-      { label: 'Social Accounts', href: '/social-accounts', icon: ShieldCheck },
+      { label: 'Connected Accounts', href: '/social-accounts', icon: ShieldCheck },
+      { label: 'API Health', href: '/system/health', icon: Activity },
+      { label: 'Platform Errors', href: '/publishing/failed', icon: AlertTriangle },
     ],
   },
   {
     title: 'AI Management',
-    items: [{ label: 'AI Usage & Costs', href: '/ai', icon: Bot }],
+    items: [
+      { label: 'AI Usage', href: '/ai', icon: Bot },
+      { label: 'AI Costs', href: '/ai', icon: DollarSign },
+      { label: 'AI Jobs', href: '/ai/routing', icon: Cpu },
+      { label: 'AI Providers', href: '/ai/providers', icon: Server },
+    ],
   },
   {
-    title: 'Business & Billing',
-    items: [{ label: 'Subscriptions', href: '/billing/subscriptions', icon: DollarSign }],
+    title: 'Business',
+    items: [
+      { label: 'Subscriptions', href: '/billing/subscriptions', icon: CreditCard },
+      { label: 'Plans', href: '/billing/plans', icon: Package },
+      { label: 'Payments', href: '/billing/payments', icon: Receipt },
+      { label: 'Invoices', href: '/billing/payments', icon: Receipt },
+      { label: 'Revenue', href: '/analytics', icon: TrendingUp },
+    ],
   },
   {
     title: 'Analytics',
-    items: [{ label: 'Product Analytics', href: '/analytics', icon: BarChart3 }],
+    items: [
+      { label: 'Platform Analytics', href: '/analytics/platforms', icon: PieChart },
+      { label: 'Product Analytics', href: '/analytics/product', icon: BarChart3 },
+      { label: 'Usage Analytics', href: '/analytics', icon: LineChart },
+    ],
   },
   {
-    title: 'Operations & Health',
+    title: 'Operations',
     items: [
-      { label: 'Support Tickets', href: '/support/tickets', icon: LifeBuoy },
+      { label: 'Support', href: '/support/tickets', icon: LifeBuoy },
+      { label: 'Notifications', href: '/moderation', icon: Bell },
       { label: 'Audit Logs', href: '/audit-logs', icon: ShieldAlert },
-      { label: 'System Health', href: '/system/health', icon: Activity },
-      { label: 'Settings', href: '/settings/flags', icon: Settings },
+      { label: 'System Health', href: '/system/health', icon: Sliders },
+    ],
+  },
+  {
+    title: 'Settings',
+    items: [
+      { label: 'General', href: '/settings/platform', icon: SettingsIcon },
+      { label: 'Security', href: '/security/policies', icon: Shield },
+      { label: 'Feature Flags', href: '/settings/flags', icon: Flag },
+      { label: 'System Config', href: '/system/workers', icon: SettingsIcon },
     ],
   },
 ];
@@ -87,12 +134,12 @@ export function AdminSidebar() {
       {/* Brand Header */}
       <div className="p-5 border-b border-slate-800 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-indigo-600 font-black text-sm text-white flex items-center justify-center shadow-lg shadow-indigo-600/30">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-emerald-500 font-black text-sm text-white flex items-center justify-center shadow-lg shadow-blue-600/30">
             OP
           </div>
           <div>
             <h1 className="text-sm font-black text-slate-100 tracking-tight">OmniPost Admin</h1>
-            <span className="text-[10px] text-slate-400 font-mono">v2.5 Enterprise</span>
+            <span className="text-[10px] text-blue-400 font-mono font-bold">Enterprise v2.5</span>
           </div>
         </div>
 
@@ -113,16 +160,16 @@ export function AdminSidebar() {
               {sec.title}
             </div>
             {sec.items.map((item) => {
-              const isActive = pathname === item.href || pathname?.startsWith(`${item.href}/`);
+              const isActive = pathname === item.href;
               const Icon = item.icon;
               return (
                 <Link
-                  key={item.href}
+                  key={`${sec.title}-${item.label}`}
                   href={item.href}
                   onClick={() => setMobileOpen(false)}
                   className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition ${
                     isActive
-                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20'
+                      ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20'
                       : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
                   }`}
                 >
@@ -139,7 +186,7 @@ export function AdminSidebar() {
 
   return (
     <>
-      {/* Mobile Menu Button Trigger */}
+      {/* Mobile Menu Trigger */}
       <div className="md:hidden fixed top-3 left-4 z-50">
         <button
           onClick={() => setMobileOpen(true)}
@@ -154,7 +201,7 @@ export function AdminSidebar() {
         {sidebarContent}
       </aside>
 
-      {/* Mobile Slide-Over Drawer with Backdrop */}
+      {/* Mobile Slide-Over Drawer */}
       {mobileOpen && (
         <div className="md:hidden fixed inset-0 z-50 flex">
           <div
