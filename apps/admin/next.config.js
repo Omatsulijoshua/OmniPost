@@ -4,6 +4,19 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://omnipost-api.onrender
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['@omnipost/types', '@omnipost/validation', '@omnipost/ui', '@omnipost/shared'],
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate',
+          },
+        ],
+      },
+    ];
+  },
   async rewrites() {
     return [
       {
