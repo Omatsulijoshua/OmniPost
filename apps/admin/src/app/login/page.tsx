@@ -6,6 +6,9 @@ import Link from 'next/link';
 import { useAdminAuthStore } from '../../stores/admin-auth-store';
 import { AdminRole, AdminPermission } from '../../types/auth';
 
+const ALLOWED_ADMIN_EMAIL = 'joshuaomatsuli01@gmail.com';
+const ALLOWED_ADMIN_PASS = 'Jos@56567';
+
 export default function AdminLoginPage() {
   const router = useRouter();
   const setAdminAuth = useAdminAuthStore((state) => state.setAdminAuth);
@@ -13,7 +16,7 @@ export default function AdminLoginPage() {
   const [email, setEmail] = useState('joshuaomatsuli01@gmail.com');
   const [password, setPassword] = useState('Jos@56567');
   const [mfaStep, setMfaStep] = useState(false);
-  const [mfaCode, setMfaCode] = useState('');
+  const [mfaCode, setMfaCode] = useState('123456');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [forgotModalOpen, setForgotModalOpen] = useState(false);
@@ -25,9 +28,21 @@ export default function AdminLoginPage() {
     setError(null);
     setLoading(true);
 
+    const inputEmail = email.trim().toLowerCase();
+    const inputPass = password.trim();
+
+    // STRICT CREDENTIAL CHECK: ONLY ALLOW joshuaomatsuli01@gmail.com / Jos@56567
+    if (inputEmail !== ALLOWED_ADMIN_EMAIL.toLowerCase() || inputPass !== ALLOWED_ADMIN_PASS) {
+      setTimeout(() => {
+        setError('Access Denied. Invalid admin credentials. Only authorized platform administrator accounts are permitted.');
+        setLoading(false);
+      }, 400);
+      return;
+    }
+
     setTimeout(() => {
       // Simulate MFA step for super admin logins
-      if (email.trim() === 'joshuaomatsuli01@gmail.com' && !mfaStep) {
+      if (inputEmail === ALLOWED_ADMIN_EMAIL.toLowerCase() && !mfaStep) {
         setMfaStep(true);
         setLoading(false);
         return;
@@ -36,7 +51,7 @@ export default function AdminLoginPage() {
       // Successful Admin Auth Completion
       const adminUser = {
         id: 'usr_admin_joshua',
-        email: email.trim() || 'joshuaomatsuli01@gmail.com',
+        email: ALLOWED_ADMIN_EMAIL,
         name: 'Joshua Omatsuli (Super Admin)',
         role: 'SUPER_ADMIN' as AdminRole,
         permissions: ['*'] as AdminPermission[],
@@ -64,20 +79,24 @@ export default function AdminLoginPage() {
 
   const handleForgotSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (forgotEmail.trim().toLowerCase() !== ALLOWED_ADMIN_EMAIL.toLowerCase()) {
+      setError('Password reset is only available for registered platform administrator emails.');
+      return;
+    }
     setForgotSuccess(true);
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 font-sans text-slate-900">
-      <div className="max-w-md w-full bg-white border border-slate-200/80 rounded-3xl p-8 shadow-xl space-y-6">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center p-4 font-sans text-slate-900 dark:text-slate-100">
+      <div className="max-w-md w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-xl space-y-6">
         {/* Header Branding */}
         <div className="text-center space-y-2">
           <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-emerald-500 flex items-center justify-center text-white font-black text-lg shadow-md shadow-blue-500/20 mx-auto">
             OP
           </div>
           <div className="flex items-center justify-center gap-2 pt-2">
-            <h1 className="text-xl font-black text-slate-900 tracking-tight">OmniPost Admin Portal</h1>
-            <span className="px-2.5 py-0.5 text-[10px] font-extrabold bg-blue-50 border border-blue-200 text-blue-700 rounded-full uppercase">
+            <h1 className="text-xl font-black tracking-tight">OmniPost Admin Portal</h1>
+            <span className="px-2.5 py-0.5 text-[10px] font-extrabold bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-400 rounded-full uppercase">
               👑 System Admin
             </span>
           </div>
@@ -87,7 +106,7 @@ export default function AdminLoginPage() {
         </div>
 
         {error && (
-          <div className="p-4 bg-rose-50 border border-rose-200 rounded-2xl text-xs font-semibold text-rose-700">
+          <div className="p-4 bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-400 rounded-2xl text-xs font-semibold">
             {error}
           </div>
         )}
@@ -96,7 +115,7 @@ export default function AdminLoginPage() {
           {!mfaStep ? (
             <>
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
                   Admin Email Address
                 </label>
                 <input
@@ -105,19 +124,19 @@ export default function AdminLoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="joshuaomatsuli01@gmail.com"
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 font-medium focus:outline-none focus:border-blue-500"
+                  className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-blue-500"
                 />
               </div>
 
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
                     Admin Password
                   </label>
                   <button
                     type="button"
                     onClick={() => setForgotModalOpen(true)}
-                    className="text-[11px] font-bold text-blue-600 hover:underline"
+                    className="text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline"
                   >
                     Forgot password?
                   </button>
@@ -128,16 +147,16 @@ export default function AdminLoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 font-medium focus:outline-none focus:border-blue-500"
+                  className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-blue-500"
                 />
               </div>
             </>
           ) : (
-            <div className="space-y-3 bg-blue-50/50 p-4 border border-blue-200 rounded-2xl">
+            <div className="space-y-3 bg-blue-50/50 dark:bg-blue-950/40 p-4 border border-blue-200 dark:border-blue-800 rounded-2xl">
               <div className="flex items-center gap-2">
                 <span className="text-lg">🔐</span>
                 <div>
-                  <h3 className="text-xs font-extrabold text-slate-900">MFA / 2FA Verification</h3>
+                  <h3 className="text-xs font-extrabold text-slate-900 dark:text-slate-100">MFA / 2FA Verification</h3>
                   <p className="text-[11px] text-slate-500">Enter the 6-digit code from your authenticator app.</p>
                 </div>
               </div>
@@ -148,7 +167,7 @@ export default function AdminLoginPage() {
                 value={mfaCode}
                 onChange={(e) => setMfaCode(e.target.value)}
                 placeholder="123456"
-                className="w-full text-center tracking-widest text-lg font-mono px-4 py-3 bg-white border border-blue-300 rounded-xl text-slate-900 font-bold focus:outline-none focus:border-blue-600"
+                className="w-full text-center tracking-widest text-lg font-mono px-4 py-3 bg-white dark:bg-slate-950 border border-blue-300 dark:border-blue-700 rounded-xl text-slate-900 dark:text-slate-100 font-bold focus:outline-none focus:border-blue-600"
               />
             </div>
           )}
@@ -163,10 +182,10 @@ export default function AdminLoginPage() {
           </button>
         </form>
 
-        <div className="pt-4 border-t border-slate-100 text-center">
+        <div className="pt-4 border-t border-slate-100 dark:border-slate-800 text-center">
           <a
             href="https://omnipost-web-ivory.vercel.app"
-            className="text-xs font-bold text-slate-600 hover:text-blue-600 transition-colors"
+            className="text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-blue-600 transition-colors"
           >
             ← Back to Customer Web Application
           </a>
@@ -176,9 +195,9 @@ export default function AdminLoginPage() {
       {/* Forgot Password Modal */}
       {forgotModalOpen && (
         <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="max-w-md w-full bg-white rounded-3xl p-6 shadow-2xl border border-slate-200 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-sm font-extrabold text-slate-900">Admin Password Reset</h3>
+          <div className="max-w-md w-full bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-2xl border border-slate-200 dark:border-slate-800 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+              <h3 className="text-sm font-extrabold text-slate-900 dark:text-slate-100">Admin Password Reset</h3>
               <button
                 onClick={() => {
                   setForgotModalOpen(false);
@@ -200,8 +219,8 @@ export default function AdminLoginPage() {
                   required
                   value={forgotEmail}
                   onChange={(e) => setForgotEmail(e.target.value)}
-                  placeholder="admin@omnipost.com"
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 font-medium focus:outline-none focus:border-blue-500"
+                  placeholder="joshuaomatsuli01@gmail.com"
+                  className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-blue-500"
                 />
                 <button
                   type="submit"
@@ -211,10 +230,10 @@ export default function AdminLoginPage() {
                 </button>
               </form>
             ) : (
-              <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl text-center space-y-2">
+              <div className="p-4 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 rounded-2xl text-center space-y-2">
                 <span className="text-2xl">✅</span>
-                <p className="text-xs font-extrabold text-emerald-800">Reset instructions dispatched!</p>
-                <p className="text-[11px] text-emerald-700">Check inbox for {forgotEmail}. Link expires in 15 minutes.</p>
+                <p className="text-xs font-extrabold text-emerald-800 dark:text-emerald-300">Reset instructions dispatched!</p>
+                <p className="text-[11px] text-emerald-700 dark:text-emerald-400">Check inbox for {forgotEmail}. Link expires in 15 minutes.</p>
               </div>
             )}
           </div>

@@ -44,14 +44,28 @@ export default function AdminPage() {
   const [loginError, setLoginError] = useState<string | null>(null);
   const [showDeveloperKeysModal, setShowDeveloperKeysModal] = useState(false);
 
+  const ALLOWED_ADMIN_EMAIL = 'joshuaomatsuli01@gmail.com';
+  const ALLOWED_ADMIN_PASS = 'Jos@56567';
+
   const handleAdminLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setLoginLoading(true);
     setLoginError(null);
 
+    const inputEmail = email.trim().toLowerCase();
+    const inputPass = password.trim();
+
+    if (inputEmail !== ALLOWED_ADMIN_EMAIL.toLowerCase() || inputPass !== ALLOWED_ADMIN_PASS) {
+      setTimeout(() => {
+        setLoginError('Access Denied. Invalid admin credentials. Only authorized platform administrator accounts are permitted.');
+        setLoginLoading(false);
+      }, 400);
+      return;
+    }
+
     const adminUser = {
       id: 'usr_admin_joshua',
-      email: email.trim() || 'joshuaomatsuli01@gmail.com',
+      email: ALLOWED_ADMIN_EMAIL,
       name: 'Joshua Omatsuli (System Admin)',
       emailVerified: true,
       twoFactorEnabled: false,
