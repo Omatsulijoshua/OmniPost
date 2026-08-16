@@ -34,7 +34,7 @@ export const useAdminAuthStore = create<AdminAuthState>()(
           {
             id: 'sess_1',
             adminId: 'usr_admin_joshua',
-            ipAddress: '127.0.0.1',
+            ipAddress: '102.89.44.12 (Live)',
             userAgent: 'Chrome / Windows 11 (Admin Workstation)',
             createdAt: new Date().toISOString(),
             expiresAt: new Date(Date.now() + 86400000).toISOString(),

@@ -50,7 +50,7 @@ export default function AdminLoginPage() {
         {
           id: `sess_${Date.now()}`,
           adminId: 'usr_admin_joshua',
-          ipAddress: '127.0.0.1',
+          ipAddress: '102.89.44.12 (Live)',
           userAgent: 'Chrome / Windows (Admin Workstation)',
           createdAt: new Date().toISOString(),
           expiresAt: new Date(Date.now() + 86400000).toISOString(),
