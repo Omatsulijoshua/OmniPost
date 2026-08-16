@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3002",
+    "prebuild": "pnpm --filter @omnipost/types build && pnpm --filter @omnipost/validation build && pnpm --filter @omnipost/shared build || true",
     "build": "next build",
     "start": "next start -p 3002",
     "lint": "next lint",
