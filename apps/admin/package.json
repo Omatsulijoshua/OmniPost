@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3002",
-    "prebuild": "pnpm --filter @omnipost/types build && pnpm --filter @omnipost/validation build && pnpm --filter @omnipost/shared build || true",
     "build": "next build",
     "start": "next start -p 3002",
     "lint": "next lint",
@@ -12,10 +11,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "@omnipost/shared": "workspace:*",
-    "@omnipost/types": "workspace:*",
-    "@omnipost/ui": "workspace:*",
-    "@omnipost/validation": "workspace:*",
     "clsx": "^2.1.1",
     "lucide-react": "^0.460.0",
     "next": "^15.0.3",
@@ -25,7 +20,6 @@
     "zustand": "^5.0.1"
   },
   "devDependencies": {
-    "@omnipost/config": "workspace:*",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.1",
     "@types/jest": "^29.5.14",
