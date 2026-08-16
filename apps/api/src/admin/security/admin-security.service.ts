@@ -33,6 +33,7 @@ export class AdminSecurityService {
     allowedAdminIps: ['192.168.1.0/24', '10.0.0.0/16'],
     sessionInactivityTimeoutMinutes: 30,
     enforceMfaForAllAdmins: true,
+    cspHeaderEnforced: true,
     corsAllowedAdminOrigins: [
       'https://omnipost-admin.vercel.app',
       'https://omnipost-web-ivory.vercel.app',
@@ -40,6 +41,7 @@ export class AdminSecurityService {
       'http://localhost:3002',
       'https://admin.omnipost.com',
     ],
+  };
 
   private sessions: AdminActiveSession[] = [
     {
