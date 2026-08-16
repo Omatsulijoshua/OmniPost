@@ -12,8 +12,9 @@ export default function SecuritySettingsPage() {
   const handleExportAuditLogs = async () => {
     setDownloadingLogs(true);
     try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://omnipost-api.onrender.com/api/v1';
       const response = await fetch(
-        'http://localhost:3001/api/v1/approvals/audit-logs/export',
+        `${apiUrl}/approvals/audit-logs/export`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('omnipost_access_token')}`,

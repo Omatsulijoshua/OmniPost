@@ -48,7 +48,8 @@ export default function AnalyticsPage() {
 
   const handleExportCsv = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/v1/analytics/export', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://omnipost-api.onrender.com/api/v1';
+      const response = await fetch(`${apiUrl}/analytics/export`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('omnipost_access_token')}`,
           'x-workspace-id': activeWorkspace?.id || '',

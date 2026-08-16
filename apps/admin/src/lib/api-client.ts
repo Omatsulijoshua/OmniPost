@@ -1,8 +1,5 @@
 const ADMIN_API_BASE =
-  process.env.NEXT_PUBLIC_ADMIN_API_URL ||
-  (typeof window !== 'undefined' && window.location.origin.includes('localhost')
-    ? 'http://localhost:3001/api/v1/admin'
-    : 'https://omnipost-api.onrender.com/api/v1/admin');
+  process.env.NEXT_PUBLIC_ADMIN_API_URL || 'https://omnipost-api.onrender.com/api/v1/admin';
 
 export async function adminApiFetch<T = any>(
   endpoint: string,
@@ -35,7 +32,7 @@ export async function adminApiFetch<T = any>(
 
     return json.data ?? json;
   } catch (err: any) {
-    console.warn(`[OmniPost Admin API] Notice: ${err.message || 'API fallback mode active'}`);
+    console.warn(`[OmniPost Admin API] Notice on ${endpoint}: ${err.message || 'API fallback mode active'}`);
     throw err;
   }
 }
