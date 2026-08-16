@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { useAdminAuthStore } from '../../stores/admin-auth-store';
 import { AdminRole, AdminPermission } from '../../types/auth';
 
@@ -15,8 +14,6 @@ export default function AdminLoginPage() {
 
   const [email, setEmail] = useState('joshuaomatsuli01@gmail.com');
   const [password, setPassword] = useState('Jos@56567');
-  const [mfaStep, setMfaStep] = useState(false);
-  const [mfaCode, setMfaCode] = useState('123456');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [forgotModalOpen, setForgotModalOpen] = useState(false);
@@ -36,45 +33,39 @@ export default function AdminLoginPage() {
       setTimeout(() => {
         setError('Access Denied. Invalid admin credentials. Only authorized platform administrator accounts are permitted.');
         setLoading(false);
-      }, 400);
+      }, 300);
       return;
     }
 
+    // Instant Super Admin Authentication
+    const adminUser = {
+      id: 'usr_admin_joshua',
+      email: ALLOWED_ADMIN_EMAIL,
+      name: 'Joshua Omatsuli (Super Admin)',
+      role: 'SUPER_ADMIN' as AdminRole,
+      permissions: ['*'] as AdminPermission[],
+      mfaEnabled: true,
+      lastLoginAt: new Date().toISOString(),
+      activeSessions: [
+        {
+          id: `sess_${Date.now()}`,
+          adminId: 'usr_admin_joshua',
+          ipAddress: '127.0.0.1',
+          userAgent: 'Chrome / Windows (Admin Workstation)',
+          createdAt: new Date().toISOString(),
+          expiresAt: new Date(Date.now() + 86400000).toISOString(),
+          lastActiveAt: new Date().toISOString(),
+          isCurrentSession: true,
+        },
+      ],
+    };
+
+    setAdminAuth(adminUser, 'admin_jwt_access_token_live', 'admin_jwt_refresh_token_live', 86400);
+
     setTimeout(() => {
-      // Simulate MFA step for super admin logins
-      if (inputEmail === ALLOWED_ADMIN_EMAIL.toLowerCase() && !mfaStep) {
-        setMfaStep(true);
-        setLoading(false);
-        return;
-      }
-
-      // Successful Admin Auth Completion
-      const adminUser = {
-        id: 'usr_admin_joshua',
-        email: ALLOWED_ADMIN_EMAIL,
-        name: 'Joshua Omatsuli (Super Admin)',
-        role: 'SUPER_ADMIN' as AdminRole,
-        permissions: ['*'] as AdminPermission[],
-        mfaEnabled: true,
-        lastLoginAt: new Date().toISOString(),
-        activeSessions: [
-          {
-            id: `sess_${Date.now()}`,
-            adminId: 'usr_admin_joshua',
-            ipAddress: '127.0.0.1',
-            userAgent: 'Chrome / Windows (Admin Workstation)',
-            createdAt: new Date().toISOString(),
-            expiresAt: new Date(Date.now() + 86400000).toISOString(),
-            lastActiveAt: new Date().toISOString(),
-            isCurrentSession: true,
-          },
-        ],
-      };
-
-      setAdminAuth(adminUser, 'admin_jwt_access_token_live', 'admin_jwt_refresh_token_live', 86400);
       setLoading(false);
       router.push('/dashboard');
-    }, 600);
+    }, 400);
   };
 
   const handleForgotSubmit = (e: React.FormEvent) => {
@@ -101,7 +92,7 @@ export default function AdminLoginPage() {
             </span>
           </div>
           <p className="text-xs text-slate-500 font-medium">
-            Authorized OmniPost platform administrators and operations staff only.
+            Authorized OmniPost platform administrators only.
           </p>
         </div>
 
@@ -112,65 +103,42 @@ export default function AdminLoginPage() {
         )}
 
         <form onSubmit={handleLoginSubmit} className="space-y-4">
-          {!mfaStep ? (
-            <>
-              <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
-                  Admin Email Address
-                </label>
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="joshuaomatsuli01@gmail.com"
-                  className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-blue-500"
-                />
-              </div>
+          <div>
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
+              Admin Email
+            </label>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="joshuaomatsuli01@gmail.com"
+              className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-blue-500"
+            />
+          </div>
 
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                    Admin Password
-                  </label>
-                  <button
-                    type="button"
-                    onClick={() => setForgotModalOpen(true)}
-                    className="text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline"
-                  >
-                    Forgot password?
-                  </button>
-                </div>
-                <input
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
-                  className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-blue-500"
-                />
-              </div>
-            </>
-          ) : (
-            <div className="space-y-3 bg-blue-50/50 dark:bg-blue-950/40 p-4 border border-blue-200 dark:border-blue-800 rounded-2xl">
-              <div className="flex items-center gap-2">
-                <span className="text-lg">🔐</span>
-                <div>
-                  <h3 className="text-xs font-extrabold text-slate-900 dark:text-slate-100">MFA / 2FA Verification</h3>
-                  <p className="text-[11px] text-slate-500">Enter the 6-digit code from your authenticator app.</p>
-                </div>
-              </div>
-              <input
-                type="text"
-                required
-                maxLength={6}
-                value={mfaCode}
-                onChange={(e) => setMfaCode(e.target.value)}
-                placeholder="123456"
-                className="w-full text-center tracking-widest text-lg font-mono px-4 py-3 bg-white dark:bg-slate-950 border border-blue-300 dark:border-blue-700 rounded-xl text-slate-900 dark:text-slate-100 font-bold focus:outline-none focus:border-blue-600"
-              />
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                Password
+              </label>
+              <button
+                type="button"
+                onClick={() => setForgotModalOpen(true)}
+                className="text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                Forgot password?
+              </button>
             </div>
-          )}
+            <input
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••••••"
+              className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-blue-500"
+            />
+          </div>
 
           <button
             type="submit"
@@ -178,7 +146,7 @@ export default function AdminLoginPage() {
             className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold rounded-xl shadow-lg shadow-blue-600/20 active:scale-98 transition-all flex items-center justify-center gap-2"
           >
             <span>👑</span>
-            <span>{loading ? 'Authenticating Admin...' : mfaStep ? 'Verify MFA Code & Enter' : 'Sign In to Admin Portal'}</span>
+            <span>{loading ? 'Authenticating Admin...' : 'Sign In'}</span>
           </button>
         </form>
 

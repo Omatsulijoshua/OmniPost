@@ -1,4 +1,8 @@
-const ADMIN_API_BASE = process.env.NEXT_PUBLIC_ADMIN_API_URL || 'http://localhost:3001/api/v1/admin';
+const ADMIN_API_BASE =
+  process.env.NEXT_PUBLIC_ADMIN_API_URL ||
+  (typeof window !== 'undefined' && window.location.origin.includes('localhost')
+    ? 'http://localhost:3001/api/v1/admin'
+    : 'https://omnipost-api.onrender.com/api/v1/admin');
 
 export async function adminApiFetch<T = any>(
   endpoint: string,
@@ -17,16 +21,21 @@ export async function adminApiFetch<T = any>(
 
   const url = endpoint.startsWith('http') ? endpoint : `${ADMIN_API_BASE}${endpoint}`;
 
-  const res = await fetch(url, {
-    ...options,
-    headers,
-  });
+  try {
+    const res = await fetch(url, {
+      ...options,
+      headers,
+    });
 
-  const json = await res.json();
+    const json = await res.json().catch(() => ({ success: true, data: null }));
 
-  if (!res.ok || !json.success) {
-    throw new Error(json.error?.message || json.message || `Admin API Error ${res.status}`);
+    if (!res.ok || json.success === false) {
+      throw new Error(json.error?.message || json.message || `Admin API error: ${res.status}`);
+    }
+
+    return json.data ?? json;
+  } catch (err: any) {
+    console.warn(`[OmniPost Admin API] Notice: ${err.message || 'API fallback mode active'}`);
+    throw err;
   }
-
-  return json.data;
 }
