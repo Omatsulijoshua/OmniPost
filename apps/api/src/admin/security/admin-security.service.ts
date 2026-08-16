@@ -37,8 +37,6 @@ export class AdminSecurityService {
     corsAllowedAdminOrigins: [
       'https://omnipost-admin.vercel.app',
       'https://omnipost-web-ivory.vercel.app',
-      'http://localhost:3000',
-      'http://localhost:3002',
       'https://admin.omnipost.com',
     ],
   };
