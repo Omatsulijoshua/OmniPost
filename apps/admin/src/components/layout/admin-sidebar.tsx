@@ -66,7 +66,7 @@ const navSections: NavSection[] = [
       { label: 'Publishing Queue', href: '/publishing', icon: Clock },
       { label: 'Failed Jobs', href: '/publishing/failed', icon: AlertOctagon },
       { label: 'Media Assets', href: '/media', icon: Image },
-      { label: 'Templates', href: '/media/jobs', icon: Layers },
+      { label: 'FFmpeg Jobs', href: '/media/jobs', icon: Layers },
     ],
   },
   {
@@ -82,45 +82,45 @@ const navSections: NavSection[] = [
     title: 'AI Management',
     items: [
       { label: 'AI Usage', href: '/ai', icon: Bot },
-      { label: 'AI Costs', href: '/ai', icon: DollarSign },
-      { label: 'AI Jobs', href: '/ai/routing', icon: Cpu },
+      { label: 'AI Model Routing', href: '/ai/routing', icon: Cpu },
       { label: 'AI Providers', href: '/ai/providers', icon: Server },
     ],
   },
   {
-    title: 'Business',
+    title: 'Business & Billing',
     items: [
       { label: 'Subscriptions', href: '/billing/subscriptions', icon: CreditCard },
-      { label: 'Plans', href: '/billing/plans', icon: Package },
-      { label: 'Payments', href: '/billing/payments', icon: Receipt },
-      { label: 'Invoices', href: '/billing/payments', icon: Receipt },
-      { label: 'Revenue', href: '/analytics', icon: TrendingUp },
+      { label: 'Plans & Entitlements', href: '/billing/plans', icon: Package },
+      { label: 'Payments & Refunds', href: '/billing/payments', icon: Receipt },
     ],
   },
   {
-    title: 'Analytics',
+    title: 'Analytics & BI',
     items: [
+      { label: 'Executive BI', href: '/analytics', icon: TrendingUp },
       { label: 'Platform Analytics', href: '/analytics/platforms', icon: PieChart },
       { label: 'Product Analytics', href: '/analytics/product', icon: BarChart3 },
-      { label: 'Usage Analytics', href: '/analytics', icon: LineChart },
     ],
   },
   {
-    title: 'Operations',
+    title: 'Operations & Infrastructure',
     items: [
-      { label: 'Support', href: '/support/tickets', icon: LifeBuoy },
-      { label: 'Notifications', href: '/moderation', icon: Bell },
+      { label: 'Support Tickets', href: '/support/tickets', icon: LifeBuoy },
+      { label: 'Content Moderation', href: '/moderation', icon: Bell },
       { label: 'Audit Logs', href: '/audit-logs', icon: ShieldAlert },
       { label: 'System Health', href: '/system/health', icon: Sliders },
+      { label: 'BullMQ Queues', href: '/system/queues', icon: Activity },
+      { label: 'Worker Fleet', href: '/system/workers', icon: Cpu },
     ],
   },
   {
-    title: 'Settings',
+    title: 'Settings & Security',
     items: [
-      { label: 'General', href: '/settings/platform', icon: SettingsIcon },
-      { label: 'Security', href: '/security/policies', icon: Shield },
+      { label: 'Platform Config', href: '/settings/platform', icon: SettingsIcon },
       { label: 'Feature Flags', href: '/settings/flags', icon: Flag },
-      { label: 'System Config', href: '/system/workers', icon: SettingsIcon },
+      { label: 'Security & Policies', href: '/security/policies', icon: Shield },
+      { label: 'Active Sessions', href: '/security/sessions', icon: ShieldCheck },
+      { label: 'RBAC Roles', href: '/settings/roles', icon: UserCheck },
     ],
   },
 ];
@@ -130,10 +130,10 @@ export function AdminSidebar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const sidebarContent = (
-    <div className="flex flex-col h-full bg-slate-900 border-r border-slate-800">
+    <div className="flex flex-col h-full bg-slate-900 border-r border-slate-800 select-none">
       {/* Brand Header */}
-      <div className="p-5 border-b border-slate-800 flex items-center justify-between">
-        <div className="flex items-center gap-3">
+      <div className="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between">
+        <Link href="/dashboard" className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-emerald-500 font-black text-sm text-white flex items-center justify-center shadow-lg shadow-blue-600/30">
             OP
           </div>
@@ -141,22 +141,23 @@ export function AdminSidebar() {
             <h1 className="text-sm font-black text-slate-100 tracking-tight">OmniPost Admin</h1>
             <span className="text-[10px] text-blue-400 font-mono font-bold">Enterprise v2.5</span>
           </div>
-        </div>
+        </Link>
 
         {/* Close Button on Mobile */}
         <button
           onClick={() => setMobileOpen(false)}
-          className="md:hidden text-slate-400 hover:text-slate-100 p-1"
+          className="md:hidden text-slate-400 hover:text-slate-100 p-1.5 rounded-lg hover:bg-slate-800 transition"
+          aria-label="Close Sidebar"
         >
           <X className="w-5 h-5" />
         </button>
       </div>
 
       {/* Navigation Sections */}
-      <div className="p-4 space-y-6 flex-1 overflow-y-auto">
+      <div className="p-3 sm:p-4 space-y-6 flex-1 overflow-y-auto">
         {navSections.map((sec) => (
           <div key={sec.title} className="space-y-1">
-            <div className="px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+            <div className="px-2 text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">
               {sec.title}
             </div>
             {sec.items.map((item) => {
@@ -169,12 +170,12 @@ export function AdminSidebar() {
                   onClick={() => setMobileOpen(false)}
                   className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition ${
                     isActive
-                      ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20'
+                      ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20 font-bold'
                       : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
-                  <span>{item.label}</span>
+                  <Icon className="w-4 h-4 shrink-0" />
+                  <span className="truncate">{item.label}</span>
                 </Link>
               );
             })}
@@ -187,10 +188,11 @@ export function AdminSidebar() {
   return (
     <>
       {/* Mobile Menu Trigger */}
-      <div className="md:hidden fixed top-3 left-4 z-50">
+      <div className="md:hidden fixed top-3 left-3 z-40">
         <button
           onClick={() => setMobileOpen(true)}
-          className="p-2 bg-slate-900 border border-slate-800 rounded-xl text-slate-100 shadow-xl"
+          className="p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-800 dark:text-slate-100 shadow-md flex items-center justify-center"
+          aria-label="Open Navigation Menu"
         >
           <Menu className="w-5 h-5" />
         </button>
@@ -201,14 +203,14 @@ export function AdminSidebar() {
         {sidebarContent}
       </aside>
 
-      {/* Mobile Slide-Over Drawer */}
+      {/* Mobile Slide-Over Drawer with Backdrop Blur */}
       {mobileOpen && (
         <div className="md:hidden fixed inset-0 z-50 flex">
           <div
-            className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm"
+            className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="relative w-72 max-w-xs h-full z-10">
+          <div className="relative w-72 max-w-[85vw] h-full z-10 shadow-2xl animate-in slide-in-from-left duration-200">
             {sidebarContent}
           </div>
         </div>
