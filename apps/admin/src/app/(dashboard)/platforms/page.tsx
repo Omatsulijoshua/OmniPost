@@ -717,7 +717,7 @@ export default function AdminPlatformsPage() {
   };
 
   const handleToggleMaintenance = async (p: PlatformItem) => {
-    const newStatus = p.status === 'MAINTENANCE' ? 'OPERATIONAL' : 'MAINTENANCE';
+    const newStatus: PlatformItem['status'] = p.status === 'MAINTENANCE' ? 'OPERATIONAL' : 'MAINTENANCE';
     const updated = platforms.map((item) => (item.id === p.id ? { ...item, status: newStatus } : item));
     savePlatformsState(updated);
     setActionMsg(`Platform ${p.name} status updated to ${newStatus}.`);
