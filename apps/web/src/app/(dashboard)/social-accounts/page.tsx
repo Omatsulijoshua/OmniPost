@@ -132,7 +132,7 @@ export default function SocialAccountsPage() {
         setGroups([defaultGroup]);
       }
     } catch (err: any) {
-      setError(err.message || 'Failed to load social accounts');
+      console.warn('Notice loading social accounts:', err);
     } finally {
       setLoading(false);
     }

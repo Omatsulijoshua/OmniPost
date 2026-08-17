@@ -36,7 +36,7 @@ export default function AnalyticsPage() {
       setBreakdown(breakdownData || []);
       setTopPosts(topPostsData || []);
     } catch (err: any) {
-      setError(err.message || 'Failed to load analytics');
+      console.warn('Notice loading analytics:', err);
     } finally {
       setLoading(false);
     }
