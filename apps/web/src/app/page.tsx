@@ -8,7 +8,7 @@ export default function HomePage() {
     if (typeof window !== 'undefined') {
       const currentUrl = window.location.href.toLowerCase();
       const currentHost = window.location.host.toLowerCase();
-      if (currentUrl.includes('omnipost-admin') || currentHost.includes('omnipost-admin')) {
+      if (currentUrl.includes('admin-gamma-ten-89') || currentHost.includes('admin-gamma-ten-89')) {
         window.location.replace('/admin');
       }
     }

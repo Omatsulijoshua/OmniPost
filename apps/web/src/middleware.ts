@@ -8,11 +8,11 @@ export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   const isAdminHost =
-    host.includes('omnipost-admin') ||
-    forwardedHost.includes('omnipost-admin') ||
-    hostname.includes('omnipost-admin');
+    host.includes('admin-gamma-ten-89') ||
+    forwardedHost.includes('admin-gamma-ten-89') ||
+    hostname.includes('admin-gamma-ten-89');
 
-  // If request comes from omnipost-admin.vercel.app and is at root '/', redirect directly to /admin login page
+  // If request comes from admin domain and is at root '/', redirect directly to /admin
   if (isAdminHost && pathname === '/') {
     return NextResponse.redirect(new URL('/admin', request.url));
   }

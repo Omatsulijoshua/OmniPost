@@ -17,7 +17,7 @@ const nextConfig = {
           has: [
             {
               type: 'host',
-              value: 'omnipost-admin.vercel.app',
+              value: 'admin-gamma-ten-89.vercel.app',
             },
           ],
           destination: '/admin',

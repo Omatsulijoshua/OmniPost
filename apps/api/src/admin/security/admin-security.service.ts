@@ -35,9 +35,8 @@ export class AdminSecurityService {
     enforceMfaForAllAdmins: true,
     cspHeaderEnforced: true,
     corsAllowedAdminOrigins: [
-      'https://omnipost-admin.vercel.app',
+      'https://admin-gamma-ten-89.vercel.app',
       'https://omnipost-web-ivory.vercel.app',
-      'https://admin.omnipost.com',
     ],
   };
 

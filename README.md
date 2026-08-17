@@ -1,82 +1,51 @@
-# OmniPost — Multi-Platform Social Media Automation & Enterprise SaaS
+# OmniPost Monorepo
 
-OmniPost is an all-in-one social media publishing, scheduling, AI content generation, and multi-channel analytics SaaS platform. It features a Next.js customer web portal, a NestJS REST API backend, and a Next.js 15 Enterprise Admin Dashboard.
-
----
-
-## 🌟 Key Platform Features & Architecture Updates
-
-### 1. 🎨 Premium White, Royal Blue & Emerald Green UI Theme
-- **Crisp High-Contrast Design**: Clean white containers (`bg-white`), subtle dividers (`border-slate-200`), and soft slate backgrounds (`bg-slate-50`).
-- **Brand Accents**: Royal Blue primary buttons/active states (`bg-blue-600`) and Emerald Green success badges/conversion CTAs (`bg-emerald-600`).
-
-### 2. 🎥 Multi-Account YouTube Channels & TikTok Accounts
-- **Multiple Accounts Per Platform**: Link multiple channels under the same platform (e.g. 3 YouTube channels: `@gaming_vlogs`, `@tech_channel`, `@shorts_brand`; 2 TikTok accounts: `@business_tok`, `@personal_tok`).
-- **Account-Level Previews & Overrides**: Distinct preview tabs for each linked account allowing unique titles, captions, and hashtags.
-
-### 3. ✍️ Interactive Channel Checkboxes & Content Selector
-- **Content Format Selector**: 🖼️ **Photo/Image Post**, 🎥 **Video/Reel/Short Post**, or 📝 **Text-Only Post**.
-- **Target Channel Checkbox Matrix**: Tick individual connected accounts or use quick `✓ Select All` / `✕ Deselect All` actions.
-
-### 4. 🛡️ Team Collaboration & Restricted Approval Workflows
-- **Granular Workspace Roles**:
-  - **OWNER / ADMIN**: Full workspace control & instant publishing.
-  - **EDITOR / CREATOR**: Restricted to drafts — must click `Submit for Approval`.
-  - **PUBLISHER / SCHEDULER**: Manages queue calendar and schedules pre-approved posts.
-  - **ANALYST / VIEWER**: Read-only performance inspection.
-- **Team Governance Studio**: Review queue, internal discussion threads, and one-click approve/reject controls.
-
-### 5. 📦 30-Day Media Auto-Wipe vs Paid Permanent Storage
-- **Free/Standard Policy**: Heavy raw videos and photo assets auto-expire after 30 days to optimize cloud storage costs.
-- **Permanent Lifetime Storage Pass**: Paid add-on ($15/mo) or included with Pro/Agency tiers for lifetime asset retention.
-
-### 6. 📜 Multi-Channel Post History & Audit Inspector Modal
-- **Detailed History Inspection**: View complete target channel breakdowns, adapted captions, live post URLs (`🔗 View Live Post`), and individual platform status.
-- **Audit Timeline**: Step-by-step history tracking when a post was created, submitted for approval, approved, scheduled, and published.
+Enterprise-grade, multi-platform social media publishing, campaign management, AI studio, and administrative platform built with Next.js 15, NestJS, and Prisma.
 
 ---
 
-### 💳 Tiered Pricing & Channel Capacity Matrix
+## 🌐 Production Deployments
 
-| Subscription Tier | Monthly Price | Connected Social Account Limit | Post Quota & Media Storage |
-|---|---|---|---|
-| **FREE STARTER** | **$0 / mo** | **3 Connected Social Channels** | **1 Post / mo (Free Trial)**, 30-Day Media Auto-Wipe |
-| **CREATOR TIER** | **$29 / mo** | **10 Connected Social Channels** | **100 Posts / mo**, 1,000 AI Credits, 3 Team Seats |
-| **PRO GROWTH** | **$79 / mo** | **25 Connected Social Channels** | **500 Posts / mo**, **Permanent Lifetime Storage**, 10 Team Seats |
-| **AGENCY UNLIMITED** | **$199 / mo** | **UNLIMITED Social Channels** | **UNLIMITED Posts / mo**, **Permanent Lifetime Storage**, 25k AI Credits |
+| Service | Live URL | Description |
+|---|---|---|
+| **User Web Platform** | [https://omnipost-web-ivory.vercel.app](https://omnipost-web-ivory.vercel.app) | Customer Dashboard, Scheduling, Multi-Account Publishing, AI Studio |
+| **Dedicated Admin Portal** | [https://admin-gamma-ten-89.vercel.app](https://admin-gamma-ten-89.vercel.app) | Platform Administration, Revenue Intelligence, System Health, RBAC |
+| **Backend REST API** | [https://omnipost-api.onrender.com](https://omnipost-api.onrender.com) | NestJS Microservices, BullMQ Queue, Database Gateway |
 
 ---
 
-## 🚀 Repository Structure
+## 🔐 Super Admin Credentials
+- **Admin Email**: `joshuaomatsuli01@gmail.com`
+- **Password**: `Jos@56567`
+
+---
+
+## 📦 Monorepo Architecture
 
 ```text
 OmniPost/
 ├── apps/
-│   ├── admin/               # Next.js 15 Standalone Enterprise Admin Dashboard (Port 3002)
-│   ├── api/                 # NestJS Core API Gateway & Admin Endpoints (Port 3001)
-│   └── web/                 # Customer Web Application (Port 3000)
+│   ├── web/                 # Next.js 15 Customer Web App (https://omnipost-web-ivory.vercel.app)
+│   ├── admin/               # Next.js 15 Enterprise Admin App (https://admin-gamma-ten-89.vercel.app)
+│   └── api/                 # NestJS Core API Engine (https://omnipost-api.onrender.com)
 ├── packages/
-│   ├── billing-core/        # Billing Engine & Tier Specs
-│   ├── types/               # Shared TypeScript Interfaces & DTO Schemas
-│   ├── ui/                  # Shared UI Component Library & Design Tokens
-│   └── validation/          # Zod Validation Schemas
-├── README.md                # Main Project Documentation
-└── package.json             # Monorepo Workspace Configuration
+│   ├── types/               # Shared TypeScript models and enums
+│   ├── validation/          # Zod schemas and validation utilities
+│   ├── ui/                  # UI component library
+│   ├── platform-core/       # 13 social platform adapters
+│   ├── brand-core/          # Brand kits and asset management
+│   ├── media-core/          # Media processing and transcode utilities
+│   ├── ai-core/             # Multi-LLM AI orchestration
+│   ├── publishing-core/     # Publishing pipeline and queue processing
+│   ├── analytics-core/      # Cross-channel metrics aggregation
+│   ├── billing-core/        # Subscription management and revenue accounting
+│   └── shared/              # Cross-package helper utilities
 ```
 
 ---
 
-## ⚡ Port Mappings & Local Development
-
-| Application | Framework | Port | Command |
-|---|---|---|---|
-| **Customer App (`apps/web`)** | Next.js 15 / React 18 | `3000` | `pnpm --filter @omnipost/web dev` |
-| **REST API Backend (`apps/api`)** | NestJS / Prisma ORM | `3001` | `pnpm --filter @omnipost/api dev` |
-| **Admin Dashboard (`apps/admin`)** | Next.js 15 / Tailwind CSS | `3002` | `pnpm --filter @omnipost/admin dev` |
-
----
-
-## 📄 License & GitHub Repository
-- **Repository**: [https://github.com/Omatsulijoshua/OmniPost](https://github.com/Omatsulijoshua/OmniPost)
-- **Main Web App**: [https://omnipost-web-ivory.vercel.app](https://omnipost-web-ivory.vercel.app)
-- **API Backend**: [https://omnipost-api.onrender.com](https://omnipost-api.onrender.com)
+## 📄 License & Repository
+- **GitHub Repository**: [https://github.com/Omatsulijoshua/OmniPost](https://github.com/Omatsulijoshua/OmniPost)
+- **User Web App**: [https://omnipost-web-ivory.vercel.app](https://omnipost-web-ivory.vercel.app)
+- **Admin App**: [https://admin-gamma-ten-89.vercel.app](https://admin-gamma-ten-89.vercel.app)
+- **Backend API**: [https://omnipost-api.onrender.com](https://omnipost-api.onrender.com)
