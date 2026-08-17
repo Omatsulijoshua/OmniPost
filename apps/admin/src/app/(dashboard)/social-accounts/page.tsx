@@ -26,6 +26,24 @@ interface HealthSummary {
   healthScorePercent: number;
 }
 
+const PLATFORM_LOGOS: Record<string, string> = {
+  INSTAGRAM: 'https://cdn.simpleicons.org/instagram/E4405F',
+  TIKTOK: 'https://cdn.simpleicons.org/tiktok/000000',
+  YOUTUBE: 'https://cdn.simpleicons.org/youtube/FF0000',
+  X: 'https://cdn.simpleicons.org/x/000000',
+  LINKEDIN: 'https://cdn.simpleicons.org/linkedin/0A66C2',
+  FACEBOOK: 'https://cdn.simpleicons.org/facebook/1877F2',
+  THREADS: 'https://cdn.simpleicons.org/threads/000000',
+  PINTEREST: 'https://cdn.simpleicons.org/pinterest/BD081C',
+  TELEGRAM: 'https://cdn.simpleicons.org/telegram/26A5E4',
+  DISCORD: 'https://cdn.simpleicons.org/discord/5865F2',
+  SLACK: 'https://cdn.simpleicons.org/slack/4A154B',
+  REDDIT: 'https://cdn.simpleicons.org/reddit/FF4500',
+  GOOGLE_BUSINESS: 'https://cdn.simpleicons.org/google/4285F4',
+  QUORA: 'https://cdn.simpleicons.org/quora/B92B27',
+  BLUESKY: 'https://cdn.simpleicons.org/bluesky/0285FF',
+};
+
 export default function AdminSocialAccountsPage() {
   const [accounts, setAccounts] = useState<SocialAccountItem[]>([]);
   const [summary, setSummary] = useState<HealthSummary | null>(null);
@@ -259,7 +277,16 @@ export default function AdminSocialAccountsPage() {
                 accounts.map((sa) => (
                   <tr key={sa.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
                     <td className="py-3.5 px-4 font-extrabold text-blue-600 dark:text-blue-400">
-                      {sa.platform}
+                      <div className="flex items-center gap-2">
+                        {PLATFORM_LOGOS[sa.platform.toUpperCase()] && (
+                          <img
+                            src={PLATFORM_LOGOS[sa.platform.toUpperCase()]}
+                            alt={sa.platform}
+                            className="w-4 h-4 object-contain"
+                          />
+                        )}
+                        <span>{sa.platform}</span>
+                      </div>
                     </td>
                     <td className="py-3.5 px-4 font-bold text-slate-900 dark:text-slate-100">
                       {sa.accountName}

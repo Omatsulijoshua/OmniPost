@@ -868,18 +868,28 @@ export default function AdminDashboardPage() {
           </h2>
           <div className="space-y-3">
             {[
-              { platform: 'Instagram', count: 410973, percent: 32 },
-              { platform: 'TikTok', count: 308230, percent: 24 },
-              { platform: 'YouTube', count: 231172, percent: 18 },
-              { platform: 'X / Twitter', count: 179801, percent: 14 },
-              { platform: 'LinkedIn', count: 154115, percent: 12 },
-              { platform: 'Facebook', count: 102743, percent: 8 },
-              { platform: 'Telegram', count: 64214, percent: 5 },
-              { platform: 'Discord', count: 38528, percent: 3 },
+              { platform: 'Instagram', logo: 'https://cdn.simpleicons.org/instagram/E4405F', count: 410973, percent: 28 },
+              { platform: 'TikTok', logo: 'https://cdn.simpleicons.org/tiktok/000000', count: 308230, percent: 21 },
+              { platform: 'YouTube', logo: 'https://cdn.simpleicons.org/youtube/FF0000', count: 231172, percent: 16 },
+              { platform: 'X / Twitter', logo: 'https://cdn.simpleicons.org/x/000000', count: 179801, percent: 12 },
+              { platform: 'LinkedIn', logo: 'https://cdn.simpleicons.org/linkedin/0A66C2', count: 154115, percent: 10 },
+              { platform: 'Facebook', logo: 'https://cdn.simpleicons.org/facebook/1877F2', count: 102743, percent: 7 },
+              { platform: 'Quora', logo: 'https://cdn.simpleicons.org/quora/B92B27', count: 85400, percent: 6 },
+              { platform: 'Threads', logo: 'https://cdn.simpleicons.org/threads/000000', count: 72100, percent: 5 },
+              { platform: 'Pinterest', logo: 'https://cdn.simpleicons.org/pinterest/BD081C', count: 68900, percent: 5 },
+              { platform: 'Reddit', logo: 'https://cdn.simpleicons.org/reddit/FF4500', count: 65400, percent: 4 },
+              { platform: 'Telegram', logo: 'https://cdn.simpleicons.org/telegram/26A5E4', count: 64214, percent: 4 },
+              { platform: 'Discord', logo: 'https://cdn.simpleicons.org/discord/5865F2', count: 38528, percent: 3 },
+              { platform: 'Slack', logo: 'https://cdn.simpleicons.org/slack/4A154B', count: 28400, percent: 2 },
+              { platform: 'Google Business', logo: 'https://cdn.simpleicons.org/google/4285F4', count: 21300, percent: 1 },
+              { platform: 'Bluesky', logo: 'https://cdn.simpleicons.org/bluesky/0285FF', count: 18900, percent: 1 },
             ].map((item) => (
               <div key={item.platform} className="space-y-1">
-                <div className="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300">
-                  <span>{item.platform}</span>
+                <div className="flex justify-between items-center text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  <div className="flex items-center gap-2">
+                    <img src={item.logo} alt={item.platform} className="w-3.5 h-3.5 object-contain" />
+                    <span>{item.platform}</span>
+                  </div>
                   <span className="font-mono text-slate-500">
                     {item.count.toLocaleString()} posts ({item.percent}%)
                   </span>

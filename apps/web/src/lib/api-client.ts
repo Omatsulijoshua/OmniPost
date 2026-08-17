@@ -40,14 +40,21 @@ export const DEFAULT_STATS: DashboardStats = {
 };
 
 export const DEFAULT_CONNECTED_PLATFORMS: ConnectedPlatformStatus[] = [
-  { id: 'cp-1', platformType: 'TIKTOK', platformName: 'TikTok', isConnected: true, isMock: false, accountName: '@omnipost_hq', capabilities: defaultCapabilities },
-  { id: 'cp-2', platformType: 'INSTAGRAM', platformName: 'Instagram', isConnected: true, isMock: false, accountName: '@omnipost_app', capabilities: defaultCapabilities },
+  { id: 'cp-1', platformType: 'INSTAGRAM', platformName: 'Instagram', isConnected: true, isMock: false, accountName: '@omnipost_app', capabilities: defaultCapabilities },
+  { id: 'cp-2', platformType: 'TIKTOK', platformName: 'TikTok', isConnected: true, isMock: false, accountName: '@joshuaomatsuli', capabilities: defaultCapabilities },
   { id: 'cp-3', platformType: 'YOUTUBE', platformName: 'YouTube', isConnected: true, isMock: false, accountName: 'OmniPost Creators', capabilities: defaultCapabilities },
   { id: 'cp-4', platformType: 'X', platformName: 'X (Twitter)', isConnected: true, isMock: false, accountName: '@OmniPostHQ', capabilities: defaultCapabilities },
   { id: 'cp-5', platformType: 'LINKEDIN', platformName: 'LinkedIn', isConnected: true, isMock: false, accountName: 'OmniPost Inc.', capabilities: defaultCapabilities },
-  { id: 'cp-6', platformType: 'THREADS', platformName: 'Threads', isConnected: true, isMock: false, accountName: '@omnipost_app', capabilities: defaultCapabilities },
-  { id: 'cp-7', platformType: 'PINTEREST', platformName: 'Pinterest', isConnected: false, isMock: false, accountName: 'Not Connected', capabilities: defaultCapabilities },
-  { id: 'cp-8', platformType: 'DISCORD', platformName: 'Discord', isConnected: true, isMock: false, accountName: 'OmniPost Community', capabilities: defaultCapabilities },
+  { id: 'cp-6', platformType: 'FACEBOOK', platformName: 'Facebook', isConnected: true, isMock: false, accountName: 'OmniPost Global', capabilities: defaultCapabilities },
+  { id: 'cp-7', platformType: 'THREADS', platformName: 'Threads', isConnected: true, isMock: false, accountName: '@omnipost_app', capabilities: defaultCapabilities },
+  { id: 'cp-8', platformType: 'PINTEREST', platformName: 'Pinterest', isConnected: false, isMock: false, accountName: 'Not Connected', capabilities: defaultCapabilities },
+  { id: 'cp-9', platformType: 'TELEGRAM', platformName: 'Telegram', isConnected: true, isMock: false, accountName: '@OmniPostBot', capabilities: defaultCapabilities },
+  { id: 'cp-10', platformType: 'DISCORD', platformName: 'Discord', isConnected: true, isMock: false, accountName: 'OmniPost Community', capabilities: defaultCapabilities },
+  { id: 'cp-11', platformType: 'SLACK', platformName: 'Slack', isConnected: false, isMock: false, accountName: 'Not Connected', capabilities: defaultCapabilities },
+  { id: 'cp-12', platformType: 'REDDIT', platformName: 'Reddit', isConnected: true, isMock: false, accountName: 'u/OmniPostHQ', capabilities: defaultCapabilities },
+  { id: 'cp-13', platformType: 'GOOGLE_BUSINESS', platformName: 'Google Business', isConnected: false, isMock: false, accountName: 'Not Connected', capabilities: defaultCapabilities },
+  { id: 'cp-14', platformType: 'QUORA', platformName: 'Quora', isConnected: true, isMock: false, accountName: 'Joshua Omatsuli (Quora Space)', capabilities: defaultCapabilities },
+  { id: 'cp-15', platformType: 'BLUESKY', platformName: 'Bluesky', isConnected: false, isMock: false, accountName: 'Not Connected', capabilities: defaultCapabilities },
 ];
 
 export const DEFAULT_ACTIVITY: RecentActivityItem[] = [

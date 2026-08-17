@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ConnectedPlatformStatus } from '@omnipost/types';
+import { PlatformLogo } from '../common/platform-logo';
 
 interface ConnectedPlatformsProps {
   platforms: ConnectedPlatformStatus[];
@@ -28,9 +29,7 @@ export function ConnectedPlatforms({ platforms }: ConnectedPlatformsProps) {
             className="p-3.5 bg-slate-50/80 border border-slate-200/80 hover:border-blue-300 rounded-xl flex items-center justify-between transition-all"
           >
             <div className="flex items-center gap-3 truncate">
-              <div className="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-xs font-black text-blue-600 shadow-xs">
-                {platform.platformType === 'OTHER' ? '✨' : platform.platformType.slice(0, 2)}
-              </div>
+              <PlatformLogo platformType={platform.platformType} size={36} />
               <div className="truncate">
                 <div className="text-xs font-bold text-slate-900 truncate">
                   {platform.platformType === 'OTHER' ? 'Custom Platform' : platform.platformName}
