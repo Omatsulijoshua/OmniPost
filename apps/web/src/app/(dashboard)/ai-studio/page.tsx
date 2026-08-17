@@ -29,6 +29,12 @@ const platforms: PlatformType[] = [
   'LINKEDIN',
   'FACEBOOK',
   'THREADS',
+  'QUORA',
+  'REDDIT',
+  'BLUESKY',
+  'PINTEREST',
+  'TELEGRAM',
+  'DISCORD',
   'OTHER',
 ];
 

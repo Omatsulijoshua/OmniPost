@@ -82,7 +82,9 @@ export class MockAIProvider extends BaseAIProvider {
     const prefix = toneSpec.emojiPrefix;
 
     let adapted = `${prefix} [${platform} - ${tone}] ${caption}`;
-    if (platform === 'X' && adapted.length > 270) {
+    if (platform === 'QUORA') {
+      adapted = `💡 **Answer Summary**:\n${caption}\n\nKey Takeaways:\n• Understand audience intent on Quora\n• Structure with clear headings and verified facts\n• Provide actionable conclusions.\n\nHope this helps! Let me know if you have follow-up questions in the comments below.`;
+    } else if (platform === 'X' && adapted.length > 270) {
       adapted = `${adapted.substring(0, 260)}... 🧵`;
     }
 

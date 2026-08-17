@@ -39,8 +39,39 @@ export default function CreatePostPage() {
   useEffect(() => {
     if (!activeWorkspace?.id) return;
 
-    // Default connected accounts fallback including @joshuaomatsuli and @ubgbe
-    const defaultTikTokAccounts: SocialAccountDetail[] = [
+    // Default multi-platform connected accounts including Quora, TikTok, Instagram, X, YouTube, LinkedIn
+    const defaultAccounts: SocialAccountDetail[] = [
+      {
+        id: 'acc_quora_joshua',
+        workspaceId: activeWorkspace.id,
+        platformType: 'QUORA' as const,
+        platformName: 'Quora',
+        accountName: 'Joshua Omatsuli (Quora Space)',
+        externalId: 'ext_quora_joshua',
+        profileUrl: 'https://www.quora.com/profile/Joshua-Omatsuli',
+        isMock: false,
+        capabilities: {
+          supportsImages: true,
+          supportsVideos: true,
+          supportsStories: false,
+          supportsShorts: false,
+          supportsReels: false,
+          supportsScheduling: true,
+          supportsDirectPublishing: true,
+          supportsAnalytics: true,
+          supportsComments: true,
+          supportsDeletion: true,
+          maxVideoSizeMB: 500,
+          maxVideoDurationSeconds: 1800,
+          supportedAspectRatios: ['16:9', '1:1'],
+          requiresBusinessAccount: false,
+          requiresAppReview: false,
+        },
+        hasValidCredentials: true,
+        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
       {
         id: 'acc_tiktok_joshua',
         workspaceId: activeWorkspace.id,
@@ -73,20 +104,82 @@ export default function CreatePostPage() {
         updatedAt: new Date().toISOString(),
       },
       {
-        id: 'acc_tiktok_ubgbe',
+        id: 'acc_instagram_joshua',
         workspaceId: activeWorkspace.id,
-        platformType: 'TIKTOK' as const,
-        platformName: 'TikTok',
-        accountName: '@ubgbe',
-        externalId: 'ext_tiktok_ubgbe',
-        profileUrl: 'https://www.tiktok.com/@ubgbe',
+        platformType: 'INSTAGRAM' as const,
+        platformName: 'Instagram',
+        accountName: '@omnipost_app',
+        externalId: 'ext_instagram_joshua',
+        profileUrl: 'https://www.instagram.com/omnipost_app',
         isMock: false,
         capabilities: {
           supportsImages: true,
           supportsVideos: true,
           supportsStories: true,
-          supportsShorts: true,
+          supportsShorts: false,
           supportsReels: true,
+          supportsScheduling: true,
+          supportsDirectPublishing: true,
+          supportsAnalytics: true,
+          supportsComments: true,
+          supportsDeletion: true,
+          maxVideoSizeMB: 300,
+          maxVideoDurationSeconds: 900,
+          supportedAspectRatios: ['9:16', '1:1', '4:5'],
+          requiresBusinessAccount: false,
+          requiresAppReview: false,
+        },
+        hasValidCredentials: true,
+        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: 'acc_x_joshua',
+        workspaceId: activeWorkspace.id,
+        platformType: 'X' as const,
+        platformName: 'X (Twitter)',
+        accountName: '@OmniPostHQ',
+        externalId: 'ext_x_joshua',
+        profileUrl: 'https://x.com/OmniPostHQ',
+        isMock: false,
+        capabilities: {
+          supportsImages: true,
+          supportsVideos: true,
+          supportsStories: false,
+          supportsShorts: false,
+          supportsReels: false,
+          supportsScheduling: true,
+          supportsDirectPublishing: true,
+          supportsAnalytics: true,
+          supportsComments: true,
+          supportsDeletion: true,
+          maxVideoSizeMB: 512,
+          maxVideoDurationSeconds: 140,
+          supportedAspectRatios: ['16:9', '1:1'],
+          requiresBusinessAccount: false,
+          requiresAppReview: false,
+        },
+        hasValidCredentials: true,
+        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: 'acc_linkedin_joshua',
+        workspaceId: activeWorkspace.id,
+        platformType: 'LINKEDIN' as const,
+        platformName: 'LinkedIn',
+        accountName: 'OmniPost Inc.',
+        externalId: 'ext_linkedin_joshua',
+        profileUrl: 'https://www.linkedin.com/company/omnipost',
+        isMock: false,
+        capabilities: {
+          supportsImages: true,
+          supportsVideos: true,
+          supportsStories: false,
+          supportsShorts: false,
+          supportsReels: false,
           supportsScheduling: true,
           supportsDirectPublishing: true,
           supportsAnalytics: true,
@@ -94,7 +187,7 @@ export default function CreatePostPage() {
           supportsDeletion: true,
           maxVideoSizeMB: 500,
           maxVideoDurationSeconds: 600,
-          supportedAspectRatios: ['9:16', '16:9'],
+          supportedAspectRatios: ['16:9', '1:1'],
           requiresBusinessAccount: false,
           requiresAppReview: false,
         },
@@ -107,16 +200,16 @@ export default function CreatePostPage() {
 
     apiFetch<SocialAccountDetail[]>('/social-accounts')
       .then((data) => {
-        const loaded = data && data.length > 0 ? data : defaultTikTokAccounts;
+        const loaded = data && data.length > 0 ? data : defaultAccounts;
         setConnectedAccounts(loaded);
         const defaultSelected = loaded.map((a) => a.id);
         setSelectedAccountIds(defaultSelected);
         setActiveTabAccountId(loaded[0].id);
       })
       .catch(() => {
-        setConnectedAccounts(defaultTikTokAccounts);
-        setSelectedAccountIds(defaultTikTokAccounts.map((a) => a.id));
-        setActiveTabAccountId(defaultTikTokAccounts[0].id);
+        setConnectedAccounts(defaultAccounts);
+        setSelectedAccountIds(defaultAccounts.map((a) => a.id));
+        setActiveTabAccountId(defaultAccounts[0].id);
       });
 
     // Load channel groups

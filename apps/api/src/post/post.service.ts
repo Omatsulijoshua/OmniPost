@@ -69,7 +69,9 @@ export class PostService {
             const pType = acc.platform.type as PlatformType;
             const override = input.overrides?.find((o: any) => o.socialAccountId === acc.id);
             return {
-              socialAccountId: acc.id,
+              socialAccount: {
+                connect: { id: acc.id },
+              },
               platformType: pType,
               caption: override?.caption || input.universalCaption,
               title: override?.title || input.title || null,

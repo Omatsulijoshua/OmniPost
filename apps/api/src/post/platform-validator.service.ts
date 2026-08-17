@@ -16,6 +16,8 @@ export class PlatformValidatorService {
     DISCORD: 2000,
     SLACK: 40000,
     REDDIT: 40000,
+    QUORA: 50000,
+    BLUESKY: 300,
     GOOGLE_BUSINESS: 1500,
     OTHER: 5000,
   };

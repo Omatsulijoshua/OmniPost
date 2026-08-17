@@ -26,6 +26,8 @@ const charLimits: Record<PlatformType, number> = {
   DISCORD: 2000,
   SLACK: 40000,
   REDDIT: 40000,
+  QUORA: 50000,
+  BLUESKY: 300,
   GOOGLE_BUSINESS: 1500,
   OTHER: 5000,
 };
@@ -59,8 +61,10 @@ export function PlatformPreviewCard({
 
         <div className="p-4 bg-slate-50/80 border border-slate-200/80 rounded-xl space-y-3 shadow-inner">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center font-black text-xs text-blue-600">
-              {pType === 'OTHER' ? '✨' : pType.slice(0, 2)}
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center font-black text-xs ${
+              pType === 'QUORA' ? 'bg-[#B92B27] text-white font-serif' : 'bg-blue-100 text-blue-600'
+            }`}>
+              {pType === 'QUORA' ? 'Q' : pType === 'OTHER' ? '✨' : pType.slice(0, 2)}
             </div>
             <div>
               <div className="text-xs font-bold text-slate-900">{account.accountName}</div>
@@ -69,7 +73,9 @@ export function PlatformPreviewCard({
           </div>
 
           {currentTitle && (
-            <div className="text-sm font-bold text-slate-900">{currentTitle}</div>
+            <div className="text-sm font-bold text-slate-900">
+              {pType === 'QUORA' ? `Q: ${currentTitle}` : currentTitle}
+            </div>
           )}
 
           <div className="text-xs text-slate-700 whitespace-pre-wrap leading-relaxed">
@@ -78,6 +84,14 @@ export function PlatformPreviewCard({
 
           {overrideHashtags && (
             <div className="text-xs text-blue-600 font-semibold">{overrideHashtags}</div>
+          )}
+
+          {pType === 'QUORA' && (
+            <div className="pt-2 border-t border-slate-200 flex items-center gap-4 text-[10px] text-slate-500 font-semibold">
+              <span>▲ Upvote (1.2k)</span>
+              <span>💬 84 Answers</span>
+              <span>🔄 32 Shares</span>
+            </div>
           )}
         </div>
       </div>
@@ -103,16 +117,16 @@ export function PlatformPreviewCard({
           </div>
         )}
 
-        {(pType === 'YOUTUBE' || pType === 'PINTEREST') && (
+        {(pType === 'YOUTUBE' || pType === 'PINTEREST' || pType === 'QUORA' || pType === 'REDDIT') && (
           <div>
             <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
-              Custom Title ({pType})
+              {pType === 'QUORA' ? 'Quora Question / Space Topic' : `Custom Title (${pType})`}
             </label>
             <input
               type="text"
               value={overrideTitle}
               onChange={(e) => onOverrideChange('title', e.target.value)}
-              placeholder={universalTitle || `Title for ${pType}...`}
+              placeholder={universalTitle || (pType === 'QUORA' ? 'e.g. What is the best strategy to scale SaaS in 2026?' : `Title for ${pType}...`)}
               className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-500 font-medium"
             />
           </div>

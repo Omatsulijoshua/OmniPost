@@ -86,7 +86,7 @@ describe('DashboardService', () => {
 
     const platforms = await service.getConnectedPlatforms('ws-1');
 
-    expect(platforms.length).toBe(13);
+    expect(platforms.length).toBe(15);
     const insta = platforms.find((p) => p.platformType === 'INSTAGRAM');
     expect(insta?.isConnected).toBe(true);
     expect(insta?.accountName).toBe('@omnipost_official');

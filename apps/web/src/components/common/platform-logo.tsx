@@ -163,6 +163,28 @@ export function PlatformLogo({ platformType, size = 40, className = '' }: Platfo
         </div>
       );
 
+    case 'QUORA':
+      return (
+        <div
+          style={{ width: s, height: s }}
+          className={`rounded-xl flex items-center justify-center bg-[#B92B27] text-white shadow-xs font-serif font-black text-xl ${className}`}
+        >
+          Q
+        </div>
+      );
+
+    case 'BLUESKY':
+      return (
+        <div
+          style={{ width: s, height: s }}
+          className={`rounded-xl flex items-center justify-center bg-[#0285FF] text-white shadow-xs ${className}`}
+        >
+          <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+            <path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566 1.01 1.5 1.556 1.5 3.5c0 .762.43 5.485 1.258 7.37.592 1.348 2.054 2.112 3.242 2.13-1.89.378-3.957 1.488-4.394 3.738C1.187 18.91 3.5 22.5 8 22.5c4.5 0 6.5-5 8-8 1.5 3 3.5 8 8 8 4.5 0 6.813-3.59 6.394-5.762-.437-2.25-2.504-3.36-4.394-3.738 1.188-.018 2.65-.782 3.242-2.13.828-1.885 1.258-6.608 1.258-7.37 0-1.944-1.066-2.49-3.702-.695C20.046 4.747 17.087 8.686 16 10.8c-.89-1.733-2.11-3.3-4-3.3s-3.11 1.567-4 3.3z" />
+          </svg>
+        </div>
+      );
+
     default:
       return (
         <div

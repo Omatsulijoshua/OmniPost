@@ -70,6 +70,8 @@ export class SocialAccountService {
       DISCORD: `https://discord.com/api/oauth2/authorize?client_id=MOCK_CLIENT_ID&redirect_uri=${webUrl}/oauth/callback&response_type=code&scope=bot&state=${state}`,
       SLACK: `https://slack.com/oauth/v2/authorize?client_id=MOCK_CLIENT_ID&user_scope=chat:write&state=${state}`,
       REDDIT: `https://www.reddit.com/api/v1/authorize?client_id=MOCK_CLIENT_ID&response_type=code&state=${state}&redirect_uri=${webUrl}/oauth/callback&duration=permanent&scope=submit`,
+      QUORA: `https://www.quora.com/oauth/authorize?client_id=MOCK_CLIENT_ID&response_type=code&state=${state}&redirect_uri=${webUrl}/oauth/callback&scope=read,write`,
+      BLUESKY: `https://bsky.social/oauth/authorize?client_id=MOCK_CLIENT_ID&response_type=code&state=${state}&redirect_uri=${webUrl}/oauth/callback`,
       GOOGLE_BUSINESS: `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleKey}&redirect_uri=${webUrl}/oauth/callback&response_type=code&scope=https://www.googleapis.com/auth/business.manage&state=${state}`,
       OTHER: `https://omnipost.io/oauth/custom?state=${state}`,
     };

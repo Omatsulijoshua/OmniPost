@@ -11,6 +11,8 @@ export type PlatformType =
   | 'DISCORD'
   | 'SLACK'
   | 'REDDIT'
+  | 'QUORA'
+  | 'BLUESKY'
   | 'GOOGLE_BUSINESS'
   | 'OTHER';
 
